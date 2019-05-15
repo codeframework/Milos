@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>Milos.Data.SqlServer</id>
+    <version>1.0.0-preview1-190415.0</version>
+    <authors>EPS Software Corp./Markus Egger Inc.</authors>
+    <owners>EPS Software Corp./Markus Egger Inc.</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
+    <licenseUrl>https://licenses.nuget.org/MIT</licenseUrl>
+    <projectUrl>http://www.codeframework.io/</projectUrl>
+    <description>The Milos Solution Platform is the spiritual predecessor of CODE Framework, and some parts of the Milos Solution Platform (especially those important for data access, business logic, and services) are maintained as part of CODE Framework.</description>
+    <copyright>EPS Software Corp.</copyright>
+    <dependencies>
+      <group targetFramework=".NETStandard2.0">
+        <dependency id="Milos.Core" version="5.0.0-preview1-190415.0" exclude="Build,Analyzers" />
+        <dependency id="Milos.Data" version="1.0.0-preview1-190415.0" exclude="Build,Analyzers" />
+        <dependency id="System.Configuration.ConfigurationManager" version="4.5.0" exclude="Build,Analyzers" />
+        <dependency id="System.Data.SqlClient" version="4.6.0" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="C:\Projects\MilosSolutionPlatform\Core\MilosSolutionPlatform\Milos.Data.SqlServer\bin\Release\netstandard2.0\Milos.Data.SqlServer.dll" target="lib\netstandard2.0\Milos.Data.SqlServer.dll" />
+  </files>
+</package>

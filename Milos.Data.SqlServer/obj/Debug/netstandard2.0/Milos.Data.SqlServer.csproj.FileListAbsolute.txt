@@ -1,0 +1,14 @@
+C:\Projects\MilosSolutionPlatform\Core\MilosSolutionPlatform\Milos.Data.SqlServer\bin\Debug\netstandard2.0\Milos.Data.SqlServer.deps.json
+C:\Projects\MilosSolutionPlatform\Core\MilosSolutionPlatform\Milos.Data.SqlServer\bin\Debug\netstandard2.0\Milos.Data.SqlServer.dll
+C:\Projects\MilosSolutionPlatform\Core\MilosSolutionPlatform\Milos.Data.SqlServer\bin\Debug\netstandard2.0\Milos.Data.SqlServer.pdb
+C:\Projects\MilosSolutionPlatform\Core\MilosSolutionPlatform\Milos.Data.SqlServer\bin\Debug\netstandard2.0\Milos.Core.dll
+C:\Projects\MilosSolutionPlatform\Core\MilosSolutionPlatform\Milos.Data.SqlServer\bin\Debug\netstandard2.0\Milos.Data.dll
+C:\Projects\MilosSolutionPlatform\Core\MilosSolutionPlatform\Milos.Data.SqlServer\bin\Debug\netstandard2.0\Milos.Core.pdb
+C:\Projects\MilosSolutionPlatform\Core\MilosSolutionPlatform\Milos.Data.SqlServer\bin\Debug\netstandard2.0\Milos.Data.pdb
+C:\Projects\MilosSolutionPlatform\Core\MilosSolutionPlatform\Milos.Data.SqlServer\obj\Debug\netstandard2.0\Milos.Data.SqlServer.csprojAssemblyReference.cache
+C:\Projects\MilosSolutionPlatform\Core\MilosSolutionPlatform\Milos.Data.SqlServer\obj\Debug\netstandard2.0\Milos.Data.SqlServer.csproj.CoreCompileInputs.cache
+C:\Projects\MilosSolutionPlatform\Core\MilosSolutionPlatform\Milos.Data.SqlServer\obj\Debug\netstandard2.0\Milos.Data.SqlServer.AssemblyInfoInputs.cache
+C:\Projects\MilosSolutionPlatform\Core\MilosSolutionPlatform\Milos.Data.SqlServer\obj\Debug\netstandard2.0\Milos.Data.SqlServer.AssemblyInfo.cs
+C:\Projects\MilosSolutionPlatform\Core\MilosSolutionPlatform\Milos.Data.SqlServer\obj\Debug\netstandard2.0\Milos.Data.SqlServer.csproj.CopyComplete
+C:\Projects\MilosSolutionPlatform\Core\MilosSolutionPlatform\Milos.Data.SqlServer\obj\Debug\netstandard2.0\Milos.Data.SqlServer.dll
+C:\Projects\MilosSolutionPlatform\Core\MilosSolutionPlatform\Milos.Data.SqlServer\obj\Debug\netstandard2.0\Milos.Data.SqlServer.pdb

@@ -1,0 +1,9 @@
+C:\Projects\MilosSolutionPlatform\Core\MilosSolutionPlatform\Milos.Core\bin\Debug\netstandard2.0\Milos.Core.deps.json
+C:\Projects\MilosSolutionPlatform\Core\MilosSolutionPlatform\Milos.Core\bin\Debug\netstandard2.0\Milos.Core.dll
+C:\Projects\MilosSolutionPlatform\Core\MilosSolutionPlatform\Milos.Core\bin\Debug\netstandard2.0\Milos.Core.pdb
+C:\Projects\MilosSolutionPlatform\Core\MilosSolutionPlatform\Milos.Core\obj\Debug\netstandard2.0\Milos.Core.csproj.CoreCompileInputs.cache
+C:\Projects\MilosSolutionPlatform\Core\MilosSolutionPlatform\Milos.Core\obj\Debug\netstandard2.0\Milos.Core.AssemblyInfoInputs.cache
+C:\Projects\MilosSolutionPlatform\Core\MilosSolutionPlatform\Milos.Core\obj\Debug\netstandard2.0\Milos.Core.AssemblyInfo.cs
+C:\Projects\MilosSolutionPlatform\Core\MilosSolutionPlatform\Milos.Core\obj\Debug\netstandard2.0\Milos.Core.dll
+C:\Projects\MilosSolutionPlatform\Core\MilosSolutionPlatform\Milos.Core\obj\Debug\netstandard2.0\Milos.Core.pdb
+C:\Projects\MilosSolutionPlatform\Core\MilosSolutionPlatform\Milos.Core\obj\Debug\netstandard2.0\Milos.Core.csprojAssemblyReference.cache
