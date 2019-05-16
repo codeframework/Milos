@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28809.33
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Milos.Data", "Milos.Data\Milos.Data.csproj", "{08E5BCC5-2BB3-4F48-9A09-134E4089285A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Milos.Data", "Milos.Data\Milos.Data.csproj", "{08E5BCC5-2BB3-4F48-9A09-134E4089285A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Milos.Data.SqlServer", "Milos.Data.SqlServer\Milos.Data.SqlServer.csproj", "{DB1C831E-6248-4F83-A4F0-46F7FE0175BB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Milos.Data.SqlServer", "Milos.Data.SqlServer\Milos.Data.SqlServer.csproj", "{DB1C831E-6248-4F83-A4F0-46F7FE0175BB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Milos.Core", "Milos.Core\Milos.Core.csproj", "{F4744D17-242B-4D64-83CC-F3D220829F7D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Milos.Core", "Milos.Core\Milos.Core.csproj", "{F4744D17-242B-4D64-83CC-F3D220829F7D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Milos.BusinessObjects", "Milos.BusinessObjects\Milos.BusinessObjects.csproj", "{10F99A01-9114-4301-A316-BC78618FB9DA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Milos.BusinessObjects", "Milos.BusinessObjects\Milos.BusinessObjects.csproj", "{10F99A01-9114-4301-A316-BC78618FB9DA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Milos.Business.DocumentManagement", "Milos.Business.DocumentManagement\Milos.Business.DocumentManagement.csproj", "{EC7F8E38-FF49-4CA4-BAC0-11BF34E80558}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{10F99A01-9114-4301-A316-BC78618FB9DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{10F99A01-9114-4301-A316-BC78618FB9DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{10F99A01-9114-4301-A316-BC78618FB9DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC7F8E38-FF49-4CA4-BAC0-11BF34E80558}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC7F8E38-FF49-4CA4-BAC0-11BF34E80558}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC7F8E38-FF49-4CA4-BAC0-11BF34E80558}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC7F8E38-FF49-4CA4-BAC0-11BF34E80558}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
