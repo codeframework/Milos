@@ -1,0 +1,66 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Services.Contracts\\Milos.Services.Contracts.csproj": {}
+  },
+  "projects": {
+    "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Services.Contracts\\Milos.Services.Contracts.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Services.Contracts\\Milos.Services.Contracts.csproj",
+        "projectName": "Milos.Services.Contracts",
+        "projectPath": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Services.Contracts\\Milos.Services.Contracts.csproj",
+        "packagesPath": "C:\\Users\\megge\\.nuget\\packages\\",
+        "outputPath": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Services.Contracts\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\ProgramData\\Xamarin\\NuGet\\",
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\megge\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.0": {
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netstandard2.0": {
+          "dependencies": {
+            "NETStandard.Library": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2.0.3, )",
+              "autoReferenced": true
+            },
+            "System.ServiceModel.Primitives": {
+              "target": "Package",
+              "version": "[4.5.3, )"
+            }
+          },
+          "imports": [
+            "net461"
+          ],
+          "assetTargetFallback": true,
+          "warn": true
+        }
+      }
+    }
+  }
+}

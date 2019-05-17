@@ -11,7 +11,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Milos.Core", "Milos.Core\Mi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Milos.BusinessObjects", "Milos.BusinessObjects\Milos.BusinessObjects.csproj", "{10F99A01-9114-4301-A316-BC78618FB9DA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Milos.Business.DocumentManagement", "Milos.Business.DocumentManagement\Milos.Business.DocumentManagement.csproj", "{EC7F8E38-FF49-4CA4-BAC0-11BF34E80558}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Milos.Business.DocumentManagement", "Milos.Business.DocumentManagement\Milos.Business.DocumentManagement.csproj", "{EC7F8E38-FF49-4CA4-BAC0-11BF34E80558}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Milos.Business.Financial", "Milos.Business.Financial\Milos.Business.Financial.csproj", "{C5EC343B-679F-4C54-9E9F-15C37AB62794}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Milos.Services.Contracts", "Milos.Services.Contracts\Milos.Services.Contracts.csproj", "{850DF609-8931-4D56-865D-A9411FA6C3F6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +43,14 @@ Global
 		{EC7F8E38-FF49-4CA4-BAC0-11BF34E80558}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EC7F8E38-FF49-4CA4-BAC0-11BF34E80558}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EC7F8E38-FF49-4CA4-BAC0-11BF34E80558}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5EC343B-679F-4C54-9E9F-15C37AB62794}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5EC343B-679F-4C54-9E9F-15C37AB62794}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5EC343B-679F-4C54-9E9F-15C37AB62794}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5EC343B-679F-4C54-9E9F-15C37AB62794}.Release|Any CPU.Build.0 = Release|Any CPU
+		{850DF609-8931-4D56-865D-A9411FA6C3F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{850DF609-8931-4D56-865D-A9411FA6C3F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{850DF609-8931-4D56-865D-A9411FA6C3F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{850DF609-8931-4D56-865D-A9411FA6C3F6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
