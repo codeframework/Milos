@@ -39,7 +39,7 @@ namespace Milos.BusinessObjects
         string PrimaryKeyField { get; set; }
 
         /// <summary>
-        /// Sets the datarow this entity represents
+        /// Sets the DataRow this entity represents
         /// </summary>
         /// <param name="currentRow">Row object</param>
         void SetCurrentRow(DataRow currentRow);

@@ -10,7 +10,6 @@ C:\Projects\MilosSolutionPlatform\Core\MilosSolutionPlatform\Milos.Core\obj\Rele
 C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Core\bin\Release\netstandard2.0\Milos.Core.deps.json
 C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Core\bin\Release\netstandard2.0\Milos.Core.dll
 C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Core\bin\Release\netstandard2.0\Milos.Core.pdb
-C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Core\obj\Release\netstandard2.0\Milos.Core.csprojAssemblyReference.cache
 C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Core\obj\Release\netstandard2.0\Milos.Core.csproj.CoreCompileInputs.cache
 C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Core\obj\Release\netstandard2.0\Milos.Core.AssemblyInfoInputs.cache
 C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Core\obj\Release\netstandard2.0\Milos.Core.AssemblyInfo.cs

@@ -143,12 +143,12 @@
           }
         }
       },
-      "Milos.BusinessObjects/5.0.0-preview1-190514.1": {
+      "Milos.BusinessObjects/5.0.0-preview1-190517.0": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
-          "Milos.Core": "5.0.0-preview1-190514.1",
-          "Milos.Data": "5.0.0-preview1-190514.1"
+          "Milos.Core": "5.0.0-preview1-190517.0",
+          "Milos.Data": "5.0.0-preview1-190517.0"
         },
         "compile": {
           "bin/placeholder/Milos.BusinessObjects.dll": {}
@@ -157,7 +157,7 @@
           "bin/placeholder/Milos.BusinessObjects.dll": {}
         }
       },
-      "Milos.Core/5.0.0-preview1-190514.1": {
+      "Milos.Core/5.0.0-preview1-190517.0": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
@@ -170,11 +170,11 @@
           "bin/placeholder/Milos.Core.dll": {}
         }
       },
-      "Milos.Data/5.0.0-preview1-190514.1": {
+      "Milos.Data/5.0.0-preview1-190517.0": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
-          "Milos.Core": "5.0.0-preview1-190514.1",
+          "Milos.Core": "5.0.0-preview1-190517.0",
           "System.Configuration.ConfigurationManager": "4.5.0"
         },
         "compile": {
@@ -632,17 +632,17 @@
         "version.txt"
       ]
     },
-    "Milos.BusinessObjects/5.0.0-preview1-190514.1": {
+    "Milos.BusinessObjects/5.0.0-preview1-190517.0": {
       "type": "project",
       "path": "../Milos.BusinessObjects/Milos.BusinessObjects.csproj",
       "msbuildProject": "../Milos.BusinessObjects/Milos.BusinessObjects.csproj"
     },
-    "Milos.Core/5.0.0-preview1-190514.1": {
+    "Milos.Core/5.0.0-preview1-190517.0": {
       "type": "project",
       "path": "../Milos.Core/Milos.Core.csproj",
       "msbuildProject": "../Milos.Core/Milos.Core.csproj"
     },
-    "Milos.Data/5.0.0-preview1-190514.1": {
+    "Milos.Data/5.0.0-preview1-190517.0": {
       "type": "project",
       "path": "../Milos.Data/Milos.Data.csproj",
       "msbuildProject": "../Milos.Data/Milos.Data.csproj"
@@ -650,7 +650,7 @@
   },
   "projectFileDependencyGroups": {
     ".NETStandard,Version=v2.0": [
-      "Milos.BusinessObjects >= 5.0.0-preview1-190514.1",
+      "Milos.BusinessObjects >= 5.0.0-preview1-190517.0",
       "NETStandard.Library >= 2.0.3"
     ]
   },
@@ -660,7 +660,7 @@
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
-    "version": "5.0.0-preview1-190515.0",
+    "version": "5.0.0-preview1-190517.0",
     "restore": {
       "projectUniqueName": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Business.DocumentManagement\\Milos.Business.DocumentManagement.csproj",
       "projectName": "Milos.Business.DocumentManagement",

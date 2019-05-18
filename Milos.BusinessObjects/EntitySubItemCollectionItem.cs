@@ -210,23 +210,23 @@ namespace Milos.BusinessObjects
                     switch (collection.PrimaryKeyType)
                     {
                         case KeyType.Guid:
-                            return ((Guid) GetFieldValue(PrimaryKeyField)).ToString();
+                            return ReadFieldValue<Guid>(PrimaryKeyField).ToString();
                         case KeyType.Integer:
                         case KeyType.IntegerAutoIncrement:
-                            return ((int) GetFieldValue(PrimaryKeyField)).ToString();
+                            return ReadFieldValue<int>(PrimaryKeyField).ToString();
                         case KeyType.String:
-                            return GetFieldValue(PrimaryKeyField).ToString();
+                            return ReadFieldValue<string>(PrimaryKeyField);
                     }
                 else
                     switch (ParentCollection.ParentEntity.PrimaryKeyType)
                     {
                         case KeyType.Guid:
-                            return ((Guid) GetFieldValue(PrimaryKeyField)).ToString();
+                            return ReadFieldValue<Guid>(PrimaryKeyField).ToString();
                         case KeyType.Integer:
                         case KeyType.IntegerAutoIncrement:
-                            return ((int) GetFieldValue(PrimaryKeyField)).ToString();
+                            return ReadFieldValue<int>(PrimaryKeyField).ToString();
                         case KeyType.String:
-                            return GetFieldValue(PrimaryKeyField).ToString();
+                            return ReadFieldValue<string>(PrimaryKeyField);
                     }
 
                 return string.Empty;
@@ -281,10 +281,7 @@ namespace Milos.BusinessObjects
         /// <returns>
         /// A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
         /// </returns>
-        public override string ToString()
-        {
-            return Id;
-        }
+        public override string ToString() => Id;
 
         /// <summary>
         /// Sets the value of a field in the database
@@ -543,10 +540,7 @@ namespace Milos.BusinessObjects
         /// <returns>Value object</returns>
         /// <example>GetFieldValue("CustomerStatus", "ExtendedCustomerInformationTable", "cust_id = 'x'");</example>
         /// <remarks>May throw ArgumentException and RowNotInTableException.</remarks>
-        protected virtual object GetFieldValue(string fieldName, string tableName, string searchExpression)
-        {
-            return GetFieldValue(fieldName, false, tableName, searchExpression);
-        }
+        protected virtual object GetFieldValue(string fieldName, string tableName, string searchExpression) => GetFieldValue(fieldName, false, tableName, searchExpression);
 
         /// <summary>
         /// Returns the value from a field in a row of the specified table.
@@ -563,10 +557,7 @@ namespace Milos.BusinessObjects
         /// <returns>Value object</returns>
         /// <example>GetFieldValue("CustomerStatus", "ExtendedCustomerInformationTable", "cust_id = 'x'");</example>
         /// <remarks>May throw ArgumentException and RowNotInTableException.</remarks>
-        protected virtual TField GetFieldValue<TField>(string fieldName, string tableName, string searchExpression)
-        {
-            return ReadFieldValue<TField>(fieldName, false, tableName, searchExpression);
-        }
+        protected virtual TField GetFieldValue<TField>(string fieldName, string tableName, string searchExpression) => ReadFieldValue<TField>(fieldName, false, tableName, searchExpression);
 
         /// <summary>
         /// Returns the value from a field in a row of the specified table.
@@ -659,10 +650,7 @@ namespace Milos.BusinessObjects
         /// </summary>
         /// <param name="fieldName">Field Name</param>
         /// <returns>True (if the column existed or has been added successfully) or False</returns>
-        protected virtual bool CheckColumn(string fieldName)
-        {
-            return CheckColumn(fieldName, CurrentRow.Table);
-        }
+        protected virtual bool CheckColumn(string fieldName) => CheckColumn(fieldName, CurrentRow.Table);
 
         /// <summary>
         /// This method can be used to make sure the default table in the internal DataSet has all the required fields.
@@ -671,10 +659,7 @@ namespace Milos.BusinessObjects
         /// <param name="fieldName">Field name to check for.</param>
         /// <param name="tableToCheck">Table that is supposed to have this column.</param>
         /// <returns>true or false</returns>
-        protected virtual bool CheckColumn(string fieldName, DataTable tableToCheck)
-        {
-            return BusinessEntityHelper.CheckColumn(tableToCheck, fieldName);
-        }
+        protected virtual bool CheckColumn(string fieldName, DataTable tableToCheck) => BusinessEntityHelper.CheckColumn(tableToCheck, fieldName);
 
         /// <summary>
         /// Checks whether two field values are the same or not
@@ -682,18 +667,12 @@ namespace Milos.BusinessObjects
         /// <param name="value1">First value</param>
         /// <param name="value2">Second value</param>
         /// <returns>True of they are different, false if they are the same</returns>
-        protected virtual bool ValuesDiffer(object value1, object value2)
-        {
-            return ObjectHelper.ValuesDiffer(value1, value2);
-        }
+        protected virtual bool ValuesDiffer(object value1, object value2) => ObjectHelper.ValuesDiffer(value1, value2);
 
         /// <summary>
         /// Sets the parent collection for this item.
         /// </summary>
         /// <param name="parentCollection">The parent collection.</param>
-        public void SetParentCollection(IEntitySubItemCollection parentCollection)
-        {
-            ParentCollection = parentCollection;
-        }
+        public void SetParentCollection(IEntitySubItemCollection parentCollection) => ParentCollection = parentCollection;
     }
 }

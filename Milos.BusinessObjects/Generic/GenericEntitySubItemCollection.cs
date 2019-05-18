@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 
 namespace Milos.BusinessObjects.Generic
@@ -99,6 +100,12 @@ namespace Milos.BusinessObjects.Generic
         {
             // Nothing to do here, since we use the constructor to configure the object.
             // But if they wanted, people can still override this method in subclasses.
+        }
+
+        public new IEnumerator<TItem> GetEnumerator()
+        {
+            for (var count = 0; count < Count; count++)
+                yield return this[count];
         }
     }
 }

@@ -14,7 +14,7 @@
     <copyright>EPS Software Corp.</copyright>
     <dependencies>
       <group targetFramework=".NETStandard2.0">
-        <dependency id="Milos.BusinessObjects" version="5.0.0-preview1-190514.1" exclude="Build,Analyzers" />
+        <dependency id="Milos.Business.Names" version="5.0.0-preview1-190515.0" exclude="Build,Analyzers" />
       </group>
     </dependencies>
   </metadata>

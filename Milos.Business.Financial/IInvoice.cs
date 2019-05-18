@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
+using Milos.Business.Names;
 using Milos.BusinessObjects;
+using Milos.BusinessObjects.Generic;
 
-namespace Milos.Business.DocumentManagement
+namespace Milos.Business.Financial
 {
     /// <summary>
     /// Invoice Interface
@@ -16,7 +19,7 @@ namespace Milos.Business.DocumentManagement
         /// <summary>
         /// Address entity linked to this invoice
         /// </summary>
-        AddressEntity Address { get; }
+        AddressBusinessEntity Address { get; }
         /// <summary>
         /// Address FK linked to this invoice
         /// </summary>
@@ -127,21 +130,12 @@ namespace Milos.Business.DocumentManagement
     /// <summary>
     /// Basic interface for a line item collection
     /// </summary>
-    public interface ILineItemCollection : IEntitySubItemCollection 
+    public interface ILineItemCollection : IGenericEntitySubItemCollection<ILineItem>
     {
         /// <summary>
         /// Should line number integrity be maintained?
         /// </summary>
         bool MaintainLineNumberIntegrity { get; set; }
-        /// <summary>
-        /// Strongly typed indexer (returns a specific line item instance)
-        /// </summary>
-        new ILineItem this[int index] { get; }
-        /// <summary>
-        /// Strongly typed Add() method
-        /// </summary>
-        /// <returns>New line item instance</returns>
-        new ILineItem Add();
 		/// <summary>
 		/// Inserts a new line right after a given line.
 		/// </summary>
@@ -171,7 +165,7 @@ namespace Milos.Business.DocumentManagement
         /// line item scenario
         /// </summary>
         /// <returns>Array of line items</returns>
-        ILineItem[] GetChildLineItems();
+        List<ILineItem> GetChildLineItems();
         /// <summary>
         /// Item description
         /// </summary>

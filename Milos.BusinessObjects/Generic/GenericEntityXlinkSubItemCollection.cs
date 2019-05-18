@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 
 namespace Milos.BusinessObjects.Generic
@@ -246,5 +247,11 @@ namespace Milos.BusinessObjects.Generic
         /// </summary>
         /// <returns>Entity Sub Item Collection Item</returns>
         protected new virtual TItem AddNewRow() => (TItem) base.AddNewRow();
+
+        public new IEnumerator<TItem> GetEnumerator()
+        {
+            for (var count = 0; count < Count; count++)
+                yield return this[count];
+        }
     }
 }

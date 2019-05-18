@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>5.0.0-preview1-190514.1</Version>
+    <Version>5.0.0-preview1-190517.0</Version>
     <Company>EPS Software Corp.</Company>
     <Product>CODE Framework: Milos Solution Platform</Product>
     <Copyright>EPS Software Corp.</Copyright>

@@ -78,9 +78,7 @@ namespace Milos.Business.DocumentManagement
         {
             using (var command = NewDbCommand())
             {
-                command.CommandText = "SELECT FileAttachments.PK_FileAttachments FROM FileAttachmentAssignments INNER JOIN " +
-                                      "  FileAttachments ON FileAttachmentAssignments.fk_fileattachments = FileAttachments.PK_FileAttachments " +
-                                      "WHERE (FileAttachmentAssignments.FK_LinkedToObject = @Object) ";
+                command.CommandText = "SELECT FileAttachments.PK_FileAttachments FROM FileAttachmentAssignments INNER JOIN FileAttachments ON FileAttachmentAssignments.fk_fileattachments = FileAttachments.PK_FileAttachments WHERE (FileAttachmentAssignments.FK_LinkedToObject = @Object) ";
                 AddDbCommandParameter(command, "@Object", linkedObjectId);
 
                 try
@@ -105,8 +103,7 @@ namespace Milos.Business.DocumentManagement
         {
             using (var command = NewDbCommand())
             {
-                command.CommandText = "SELECT TOP 1 FA.PK_FileAttachments FROM FileAttachments FA JOIN FileAttachmentAssignments FAA ON FA.PK_FileAttachments = FAA.FK_FileAttachments " +
-                                      "WHERE FAA.FK_LinkedToObject = @ObjectID AND FA.cCategory = @Category ";
+                command.CommandText = "SELECT TOP 1 FA.PK_FileAttachments FROM FileAttachments FA JOIN FileAttachmentAssignments FAA ON FA.PK_FileAttachments = FAA.FK_FileAttachments WHERE FAA.FK_LinkedToObject = @ObjectID AND FA.cCategory = @Category ";
                 AddDbCommandParameter(command, "@ObjectID", linkedObjectId);
                 AddDbCommandParameter(command, "@Category", category.Trim());
                 try
@@ -129,11 +126,10 @@ namespace Milos.Business.DocumentManagement
         {
             using (var command = NewDbCommand())
             {
-                command.CommandText =
-                    "SELECT DISTINCT FA.PK_FileAttachments, FA.cTitle, FA.cFileName, FA.cType, SUBSTRING(FA.cDescription, 1, 50) AS cDescription," + "FA.dFileDate, FA.dAttachDate, FA.cCategory, FA.cSubCategory, NULL AS bPreviewThumbnail, FA.iSize " +
-                    "FROM FileAttachments FA " +
-                    "JOIN FileAttachmentAssignments FAA ON FA.PK_FileAttachments = FAA.fk_FileAttachments " +
-                    "WHERE FAA.FK_LinkedToObject = @ObjectID ";
+                command.CommandText = "SELECT DISTINCT FA.PK_FileAttachments, FA.cTitle, FA.cFileName, FA.cType, SUBSTRING(FA.cDescription, 1, 50) AS cDescription," + "FA.dFileDate, FA.dAttachDate, FA.cCategory, FA.cSubCategory, NULL AS bPreviewThumbnail, FA.iSize " +
+                                      "FROM FileAttachments FA " +
+                                      "JOIN FileAttachmentAssignments FAA ON FA.PK_FileAttachments = FAA.fk_FileAttachments " +
+                                      "WHERE FAA.FK_LinkedToObject = @ObjectID ";
                 AddDbCommandParameter(command, "@ObjectID", linkedObjectId);
                 DataSet attachments;
                 // We may get duplicate PKs
@@ -160,13 +156,12 @@ namespace Milos.Business.DocumentManagement
         {
             using (var command = NewDbCommand())
             {
-                command.CommandText =
-                    "SELECT FA.PK_FileAttachments, FA.cTitle, FA.cFileName, FA.cType, FA.cDescription, FA.dFileDate, " +
-                    "FA.dAttachDate, FA.cCategory, FA.cSubCategory, FA.bPreviewThumbnail, FA.iSize " +
-                    "FROM FileAttachments FA " +
-                    "JOIN FileAttachmentAssignments FAA ON FA.PK_FileAttachments = FAA.fk_FileAttachments " +
-                    "WHERE FAA.FK_LinkedToObject = @ObjectID " +
-                    "AND FA.cCategory LIKE @Category ";
+                command.CommandText = "SELECT FA.PK_FileAttachments, FA.cTitle, FA.cFileName, FA.cType, FA.cDescription, FA.dFileDate, " +
+                                      "FA.dAttachDate, FA.cCategory, FA.cSubCategory, FA.bPreviewThumbnail, FA.iSize " +
+                                      "FROM FileAttachments FA " +
+                                      "JOIN FileAttachmentAssignments FAA ON FA.PK_FileAttachments = FAA.fk_FileAttachments " +
+                                      "WHERE FAA.FK_LinkedToObject = @ObjectID " +
+                                      "AND FA.cCategory LIKE @Category ";
                 AddDbCommandParameter(command, "@ObjectID", linkedObjectId);
                 AddDbCommandParameter(command, "@Category", category.Trim() + "%");
                 return ExecuteQuery(command, "Attachments");
@@ -184,14 +179,13 @@ namespace Milos.Business.DocumentManagement
         {
             using (var command = NewDbCommand())
             {
-                command.CommandText =
-                    "SELECT FA.PK_FileAttachments, FA.cTitle, FA.cFileName, FA.cType, FA.cDescription, FA.dFileDate, " +
-                    "FA.dAttachDate, FA.cCategory, FA.cSubCategory, FA.bPreviewThumbnail, FA.iSize " +
-                    "FROM FileAttachments FA " +
-                    "JOIN FileAttachmentAssignments FAA ON FA.PK_FileAttachments = FAA.fk_FileAttachments " +
-                    "WHERE FAA.FK_LinkedToObject = @ObjectID " +
-                    "AND FA.cCategory LIKE @Category " +
-                    "AND FA.cSubCategory LIKE @SubCategory ";
+                command.CommandText = "SELECT FA.PK_FileAttachments, FA.cTitle, FA.cFileName, FA.cType, FA.cDescription, FA.dFileDate, " +
+                                      "FA.dAttachDate, FA.cCategory, FA.cSubCategory, FA.bPreviewThumbnail, FA.iSize " +
+                                      "FROM FileAttachments FA " +
+                                      "JOIN FileAttachmentAssignments FAA ON FA.PK_FileAttachments = FAA.fk_FileAttachments " +
+                                      "WHERE FAA.FK_LinkedToObject = @ObjectID " +
+                                      "AND FA.cCategory LIKE @Category " +
+                                      "AND FA.cSubCategory LIKE @SubCategory ";
                 AddDbCommandParameter(command, "@ObjectID", linkedObjectId);
                 AddDbCommandParameter(command, "@Category", category.Trim() + "%");
                 AddDbCommandParameter(command, "@SubCategory", subCategory.Trim() + "%");
@@ -290,9 +284,7 @@ namespace Milos.Business.DocumentManagement
         {
             using (var cmd = NewDbCommand())
             {
-                cmd.CommandText =
-                    "SELECT PK_FileAttachmentAssignments FROM FileAttachmentAssignments " +
-                    " WHERE FK_FileAttachments = @AttachmentId AND FK_LinkedToObject = @linkedObjectId ";
+                cmd.CommandText = "SELECT PK_FileAttachmentAssignments FROM FileAttachmentAssignments WHERE FK_FileAttachments = @AttachmentId AND FK_LinkedToObject = @linkedObjectId ";
                 AddDbCommandParameter(cmd, "@attachmentId", attachmentId);
                 AddDbCommandParameter(cmd, "@linkedObjectId", linkedObjectId);
                 using (var dsAttachments = ExecuteQuery(cmd, "Attachments"))

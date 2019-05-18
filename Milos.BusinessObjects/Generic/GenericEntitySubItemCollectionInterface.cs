@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 
@@ -8,7 +10,7 @@ namespace Milos.BusinessObjects.Generic
     ///     This interface defines the most fundamental IEntitySubItemCollection interface
     /// </summary>
     /// <typeparam name="TItem">The type of the item stored in the collection.</typeparam>
-    public interface IGenericEntitySubItemCollection<out TItem> : IBindingList where TItem : IEntitySubItemCollectionItem
+    public interface IGenericEntitySubItemCollection<out TItem> : IBindingList, IEnumerable<TItem> where TItem : IEntitySubItemCollectionItem
     {
         /// <summary>
         ///     Reference to the parent entity object

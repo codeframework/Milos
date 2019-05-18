@@ -5,7 +5,7 @@
   },
   "projects": {
     "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Business.DocumentManagement\\Milos.Business.DocumentManagement.csproj": {
-      "version": "5.0.0-preview1-190515.0",
+      "version": "5.0.0-preview1-190517.0",
       "restore": {
         "projectUniqueName": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Business.DocumentManagement\\Milos.Business.DocumentManagement.csproj",
         "projectName": "Milos.Business.DocumentManagement",
@@ -63,7 +63,7 @@
       }
     },
     "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.BusinessObjects\\Milos.BusinessObjects.csproj": {
-      "version": "5.0.0-preview1-190514.1",
+      "version": "5.0.0-preview1-190517.0",
       "restore": {
         "projectUniqueName": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.BusinessObjects\\Milos.BusinessObjects.csproj",
         "projectName": "Milos.BusinessObjects",
@@ -124,7 +124,7 @@
       }
     },
     "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Core\\Milos.Core.csproj": {
-      "version": "5.0.0-preview1-190514.1",
+      "version": "5.0.0-preview1-190517.0",
       "restore": {
         "projectUniqueName": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Core\\Milos.Core.csproj",
         "projectName": "Milos.Core",
@@ -182,7 +182,7 @@
       }
     },
     "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Data\\Milos.Data.csproj": {
-      "version": "5.0.0-preview1-190514.1",
+      "version": "5.0.0-preview1-190517.0",
       "restore": {
         "projectUniqueName": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Data\\Milos.Data.csproj",
         "projectName": "Milos.Data",

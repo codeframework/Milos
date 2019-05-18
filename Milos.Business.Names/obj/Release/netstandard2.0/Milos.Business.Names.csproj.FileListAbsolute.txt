@@ -1,0 +1,16 @@
+C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Business.Names\bin\Release\netstandard2.0\Milos.Business.Names.deps.json
+C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Business.Names\bin\Release\netstandard2.0\Milos.Business.Names.dll
+C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Business.Names\bin\Release\netstandard2.0\Milos.Business.Names.pdb
+C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Business.Names\bin\Release\netstandard2.0\Milos.BusinessObjects.dll
+C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Business.Names\bin\Release\netstandard2.0\Milos.Core.dll
+C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Business.Names\bin\Release\netstandard2.0\Milos.Data.dll
+C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Business.Names\bin\Release\netstandard2.0\Milos.BusinessObjects.pdb
+C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Business.Names\bin\Release\netstandard2.0\Milos.Core.pdb
+C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Business.Names\bin\Release\netstandard2.0\Milos.Data.pdb
+C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Business.Names\obj\Release\netstandard2.0\Milos.Business.Names.csprojAssemblyReference.cache
+C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Business.Names\obj\Release\netstandard2.0\Milos.Business.Names.csproj.CoreCompileInputs.cache
+C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Business.Names\obj\Release\netstandard2.0\Milos.Business.Names.AssemblyInfoInputs.cache
+C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Business.Names\obj\Release\netstandard2.0\Milos.Business.Names.AssemblyInfo.cs
+C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Business.Names\obj\Release\netstandard2.0\Milos.Business.Names.csproj.CopyComplete
+C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Business.Names\obj\Release\netstandard2.0\Milos.Business.Names.dll
+C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Business.Names\obj\Release\netstandard2.0\Milos.Business.Names.pdb
