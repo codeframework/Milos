@@ -413,7 +413,7 @@
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
-    "version": "5.0.0-preview1-190517.0",
+    "version": "5.0.0-preview1-190519.0",
     "restore": {
       "projectUniqueName": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Services.Contracts\\Milos.Services.Contracts.csproj",
       "projectName": "Milos.Services.Contracts",
