@@ -409,11 +409,11 @@
   },
   "packageFolders": {
     "C:\\Users\\megge\\.nuget\\packages\\": {},
-    "C:\\ProgramData\\Xamarin\\NuGet\\": {},
+    "C:\\Microsoft\\Xamarin\\NuGet\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
-    "version": "5.0.0-preview1-190519.0",
+    "version": "5.0.0-preview1-190615.0",
     "restore": {
       "projectUniqueName": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Services.Contracts\\Milos.Services.Contracts.csproj",
       "projectName": "Milos.Services.Contracts",
@@ -422,7 +422,7 @@
       "outputPath": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Services.Contracts\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\ProgramData\\Xamarin\\NuGet\\",
+        "C:\\Microsoft\\Xamarin\\NuGet\\",
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [

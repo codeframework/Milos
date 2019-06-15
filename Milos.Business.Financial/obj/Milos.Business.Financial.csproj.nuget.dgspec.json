@@ -5,7 +5,7 @@
   },
   "projects": {
     "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Business.Financial\\Milos.Business.Financial.csproj": {
-      "version": "5.0.0-preview1-190519.0",
+      "version": "5.0.0-preview1-190615.0",
       "restore": {
         "projectUniqueName": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Business.Financial\\Milos.Business.Financial.csproj",
         "projectName": "Milos.Business.Financial",
@@ -14,7 +14,7 @@
         "outputPath": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Business.Financial\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\ProgramData\\Xamarin\\NuGet\\",
+          "C:\\Microsoft\\Xamarin\\NuGet\\",
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
@@ -63,7 +63,7 @@
       }
     },
     "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Business.Names\\Milos.Business.Names.csproj": {
-      "version": "5.0.0-preview1-190519.0",
+      "version": "5.0.0-preview1-190615.0",
       "restore": {
         "projectUniqueName": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Business.Names\\Milos.Business.Names.csproj",
         "projectName": "Milos.Business.Names",
@@ -72,7 +72,7 @@
         "outputPath": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Business.Names\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\ProgramData\\Xamarin\\NuGet\\",
+          "C:\\Microsoft\\Xamarin\\NuGet\\",
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
@@ -121,7 +121,7 @@
       }
     },
     "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.BusinessObjects\\Milos.BusinessObjects.csproj": {
-      "version": "5.0.0-preview1-190519.0",
+      "version": "5.0.0-preview1-190615.0",
       "restore": {
         "projectUniqueName": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.BusinessObjects\\Milos.BusinessObjects.csproj",
         "projectName": "Milos.BusinessObjects",
@@ -130,7 +130,7 @@
         "outputPath": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.BusinessObjects\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\ProgramData\\Xamarin\\NuGet\\",
+          "C:\\Microsoft\\Xamarin\\NuGet\\",
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
@@ -182,7 +182,7 @@
       }
     },
     "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Core\\Milos.Core.csproj": {
-      "version": "5.0.0-preview1-190519.0",
+      "version": "5.0.0-preview1-190615.0",
       "restore": {
         "projectUniqueName": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Core\\Milos.Core.csproj",
         "projectName": "Milos.Core",
@@ -191,7 +191,7 @@
         "outputPath": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Core\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\ProgramData\\Xamarin\\NuGet\\",
+          "C:\\Microsoft\\Xamarin\\NuGet\\",
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
@@ -240,7 +240,7 @@
       }
     },
     "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Data\\Milos.Data.csproj": {
-      "version": "5.0.0-preview1-190519.0",
+      "version": "5.0.0-preview1-190615.0",
       "restore": {
         "projectUniqueName": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Data\\Milos.Data.csproj",
         "projectName": "Milos.Data",
@@ -249,7 +249,7 @@
         "outputPath": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Data\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\ProgramData\\Xamarin\\NuGet\\",
+          "C:\\Microsoft\\Xamarin\\NuGet\\",
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [

@@ -143,7 +143,7 @@
           }
         }
       },
-      "Milos.Core/5.0.0-preview1-190519.0": {
+      "Milos.Core/5.0.0-preview1-190615.0": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
@@ -604,7 +604,7 @@
         "version.txt"
       ]
     },
-    "Milos.Core/5.0.0-preview1-190519.0": {
+    "Milos.Core/5.0.0-preview1-190615.0": {
       "type": "project",
       "path": "../Milos.Core/Milos.Core.csproj",
       "msbuildProject": "../Milos.Core/Milos.Core.csproj"
@@ -612,18 +612,18 @@
   },
   "projectFileDependencyGroups": {
     ".NETStandard,Version=v2.0": [
-      "Milos.Core >= 5.0.0-preview1-190519.0",
+      "Milos.Core >= 5.0.0-preview1-190615.0",
       "NETStandard.Library >= 2.0.3",
       "System.Configuration.ConfigurationManager >= 4.5.0"
     ]
   },
   "packageFolders": {
     "C:\\Users\\megge\\.nuget\\packages\\": {},
-    "C:\\ProgramData\\Xamarin\\NuGet\\": {},
+    "C:\\Microsoft\\Xamarin\\NuGet\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
-    "version": "5.0.0-preview1-190519.0",
+    "version": "5.0.0-preview1-190615.0",
     "restore": {
       "projectUniqueName": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Data\\Milos.Data.csproj",
       "projectName": "Milos.Data",
@@ -632,7 +632,7 @@
       "outputPath": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Data\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\ProgramData\\Xamarin\\NuGet\\",
+        "C:\\Microsoft\\Xamarin\\NuGet\\",
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [

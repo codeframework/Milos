@@ -180,7 +180,7 @@ namespace Milos.Data
                 {
                     // Nope, no good. We can get rid of this one, and we also log the problem in our list
                     if (!string.IsNullOrEmpty(_instantiationProblemList)) _instantiationProblemList += "\r\n";
-                    _instantiationProblemList += "Service @serviceName (@dataConfigurationPrefix) failed to instantiate. Reason: Service reported invalid status. More info: @service.InvalidStatus";
+                    _instantiationProblemList += $"Service {serviceName} ({dataConfigurationPrefix}) failed to instantiate. Reason: Service reported invalid status. More info: {service.InvalidStatus}";
                     service?.Dispose();
                     service = null;
                 }
@@ -189,7 +189,7 @@ namespace Milos.Data
             {
                 // Nothing to do (other than record the problem). We keep going.
                 if (!string.IsNullOrEmpty(_instantiationProblemList)) _instantiationProblemList += "\r\n";
-                _instantiationProblemList += "Service @serviceName (@dataConfigurationPrefix) failed to instantiate. Reason: Service reported invalid status. More info: @ex.Message";
+                _instantiationProblemList += $"Service {serviceIdentifier} ({dataConfigurationPrefix}) failed to instantiate. Reason: Service reported invalid status. More info: {ex.Message}";
                 LastError = ex.Message;
                 throw;
             }

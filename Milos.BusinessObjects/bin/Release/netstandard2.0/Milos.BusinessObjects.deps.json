@@ -7,10 +7,10 @@
   "targets": {
     ".NETStandard,Version=v2.0": {},
     ".NETStandard,Version=v2.0/": {
-      "Milos.BusinessObjects/5.0.0-preview1-190519.0": {
+      "Milos.BusinessObjects/5.0.0-preview1-190615.0": {
         "dependencies": {
-          "Milos.Core": "5.0.0-preview1-190519.0",
-          "Milos.Data": "5.0.0-preview1-190519.0",
+          "Milos.Core": "5.0.0-preview1-190615.0",
+          "Milos.Data": "5.0.0-preview1-190615.0",
           "NETStandard.Library": "2.0.3"
         },
         "runtime": {
@@ -113,7 +113,7 @@
           }
         }
       },
-      "Milos.Core/5.0.0-preview1-190519.0": {
+      "Milos.Core/5.0.0-preview1-190615.0": {
         "dependencies": {
           "System.Configuration.ConfigurationManager": "4.5.0"
         },
@@ -121,9 +121,9 @@
           "Milos.Core.dll": {}
         }
       },
-      "Milos.Data/5.0.0-preview1-190519.0": {
+      "Milos.Data/5.0.0-preview1-190615.0": {
         "dependencies": {
-          "Milos.Core": "5.0.0-preview1-190519.0",
+          "Milos.Core": "5.0.0-preview1-190615.0",
           "System.Configuration.ConfigurationManager": "4.5.0"
         },
         "runtime": {
@@ -133,7 +133,7 @@
     }
   },
   "libraries": {
-    "Milos.BusinessObjects/5.0.0-preview1-190519.0": {
+    "Milos.BusinessObjects/5.0.0-preview1-190615.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
@@ -215,12 +215,12 @@
       "path": "system.security.principal.windows/4.5.0",
       "hashPath": "system.security.principal.windows.4.5.0.nupkg.sha512"
     },
-    "Milos.Core/5.0.0-preview1-190519.0": {
+    "Milos.Core/5.0.0-preview1-190615.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Milos.Data/5.0.0-preview1-190519.0": {
+    "Milos.Data/5.0.0-preview1-190615.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

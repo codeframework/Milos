@@ -143,11 +143,11 @@
           }
         }
       },
-      "Milos.Business.Names/5.0.0-preview1-190519.0": {
+      "Milos.Business.Names/5.0.0-preview1-190615.0": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
-          "Milos.BusinessObjects": "5.0.0-preview1-190519.0"
+          "Milos.BusinessObjects": "5.0.0-preview1-190615.0"
         },
         "compile": {
           "bin/placeholder/Milos.Business.Names.dll": {}
@@ -156,12 +156,12 @@
           "bin/placeholder/Milos.Business.Names.dll": {}
         }
       },
-      "Milos.BusinessObjects/5.0.0-preview1-190519.0": {
+      "Milos.BusinessObjects/5.0.0-preview1-190615.0": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
-          "Milos.Core": "5.0.0-preview1-190519.0",
-          "Milos.Data": "5.0.0-preview1-190519.0"
+          "Milos.Core": "5.0.0-preview1-190615.0",
+          "Milos.Data": "5.0.0-preview1-190615.0"
         },
         "compile": {
           "bin/placeholder/Milos.BusinessObjects.dll": {}
@@ -170,7 +170,7 @@
           "bin/placeholder/Milos.BusinessObjects.dll": {}
         }
       },
-      "Milos.Core/5.0.0-preview1-190519.0": {
+      "Milos.Core/5.0.0-preview1-190615.0": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
@@ -183,11 +183,11 @@
           "bin/placeholder/Milos.Core.dll": {}
         }
       },
-      "Milos.Data/5.0.0-preview1-190519.0": {
+      "Milos.Data/5.0.0-preview1-190615.0": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
-          "Milos.Core": "5.0.0-preview1-190519.0",
+          "Milos.Core": "5.0.0-preview1-190615.0",
           "System.Configuration.ConfigurationManager": "4.5.0"
         },
         "compile": {
@@ -645,22 +645,22 @@
         "version.txt"
       ]
     },
-    "Milos.Business.Names/5.0.0-preview1-190519.0": {
+    "Milos.Business.Names/5.0.0-preview1-190615.0": {
       "type": "project",
       "path": "../Milos.Business.Names/Milos.Business.Names.csproj",
       "msbuildProject": "../Milos.Business.Names/Milos.Business.Names.csproj"
     },
-    "Milos.BusinessObjects/5.0.0-preview1-190519.0": {
+    "Milos.BusinessObjects/5.0.0-preview1-190615.0": {
       "type": "project",
       "path": "../Milos.BusinessObjects/Milos.BusinessObjects.csproj",
       "msbuildProject": "../Milos.BusinessObjects/Milos.BusinessObjects.csproj"
     },
-    "Milos.Core/5.0.0-preview1-190519.0": {
+    "Milos.Core/5.0.0-preview1-190615.0": {
       "type": "project",
       "path": "../Milos.Core/Milos.Core.csproj",
       "msbuildProject": "../Milos.Core/Milos.Core.csproj"
     },
-    "Milos.Data/5.0.0-preview1-190519.0": {
+    "Milos.Data/5.0.0-preview1-190615.0": {
       "type": "project",
       "path": "../Milos.Data/Milos.Data.csproj",
       "msbuildProject": "../Milos.Data/Milos.Data.csproj"
@@ -668,17 +668,17 @@
   },
   "projectFileDependencyGroups": {
     ".NETStandard,Version=v2.0": [
-      "Milos.Business.Names >= 5.0.0-preview1-190519.0",
+      "Milos.Business.Names >= 5.0.0-preview1-190615.0",
       "NETStandard.Library >= 2.0.3"
     ]
   },
   "packageFolders": {
     "C:\\Users\\megge\\.nuget\\packages\\": {},
-    "C:\\ProgramData\\Xamarin\\NuGet\\": {},
+    "C:\\Microsoft\\Xamarin\\NuGet\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
-    "version": "5.0.0-preview1-190519.0",
+    "version": "5.0.0-preview1-190615.0",
     "restore": {
       "projectUniqueName": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Business.Financial\\Milos.Business.Financial.csproj",
       "projectName": "Milos.Business.Financial",
@@ -687,7 +687,7 @@
       "outputPath": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Business.Financial\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\ProgramData\\Xamarin\\NuGet\\",
+        "C:\\Microsoft\\Xamarin\\NuGet\\",
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [

@@ -5,7 +5,7 @@
   },
   "projects": {
     "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Core\\Milos.Core.csproj": {
-      "version": "5.0.0-preview1-190519.0",
+      "version": "5.0.0-preview1-190615.0",
       "restore": {
         "projectUniqueName": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Core\\Milos.Core.csproj",
         "projectName": "Milos.Core",
@@ -14,7 +14,7 @@
         "outputPath": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Core\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\ProgramData\\Xamarin\\NuGet\\",
+          "C:\\Microsoft\\Xamarin\\NuGet\\",
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
@@ -63,7 +63,7 @@
       }
     },
     "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Data.SqlServer\\Milos.Data.SqlServer.csproj": {
-      "version": "5.0.0-preview1-190519.0",
+      "version": "5.0.0-preview1-190615.0",
       "restore": {
         "projectUniqueName": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Data.SqlServer\\Milos.Data.SqlServer.csproj",
         "projectName": "Milos.Data.SqlServer",
@@ -72,7 +72,7 @@
         "outputPath": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Data.SqlServer\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\ProgramData\\Xamarin\\NuGet\\",
+          "C:\\Microsoft\\Xamarin\\NuGet\\",
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
@@ -132,7 +132,7 @@
       }
     },
     "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Data\\Milos.Data.csproj": {
-      "version": "5.0.0-preview1-190519.0",
+      "version": "5.0.0-preview1-190615.0",
       "restore": {
         "projectUniqueName": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Data\\Milos.Data.csproj",
         "projectName": "Milos.Data",
@@ -141,7 +141,7 @@
         "outputPath": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Data\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\ProgramData\\Xamarin\\NuGet\\",
+          "C:\\Microsoft\\Xamarin\\NuGet\\",
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
