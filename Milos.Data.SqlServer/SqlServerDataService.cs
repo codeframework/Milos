@@ -6,7 +6,7 @@ using System.Data.SqlTypes;
 using System.Globalization;
 using System.Text;
 using System.Threading.Tasks;
-using Milos.Core.Configuration;
+using CODE.Framework.Fundamentals.Configuration;
 
 namespace Milos.Data.SqlServer
 {

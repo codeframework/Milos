@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Data;
-using Milos.Core.Utilities;
+using CODE.Framework.Fundamentals.Utilities;
 using Milos.Data;
 
 namespace Milos.BusinessObjects

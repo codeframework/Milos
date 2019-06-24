@@ -13,12 +13,9 @@ C:\Projects\MilosSolutionPlatform\Core\MilosSolutionPlatform\Milos.Data\obj\Rele
 C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Data\bin\Release\netstandard2.0\Milos.Data.deps.json
 C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Data\bin\Release\netstandard2.0\Milos.Data.dll
 C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Data\bin\Release\netstandard2.0\Milos.Data.pdb
-C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Data\bin\Release\netstandard2.0\Milos.Core.dll
-C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Data\bin\Release\netstandard2.0\Milos.Core.pdb
 C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Data\obj\Release\netstandard2.0\Milos.Data.csprojAssemblyReference.cache
 C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Data\obj\Release\netstandard2.0\Milos.Data.csproj.CoreCompileInputs.cache
 C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Data\obj\Release\netstandard2.0\Milos.Data.AssemblyInfoInputs.cache
 C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Data\obj\Release\netstandard2.0\Milos.Data.AssemblyInfo.cs
-C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Data\obj\Release\netstandard2.0\Milos.Data.csproj.CopyComplete
 C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Data\obj\Release\netstandard2.0\Milos.Data.dll
 C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Data\obj\Release\netstandard2.0\Milos.Data.pdb

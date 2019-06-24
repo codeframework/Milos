@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>5.0.0-preview1-190615.0</Version>
+    <Version>5.0.0</Version>
     <Company>EPS Software Corp.</Company>
     <Product>CODE Framework: Milos Solution Platform</Product>
     <Copyright>EPS Software Corp.</Copyright>
@@ -18,11 +18,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CODE.Framework.Fundamentals" Version="1.0.1" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.5.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Milos.Core\Milos.Core.csproj" />
   </ItemGroup>
 
 </Project>

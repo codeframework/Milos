@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.Runtime.Serialization;
-using Milos.Core.Configuration;
-using Milos.Core.Utilities;
+using CODE.Framework.Fundamentals.Configuration;
+using CODE.Framework.Fundamentals.Utilities;
 using Milos.Data;
 
 namespace Milos.Business.Names
@@ -114,11 +114,11 @@ namespace Milos.Business.Names
                 // We may not have any "," within the line (like "HOUSTON TX 123456"
                 if (line.IndexOf(" ", StringComparison.Ordinal) >= 0) retVal = line.Substring(0, StringHelper.At(" ", line, StringHelper.Occurs(" ", line)));
 
-                // If Lenght > 2, this is too big for a state, so it may has the city with it. Let's get just what 
+                // If length > 2, this is too big for a state, so it may has the city with it. Let's get just what 
                 // must be the state.
                 if (retVal.Length > 2)
                 {
-                    var words = StringHelper.GetWordCount(retVal);
+                    var words = (int)StringHelper.GetWordCount(retVal);
                     retVal = StringHelper.GetWordNumb(retVal, words);
                 }
             }

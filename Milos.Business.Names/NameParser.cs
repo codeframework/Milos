@@ -3,7 +3,7 @@ using System.Collections;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.Serialization;
-using Milos.Core.Utilities;
+using CODE.Framework.Fundamentals.Utilities;
 
 namespace Milos.Business.Names
 {

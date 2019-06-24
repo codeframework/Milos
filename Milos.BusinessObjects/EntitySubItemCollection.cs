@@ -5,7 +5,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Globalization;
 using System.Reflection;
-using Milos.Core.Utilities;
+using CODE.Framework.Fundamentals.Utilities;
 using Milos.Data;
 
 namespace Milos.BusinessObjects

@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Data;
 using System.Text;
-using Milos.Core.Utilities;
+using CODE.Framework.Fundamentals.Utilities;
 
 namespace Milos.BusinessObjects
 {

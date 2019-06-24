@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using Milos.Core.Utilities;
+using CODE.Framework.Fundamentals.Utilities;
 
 namespace Milos.BusinessObjects
 {

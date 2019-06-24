@@ -2,8 +2,8 @@
 using System.Collections;
 using System.ComponentModel;
 using System.Data;
+using CODE.Framework.Fundamentals.Configuration;
 using Milos.BusinessObjects;
-using Milos.Core.Configuration;
 
 namespace Milos.Business.Names
 {

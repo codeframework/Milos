@@ -5,7 +5,7 @@ using System.Data;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
-using Milos.Core.Utilities;
+using CODE.Framework.Fundamentals.Utilities;
 using Milos.Data;
 
 namespace Milos.BusinessObjects

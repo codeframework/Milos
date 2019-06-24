@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
-using Milos.Core.Configuration;
-using Milos.Core.Utilities;
+using CODE.Framework.Fundamentals.Configuration;
+using CODE.Framework.Fundamentals.Utilities;
 
 namespace Milos.Data
 {

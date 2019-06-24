@@ -1,6 +1,6 @@
 ﻿using System;
+using CODE.Framework.Fundamentals.Utilities;
 using Milos.BusinessObjects;
-using Milos.Core.Utilities;
 
 namespace Milos.Business.Financial
 {

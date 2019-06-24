@@ -14,7 +14,7 @@
     <copyright>EPS Software Corp.</copyright>
     <dependencies>
       <group targetFramework=".NETStandard2.0">
-        <dependency id="Milos.Core" version="5.0.0-preview1-190615.0" exclude="Build,Analyzers" />
+        <dependency id="CODE.Framework.Fundamentals" version="1.0.1" exclude="Build,Analyzers" />
         <dependency id="System.Configuration.ConfigurationManager" version="4.5.0" exclude="Build,Analyzers" />
       </group>
     </dependencies>

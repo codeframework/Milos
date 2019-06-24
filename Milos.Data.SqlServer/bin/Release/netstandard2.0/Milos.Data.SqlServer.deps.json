@@ -1,16 +1,15 @@
 {
   "runtimeTarget": {
     "name": ".NETStandard,Version=v2.0/",
-    "signature": "a3bb8c4c4f6db1f8e0b8d3f3db74bf2523f8a390"
+    "signature": "ba380f05647fc851be6d39080f182f66d1c5cf6d"
   },
   "compilationOptions": {},
   "targets": {
     ".NETStandard,Version=v2.0": {},
     ".NETStandard,Version=v2.0/": {
-      "Milos.Data.SqlServer/5.0.0-preview1-190615.0": {
+      "Milos.Data.SqlServer/5.0.0": {
         "dependencies": {
-          "Milos.Core": "5.0.0-preview1-190615.0",
-          "Milos.Data": "5.0.0-preview1-190615.0",
+          "Milos.Data": "5.0.0",
           "NETStandard.Library": "2.0.3",
           "System.Configuration.ConfigurationManager": "4.5.0",
           "System.Data.SqlClient": "4.6.0"
@@ -19,7 +18,20 @@
           "Milos.Data.SqlServer.dll": {}
         }
       },
+      "CODE.Framework.Fundamentals/1.0.1": {
+        "dependencies": {
+          "Newtonsoft.Json": "12.0.2",
+          "System.Reflection.Emit": "4.3.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/CODE.Framework.Fundamentals.dll": {
+            "assemblyVersion": "1.0.1.0",
+            "fileVersion": "1.0.1.0"
+          }
+        }
+      },
       "Microsoft.NETCore.Platforms/1.1.0": {},
+      "Microsoft.NETCore.Targets/1.1.0": {},
       "Microsoft.Win32.Registry/4.5.0": {
         "dependencies": {
           "System.Buffers": "4.4.0",
@@ -37,6 +49,14 @@
       "NETStandard.Library/2.0.3": {
         "dependencies": {
           "Microsoft.NETCore.Platforms": "1.1.0"
+        }
+      },
+      "Newtonsoft.Json/12.0.2": {
+        "runtime": {
+          "lib/netstandard2.0/Newtonsoft.Json.dll": {
+            "assemblyVersion": "12.0.0.0",
+            "fileVersion": "12.0.2.23222"
+          }
         }
       },
       "runtime.native.System.Data.SqlClient.sni/4.5.0": {
@@ -94,6 +114,15 @@
           }
         }
       },
+      "System.IO/4.3.0": {
+        "dependencies": {
+          "Microsoft.NETCore.Platforms": "1.1.0",
+          "Microsoft.NETCore.Targets": "1.1.0",
+          "System.Runtime": "4.3.0",
+          "System.Text.Encoding": "4.3.0",
+          "System.Threading.Tasks": "4.3.0"
+        }
+      },
       "System.Memory/4.5.1": {
         "dependencies": {
           "System.Buffers": "4.4.0",
@@ -113,6 +142,56 @@
             "assemblyVersion": "4.1.3.0",
             "fileVersion": "4.6.25519.3"
           }
+        }
+      },
+      "System.Reflection/4.3.0": {
+        "dependencies": {
+          "Microsoft.NETCore.Platforms": "1.1.0",
+          "Microsoft.NETCore.Targets": "1.1.0",
+          "System.IO": "4.3.0",
+          "System.Reflection.Primitives": "4.3.0",
+          "System.Runtime": "4.3.0"
+        }
+      },
+      "System.Reflection.Emit/4.3.0": {
+        "dependencies": {
+          "System.IO": "4.3.0",
+          "System.Reflection": "4.3.0",
+          "System.Reflection.Emit.ILGeneration": "4.3.0",
+          "System.Reflection.Primitives": "4.3.0",
+          "System.Runtime": "4.3.0"
+        },
+        "runtime": {
+          "lib/netstandard1.3/System.Reflection.Emit.dll": {
+            "assemblyVersion": "4.0.2.0",
+            "fileVersion": "4.6.24705.1"
+          }
+        }
+      },
+      "System.Reflection.Emit.ILGeneration/4.3.0": {
+        "dependencies": {
+          "System.Reflection": "4.3.0",
+          "System.Reflection.Primitives": "4.3.0",
+          "System.Runtime": "4.3.0"
+        },
+        "runtime": {
+          "lib/netstandard1.3/System.Reflection.Emit.ILGeneration.dll": {
+            "assemblyVersion": "4.0.2.0",
+            "fileVersion": "4.6.24705.1"
+          }
+        }
+      },
+      "System.Reflection.Primitives/4.3.0": {
+        "dependencies": {
+          "Microsoft.NETCore.Platforms": "1.1.0",
+          "Microsoft.NETCore.Targets": "1.1.0",
+          "System.Runtime": "4.3.0"
+        }
+      },
+      "System.Runtime/4.3.0": {
+        "dependencies": {
+          "Microsoft.NETCore.Platforms": "1.1.0",
+          "Microsoft.NETCore.Targets": "1.1.0"
         }
       },
       "System.Runtime.CompilerServices.Unsafe/4.5.0": {
@@ -164,6 +243,13 @@
           }
         }
       },
+      "System.Text.Encoding/4.3.0": {
+        "dependencies": {
+          "Microsoft.NETCore.Platforms": "1.1.0",
+          "Microsoft.NETCore.Targets": "1.1.0",
+          "System.Runtime": "4.3.0"
+        }
+      },
       "System.Text.Encoding.CodePages/4.5.0": {
         "dependencies": {
           "System.Runtime.CompilerServices.Unsafe": "4.5.0"
@@ -175,17 +261,16 @@
           }
         }
       },
-      "Milos.Core/5.0.0-preview1-190615.0": {
+      "System.Threading.Tasks/4.3.0": {
         "dependencies": {
-          "System.Configuration.ConfigurationManager": "4.5.0"
-        },
-        "runtime": {
-          "Milos.Core.dll": {}
+          "Microsoft.NETCore.Platforms": "1.1.0",
+          "Microsoft.NETCore.Targets": "1.1.0",
+          "System.Runtime": "4.3.0"
         }
       },
-      "Milos.Data/5.0.0-preview1-190615.0": {
+      "Milos.Data/5.0.0": {
         "dependencies": {
-          "Milos.Core": "5.0.0-preview1-190615.0",
+          "CODE.Framework.Fundamentals": "1.0.1",
           "System.Configuration.ConfigurationManager": "4.5.0"
         },
         "runtime": {
@@ -195,10 +280,17 @@
     }
   },
   "libraries": {
-    "Milos.Data.SqlServer/5.0.0-preview1-190615.0": {
+    "Milos.Data.SqlServer/5.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "CODE.Framework.Fundamentals/1.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-ERdEsnPXoDgtLoyLu+hSArAv2srVoQMgBQQCWZX33FoBqyjUK315N3OlHKZCs+LDk2OuAvWX0ahpdxjR206VNQ==",
+      "path": "code.framework.fundamentals/1.0.1",
+      "hashPath": "code.framework.fundamentals.1.0.1.nupkg.sha512"
     },
     "Microsoft.NETCore.Platforms/1.1.0": {
       "type": "package",
@@ -206,6 +298,13 @@
       "sha512": "sha512-6noH+KKnpB2rXO8QguHaY5TJHF15o6VOEo2woe1HPLRcBQr9DHSSw14He1N151H1Nk5uNuVp1BxzBSqh4kcffA==",
       "path": "microsoft.netcore.platforms/1.1.0",
       "hashPath": "microsoft.netcore.platforms.1.1.0.nupkg.sha512"
+    },
+    "Microsoft.NETCore.Targets/1.1.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-gz6VO6QqqkUwVl6QV9HQsvYJNiOCxzgYq8nQSZph307Sy7HzS5xGQK65U8opkMRHzbWSMHU33dyQRdx11kTbsQ==",
+      "path": "microsoft.netcore.targets/1.1.0",
+      "hashPath": "microsoft.netcore.targets.1.1.0.nupkg.sha512"
     },
     "Microsoft.Win32.Registry/4.5.0": {
       "type": "package",
@@ -220,6 +319,13 @@
       "sha512": "sha512-st47PosZSHrjECdjeIzZQbzivYBJFv6P2nv4cj2ypdI204DO+vZ7l5raGMiX4eXMJ53RfOIg+/s4DHVZ54Nu2A==",
       "path": "netstandard.library/2.0.3",
       "hashPath": "netstandard.library.2.0.3.nupkg.sha512"
+    },
+    "Newtonsoft.Json/12.0.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-rTK0s2EKlfHsQsH6Yx2smvcTCeyoDNgCW7FEYyV01drPlh2T243PR2DiDXqtC5N4GDm4Ma/lkxfW5a/4793vbA==",
+      "path": "newtonsoft.json/12.0.2",
+      "hashPath": "newtonsoft.json.12.0.2.nupkg.sha512"
     },
     "runtime.native.System.Data.SqlClient.sni/4.5.0": {
       "type": "package",
@@ -277,6 +383,13 @@
       "path": "system.diagnostics.diagnosticsource/4.5.0",
       "hashPath": "system.diagnostics.diagnosticsource.4.5.0.nupkg.sha512"
     },
+    "System.IO/4.3.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-WvM3U0TnFDZpz6UD6TgWYrNKIyuh4/xRf2+U+xyF5mbYEjtkAOSk1BTCyNWGJ8a9g/l/cLewyzol5cpw5RhAxA==",
+      "path": "system.io/4.3.0",
+      "hashPath": "system.io.4.3.0.nupkg.sha512"
+    },
     "System.Memory/4.5.1": {
       "type": "package",
       "serviceable": true,
@@ -290,6 +403,41 @@
       "sha512": "sha512-gdRrUJs1RrjW3JB5p82hYjA67xoeFLvh0SdSIWjTiN8qExlbFt/RtXwVYNc5BukJ/f9OKzQQS6gakzbJeHTqHg==",
       "path": "system.numerics.vectors/4.4.0",
       "hashPath": "system.numerics.vectors.4.4.0.nupkg.sha512"
+    },
+    "System.Reflection/4.3.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-xRs5+uMiknStAPR4gUxyaGtalTsZD7QHUWIvxouegZDpgEHERW0MGby+4rTlo+8UYz1NZALwM/2BJtY76zA5RA==",
+      "path": "system.reflection/4.3.0",
+      "hashPath": "system.reflection.4.3.0.nupkg.sha512"
+    },
+    "System.Reflection.Emit/4.3.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-dCIZ6sOz1Pwu/dtdmPXBJmAPPDA1vrLxChHbfjEtI+kan4dWQvRSwEenWeQflU5Qbzav/aP06dJSspsCXmMNnA==",
+      "path": "system.reflection.emit/4.3.0",
+      "hashPath": "system.reflection.emit.4.3.0.nupkg.sha512"
+    },
+    "System.Reflection.Emit.ILGeneration/4.3.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-+UHbzpQEhGZz0lqAsZ1FYStDNVPqAwCeceMGcYv1Y0AjHuQtSu7PwaT9ugh0kxmN8qt7Gdy0CbW7IRD6b5S3eA==",
+      "path": "system.reflection.emit.ilgeneration/4.3.0",
+      "hashPath": "system.reflection.emit.ilgeneration.4.3.0.nupkg.sha512"
+    },
+    "System.Reflection.Primitives/4.3.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-c7sMSJrHZcwj2cZU/RGgAy/M3Qi3c4iL80BjxQ2C7tIgakeOQHSJsijGFAyy9vUtwPCyu9kcUTtQZFfrol8T7A==",
+      "path": "system.reflection.primitives/4.3.0",
+      "hashPath": "system.reflection.primitives.4.3.0.nupkg.sha512"
+    },
+    "System.Runtime/4.3.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-XSIawVGGCteoNu7RQoRFXIB05eGMXi8aFcFaj14yzpP6LmF+y8SgwhBXxrzCJVsxPNNpT7FRoxOlpKt7v4jajg==",
+      "path": "system.runtime/4.3.0",
+      "hashPath": "system.runtime.4.3.0.nupkg.sha512"
     },
     "System.Runtime.CompilerServices.Unsafe/4.5.0": {
       "type": "package",
@@ -326,6 +474,13 @@
       "path": "system.security.principal.windows/4.5.0",
       "hashPath": "system.security.principal.windows.4.5.0.nupkg.sha512"
     },
+    "System.Text.Encoding/4.3.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-zxGohRPlVDXEZBL28iU5h4YCBI+wrb/1N5N3wnt10VjZvkkWAl8sbk2iHiuGRw6Jifq3oZfl0wu5OyVBjbXrWw==",
+      "path": "system.text.encoding/4.3.0",
+      "hashPath": "system.text.encoding.4.3.0.nupkg.sha512"
+    },
     "System.Text.Encoding.CodePages/4.5.0": {
       "type": "package",
       "serviceable": true,
@@ -333,12 +488,14 @@
       "path": "system.text.encoding.codepages/4.5.0",
       "hashPath": "system.text.encoding.codepages.4.5.0.nupkg.sha512"
     },
-    "Milos.Core/5.0.0-preview1-190615.0": {
-      "type": "project",
-      "serviceable": false,
-      "sha512": ""
+    "System.Threading.Tasks/4.3.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-fh2Dt9lA0C/lI8UGNEecfauU3qgZry7FQD9K1uqA9akBhcukJHfg9QI79MiITFlbNTXg7ZQKqYhkOZHI77O7+Q==",
+      "path": "system.threading.tasks/4.3.0",
+      "hashPath": "system.threading.tasks.4.3.0.nupkg.sha512"
     },
-    "Milos.Data/5.0.0-preview1-190615.0": {
+    "Milos.Data/5.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

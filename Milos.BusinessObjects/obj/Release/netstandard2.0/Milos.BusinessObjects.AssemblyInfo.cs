@@ -18,7 +18,7 @@ using System.Reflection;
     "ome parts of the Milos Solution Platform (especially those important for data ac" +
     "cess, business logic, and services) are maintained as part of CODE Framework.")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("5.0.0.1")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("5.0.0-preview1-190615.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("5.0.0")]
 [assembly: System.Reflection.AssemblyProductAttribute("CODE Framework: Milos Solution Platform")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Milos.BusinessObjects")]
 [assembly: System.Reflection.AssemblyVersionAttribute("5.0.0.1")]

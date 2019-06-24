@@ -15,9 +15,7 @@ C:\Projects\MilosSolutionPlatform\Core\MilosSolutionPlatform\Milos.BusinessObjec
 C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.BusinessObjects\bin\Release\netstandard2.0\Milos.BusinessObjects.deps.json
 C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.BusinessObjects\bin\Release\netstandard2.0\Milos.BusinessObjects.dll
 C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.BusinessObjects\bin\Release\netstandard2.0\Milos.BusinessObjects.pdb
-C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.BusinessObjects\bin\Release\netstandard2.0\Milos.Core.dll
 C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.BusinessObjects\bin\Release\netstandard2.0\Milos.Data.dll
-C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.BusinessObjects\bin\Release\netstandard2.0\Milos.Core.pdb
 C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.BusinessObjects\bin\Release\netstandard2.0\Milos.Data.pdb
 C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.BusinessObjects\obj\Release\netstandard2.0\Milos.BusinessObjects.csprojAssemblyReference.cache
 C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.BusinessObjects\obj\Release\netstandard2.0\Milos.BusinessObjects.csproj.CoreCompileInputs.cache
