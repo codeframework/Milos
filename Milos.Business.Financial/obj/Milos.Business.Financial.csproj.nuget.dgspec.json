@@ -5,7 +5,7 @@
   },
   "projects": {
     "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Business.Financial\\Milos.Business.Financial.csproj": {
-      "version": "5.0.0",
+      "version": "5.0.1",
       "restore": {
         "projectUniqueName": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Business.Financial\\Milos.Business.Financial.csproj",
         "projectName": "Milos.Business.Financial",
@@ -27,7 +27,8 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "https://api.nuget.org/v3/index.json": {}
+          "https://api.nuget.org/v3/index.json": {},
+          "https://pkgs.dev.azure.com/eps-software/_packaging/EPSPackages/nuget/v3/index.json": {}
         },
         "frameworks": {
           "netstandard2.0": {
@@ -63,7 +64,7 @@
       }
     },
     "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Business.Names\\Milos.Business.Names.csproj": {
-      "version": "5.0.0",
+      "version": "5.0.1",
       "restore": {
         "projectUniqueName": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Business.Names\\Milos.Business.Names.csproj",
         "projectName": "Milos.Business.Names",
@@ -85,7 +86,8 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "https://api.nuget.org/v3/index.json": {}
+          "https://api.nuget.org/v3/index.json": {},
+          "https://pkgs.dev.azure.com/eps-software/_packaging/EPSPackages/nuget/v3/index.json": {}
         },
         "frameworks": {
           "netstandard2.0": {
@@ -121,7 +123,7 @@
       }
     },
     "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.BusinessObjects\\Milos.BusinessObjects.csproj": {
-      "version": "5.0.0",
+      "version": "5.0.1",
       "restore": {
         "projectUniqueName": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.BusinessObjects\\Milos.BusinessObjects.csproj",
         "projectName": "Milos.BusinessObjects",
@@ -143,7 +145,8 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "https://api.nuget.org/v3/index.json": {}
+          "https://api.nuget.org/v3/index.json": {},
+          "https://pkgs.dev.azure.com/eps-software/_packaging/EPSPackages/nuget/v3/index.json": {}
         },
         "frameworks": {
           "netstandard2.0": {
@@ -179,7 +182,7 @@
       }
     },
     "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Data\\Milos.Data.csproj": {
-      "version": "5.0.0",
+      "version": "5.0.1",
       "restore": {
         "projectUniqueName": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Data\\Milos.Data.csproj",
         "projectName": "Milos.Data",
@@ -201,7 +204,8 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "https://api.nuget.org/v3/index.json": {}
+          "https://api.nuget.org/v3/index.json": {},
+          "https://pkgs.dev.azure.com/eps-software/_packaging/EPSPackages/nuget/v3/index.json": {}
         },
         "frameworks": {
           "netstandard2.0": {

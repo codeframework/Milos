@@ -35,10 +35,7 @@ namespace Milos.Business.Financial
             ParentTablePrimaryKeyField = "pk_invoices";
         }
 
-        public ILineItem GetItemByIndex(int index)
-        {
-            throw new NotImplementedException();
-        }
+        public new ILineItem GetItemByIndex(int index) => (ILineItem)GetItemByIndex(index, false);
 
         /// <summary>
         /// Returns a new item that is used as a member of the collection
@@ -68,7 +65,7 @@ namespace Milos.Business.Financial
         /// <param name="index"></param>
         /// <remarks>
         /// CL on 07/15/2005
-        ///   A line item may have chidren lines. In such case, the children
+        ///   A line item may have children lines. In such case, the children
         ///   must be removed as well. Notice that a child line could 
         ///   potentially have children of its own, so those should be removed as well.
         ///   The logic here should take care of all that.
@@ -248,7 +245,7 @@ namespace Milos.Business.Financial
                 if (parentId != Guid.Empty)
                 {
                     var currentCollection = (LineItemCollection) ParentCollection;
-                    foreach (LineItemEntity currentItem in currentCollection)
+                    foreach (var currentItem in currentCollection)
                         if (currentItem.PK == parentId)
                             // We found it
                             return currentItem;

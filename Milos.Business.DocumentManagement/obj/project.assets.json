@@ -273,11 +273,11 @@
           "ref/netstandard1.3/System.Threading.Tasks.dll": {}
         }
       },
-      "Milos.BusinessObjects/5.0.0": {
+      "Milos.BusinessObjects/5.0.1": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
-          "Milos.Data": "5.0.0"
+          "Milos.Data": "5.0.1"
         },
         "compile": {
           "bin/placeholder/Milos.BusinessObjects.dll": {}
@@ -286,7 +286,7 @@
           "bin/placeholder/Milos.BusinessObjects.dll": {}
         }
       },
-      "Milos.Data/5.0.0": {
+      "Milos.Data/5.0.1": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
@@ -1324,12 +1324,12 @@
         "system.threading.tasks.nuspec"
       ]
     },
-    "Milos.BusinessObjects/5.0.0": {
+    "Milos.BusinessObjects/5.0.1": {
       "type": "project",
       "path": "../Milos.BusinessObjects/Milos.BusinessObjects.csproj",
       "msbuildProject": "../Milos.BusinessObjects/Milos.BusinessObjects.csproj"
     },
-    "Milos.Data/5.0.0": {
+    "Milos.Data/5.0.1": {
       "type": "project",
       "path": "../Milos.Data/Milos.Data.csproj",
       "msbuildProject": "../Milos.Data/Milos.Data.csproj"
@@ -1337,7 +1337,7 @@
   },
   "projectFileDependencyGroups": {
     ".NETStandard,Version=v2.0": [
-      "Milos.BusinessObjects >= 5.0.0",
+      "Milos.BusinessObjects >= 5.0.1",
       "NETStandard.Library >= 2.0.3"
     ]
   },
@@ -1347,7 +1347,7 @@
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
-    "version": "5.0.0",
+    "version": "5.0.1",
     "restore": {
       "projectUniqueName": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Business.DocumentManagement\\Milos.Business.DocumentManagement.csproj",
       "projectName": "Milos.Business.DocumentManagement",
@@ -1369,7 +1369,8 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "https://api.nuget.org/v3/index.json": {}
+        "https://api.nuget.org/v3/index.json": {},
+        "https://pkgs.dev.azure.com/eps-software/_packaging/EPSPackages/nuget/v3/index.json": {}
       },
       "frameworks": {
         "netstandard2.0": {

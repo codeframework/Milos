@@ -17,8 +17,7 @@ namespace Milos.BusinessObjects
     ///     However, Entity objects make using business objects much more straightforward.
     /// </summary>
     [Serializable]
-    //[XmlSchemaProvider("GetEntitySerializationSchema")]
-    public abstract class BusinessEntity : IBusinessEntity, IDataBindingRefresher, INotifyPropertyChanged, IDirty // , IXmlSerializable
+    public abstract class BusinessEntity : IBusinessEntity, IDataBindingRefresher, INotifyPropertyChanged, IDirty
     {
         /// <summary>
         ///     Delegate used for all event handlers that can be canceled
@@ -56,11 +55,6 @@ namespace Milos.BusinessObjects
         /// </summary>
         /// <remarks>This will be reset to false, every time the SetFieldValue() method is called.</remarks>
         private bool isDirtyOverride;
-
-        /// <summary>
-        ///     Load state
-        /// </summary>
-        private EntityLoadState loadState = EntityLoadState.Loading;
 
         /// <summary>
         ///     Constructor intended to be used when a new entity is meant to be created
@@ -166,7 +160,7 @@ namespace Milos.BusinessObjects
         /// </summary>
         [NotReportSerializable]
         [NotClonable]
-        public EntityLoadState LoadState => loadState;
+        public EntityLoadState LoadState { get; private set; } = EntityLoadState.Loading;
 
         /// <summary>
         ///     Primary key of the current entity (Guid)
@@ -241,10 +235,7 @@ namespace Milos.BusinessObjects
         ///     not appear dirty until further changes are made (such as when the user just
         ///     has been asked whether they want to save changes).
         /// </remarks>
-        public void IgnoreIsDirty()
-        {
-            isDirtyOverride = true;
-        }
+        public void IgnoreIsDirty() => isDirtyOverride = true;
 
         /// <summary>
         ///     State of the current entity (unchanged, added, deleted, modified,...)
@@ -265,29 +256,20 @@ namespace Milos.BusinessObjects
         ///     of your application, it will not be possible to switch to other business
         ///     entity types. Avoid using the internal DataSet if possible.
         /// </remarks>
-        public DataSet GetInternalData()
-        {
-            return InternalDataSet;
-        }
+        public DataSet GetInternalData() => InternalDataSet;
 
         /// <summary>
         ///     Returns whether or not that field's value is currently null/nothing
         /// </summary>
         /// <param name="fieldName">Field name as it appears in the data set</param>
         /// <returns>True or false</returns>
-        public bool IsFieldNull(string fieldName)
-        {
-            return InternalDataSet.Tables[GetInternalTableName(MasterEntity)].Rows[0][GetInternalFieldName(fieldName, MasterEntity)] == DBNull.Value;
-        }
+        public bool IsFieldNull(string fieldName) => InternalDataSet.Tables[GetInternalTableName(MasterEntity)].Rows[0][GetInternalFieldName(fieldName, MasterEntity)] == DBNull.Value;
 
         /// <summary>
         ///     Returns all the internal data as an XML string.
         /// </summary>
         /// <returns>Xml String</returns>
-        public string GetRawData()
-        {
-            return InternalDataSet.GetXml();
-        }
+        public string GetRawData() => InternalDataSet.GetXml();
 
         /// <summary>
         ///     Saves the current data
@@ -388,7 +370,7 @@ namespace Milos.BusinessObjects
                     break;
             }
 
-            if (retVal) loadState = EntityLoadState.Deleted;
+            if (retVal) LoadState = EntityLoadState.Deleted;
 
             if (retVal) Removed?.Invoke(this, new EventArgs());
             return retVal;
@@ -401,10 +383,7 @@ namespace Milos.BusinessObjects
         /// <remarks>
         ///     Note: This method is not overridable. Override the Remove() method instead, which is called by this method.
         /// </remarks>
-        public bool Delete()
-        {
-            return Remove();
-        }
+        public bool Delete() => Remove();
 
         /// <summary>
         ///     This method generates the appropriate business object for the current entity.
@@ -548,18 +527,15 @@ namespace Milos.BusinessObjects
             //if (mode != EntityLaunchMode.New) InitiateBackgroundLoading();
 
             // This entity is considered "loaded"
-            loadState = EntityLoadState.LoadComplete;
+            LoadState = EntityLoadState.LoadComplete;
         }
 
         /// <summary>
         ///     Returns true if the entity is created by the XML deserialization mechanism.
         /// </summary>
         /// <returns></returns>
-        private bool LaunchedFormXmlDeserialization()
-        {
-            // TODO: Implement this
-            return false;
-        }
+        [Obsolete]
+        private bool LaunchedFormXmlDeserialization() => false; // Was never implemented and is really obsolete
 
         /// <summary>
         ///     This method is called when the object initializes.
@@ -613,15 +589,14 @@ namespace Milos.BusinessObjects
         /// <param name="businessObject">Business Object</param>
         protected virtual void LoadEntity(string entityId, IBusinessObject businessObject)
         {
-            if (PrimaryKeyType == KeyType.Integer)
-            {
-                InternalDataSet = businessObject.LoadEntity(new Guid(entityId));
-            }
-            else
-            {
-                if (PrimaryKeyType == KeyType.String)
+            switch (PrimaryKeyType) {
+                case KeyType.Integer:
+                    InternalDataSet = businessObject.LoadEntity(new Guid(entityId));
+                    break;
+                case KeyType.String:
                     InternalDataSet = businessObject.LoadEntity(entityId);
-                else
+                    break;
+                default:
                     throw new UnsupportedKeyTypeException(PrimaryKeyType);
             }
         }
@@ -632,10 +607,7 @@ namespace Milos.BusinessObjects
         ///     to the default behavior
         /// </summary>
         /// <param name="businessObject">Business object</param>
-        protected virtual void NewEntity(IBusinessObject businessObject)
-        {
-            InternalDataSet = businessObject.AddNew();
-        }
+        protected virtual void NewEntity(IBusinessObject businessObject) => InternalDataSet = businessObject.AddNew();
 
         /// <summary>
         ///     Verifies the current data
@@ -680,18 +652,12 @@ namespace Milos.BusinessObjects
         /// </summary>
         /// <param name="message">The message the exception is populated with</param>
         /// <param name="source">The entity that caused the exception</param>
-        protected static void ThrowDeletedEntityException(string message, BusinessEntity source)
-        {
-            throw new DeletedEntityException(message) {Source = source.GetType().Name};
-        }
+        protected static void ThrowDeletedEntityException(string message, BusinessEntity source) => throw new DeletedEntityException(message) {Source = source.GetType().Name};
 
         /// <summary>
         ///     Finalize
         /// </summary>
-        ~BusinessEntity()
-        {
-            Dispose(false);
-        }
+        ~BusinessEntity() => Dispose(false);
 
         /// <summary>
         ///     Dispose method designed to be overridden in subclasses
@@ -916,14 +882,10 @@ namespace Milos.BusinessObjects
             }
             else if (entities.Length == 1)
                 // There is only one entity, which is odd, but OK
-            {
                 return entities[0].Save();
-            }
             else
                 // No entities were passed. We consider that to be OK
-            {
                 return true;
-            }
 
             return true;
         }
@@ -951,10 +913,7 @@ namespace Milos.BusinessObjects
         /// </summary>
         /// <param name="exposedTableName">External table name</param>
         /// <returns>Internal table name (as it appears in the database)</returns>
-        public virtual string GetInternalTableName(string exposedTableName)
-        {
-            return tableMaps.ContainsKey(exposedTableName) ? tableMaps[exposedTableName] : exposedTableName;
-        }
+        public virtual string GetInternalTableName(string exposedTableName) => tableMaps.ContainsKey(exposedTableName) ? tableMaps[exposedTableName] : exposedTableName;
 
         /// <summary>
         ///     Maps an externally visible table name to an internal name
@@ -1093,10 +1052,7 @@ namespace Milos.BusinessObjects
         /// <param name="table">Table object</param>
         /// <remarks>Field and table names used here must be INTERNAL names, not mapped names.</remarks>
         /// <returns>True (if field exist or has been added) or False </returns>
-        protected virtual bool CheckColumn(string fieldName, DataTable table)
-        {
-            return BusinessEntityHelper.CheckColumn(table, fieldName);
-        }
+        protected virtual bool CheckColumn(string fieldName, DataTable table) => BusinessEntityHelper.CheckColumn(table, fieldName);
 
         /// <summary>
         ///     Checks whether a certain table has the specified minimum number of rows.
@@ -1110,10 +1066,7 @@ namespace Milos.BusinessObjects
         /// <returns>
         ///     True if the table has the appropriate number of rows (or the appropriate number of rows has been added)
         /// </returns>
-        protected virtual bool CheckRows(string tableName, string primaryKeyField, int minimumRowCount, bool autoAddRows)
-        {
-            return BusinessEntityHelper.CheckRows(tableName, primaryKeyField, minimumRowCount, autoAddRows, InternalDataSet, this);
-        }
+        protected virtual bool CheckRows(string tableName, string primaryKeyField, int minimumRowCount, bool autoAddRows) => BusinessEntityHelper.CheckRows(tableName, primaryKeyField, minimumRowCount, autoAddRows, InternalDataSet, this);
 
         /// <summary>
         ///     Checks the number of rows in the specified table.
@@ -1121,10 +1074,7 @@ namespace Milos.BusinessObjects
         /// </summary>
         /// <param name="tableName">Name of the table.</param>
         /// <returns>True if successful</returns>
-        public virtual bool ClearRows(string tableName)
-        {
-            return BusinessEntityHelper.ClearRows(InternalDataSet, tableName);
-        }
+        public virtual bool ClearRows(string tableName) => BusinessEntityHelper.ClearRows(InternalDataSet, tableName);
 
         /// <summary>
         ///     Checks whether a certain table has at least 1 data row.
@@ -1137,10 +1087,7 @@ namespace Milos.BusinessObjects
         /// <returns>
         ///     True if the table has at least 1 row (or the rows has been added successfully)
         /// </returns>
-        protected virtual bool CheckRows(string tableName, string primaryKeyField, bool autoAddRows = true)
-        {
-            return CheckRows(tableName, primaryKeyField, 1, autoAddRows);
-        }
+        protected virtual bool CheckRows(string tableName, string primaryKeyField, bool autoAddRows = true) => CheckRows(tableName, primaryKeyField, 1, autoAddRows);
 
         /// <summary>
         ///     Checks whether the value is valid based on the definition of the field in the provided data table.
@@ -1150,10 +1097,7 @@ namespace Milos.BusinessObjects
         /// <param name="value">Value</param>
         /// <remarks>Field and table names used here must be INTERNAL names, not mapped names.</remarks>
         /// <returns>True if invalid, false otherwise</returns>
-        protected internal virtual bool IsValueInvalid(DataTable table, string fieldName, object value)
-        {
-            return BusinessEntityHelper.IsValueInvalid(table, fieldName, value, this);
-        }
+        protected internal virtual bool IsValueInvalid(DataTable table, string fieldName, object value) => BusinessEntityHelper.IsValueInvalid(table, fieldName, value, this);
 
         /// <summary>
         ///     Fixes the value to be valid based on the current field type

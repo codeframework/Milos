@@ -5,7 +5,7 @@
   },
   "projects": {
     "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Data\\Milos.Data.csproj": {
-      "version": "5.0.0",
+      "version": "5.0.1",
       "restore": {
         "projectUniqueName": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Data\\Milos.Data.csproj",
         "projectName": "Milos.Data",
@@ -27,7 +27,8 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "https://api.nuget.org/v3/index.json": {}
+          "https://api.nuget.org/v3/index.json": {},
+          "https://pkgs.dev.azure.com/eps-software/_packaging/EPSPackages/nuget/v3/index.json": {}
         },
         "frameworks": {
           "netstandard2.0": {
