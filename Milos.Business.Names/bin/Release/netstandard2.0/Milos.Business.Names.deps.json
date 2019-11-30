@@ -7,9 +7,9 @@
   "targets": {
     ".NETStandard,Version=v2.0": {},
     ".NETStandard,Version=v2.0/": {
-      "Milos.Business.Names/5.0.2": {
+      "Milos.Business.Names/5.0.5": {
         "dependencies": {
-          "Milos.BusinessObjects": "5.0.2",
+          "Milos.BusinessObjects": "5.0.5",
           "NETStandard.Library": "2.0.3"
         },
         "runtime": {
@@ -206,15 +206,15 @@
           "System.Runtime": "4.3.0"
         }
       },
-      "Milos.BusinessObjects/5.0.2": {
+      "Milos.BusinessObjects/5.0.5": {
         "dependencies": {
-          "Milos.Data": "5.0.2"
+          "Milos.Data": "5.0.5"
         },
         "runtime": {
           "Milos.BusinessObjects.dll": {}
         }
       },
-      "Milos.Data/5.0.2": {
+      "Milos.Data/5.0.5": {
         "dependencies": {
           "CODE.Framework.Fundamentals": "1.0.1",
           "System.Configuration.ConfigurationManager": "4.5.0"
@@ -226,7 +226,7 @@
     }
   },
   "libraries": {
-    "Milos.Business.Names/5.0.2": {
+    "Milos.Business.Names/5.0.5": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
@@ -385,12 +385,12 @@
       "path": "system.threading.tasks/4.3.0",
       "hashPath": "system.threading.tasks.4.3.0.nupkg.sha512"
     },
-    "Milos.BusinessObjects/5.0.2": {
+    "Milos.BusinessObjects/5.0.5": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Milos.Data/5.0.2": {
+    "Milos.Data/5.0.5": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

@@ -5,7 +5,7 @@
   },
   "projects": {
     "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Data.SqlServer\\Milos.Data.SqlServer.csproj": {
-      "version": "5.0.2",
+      "version": "5.0.5",
       "restore": {
         "projectUniqueName": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Data.SqlServer\\Milos.Data.SqlServer.csproj",
         "projectName": "Milos.Data.SqlServer",
@@ -78,7 +78,7 @@
       }
     },
     "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Data\\Milos.Data.csproj": {
-      "version": "5.0.2",
+      "version": "5.0.5",
       "restore": {
         "projectUniqueName": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Data\\Milos.Data.csproj",
         "projectName": "Milos.Data",

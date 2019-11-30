@@ -5,7 +5,7 @@
   },
   "projects": {
     "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Business.Financial\\Milos.Business.Financial.csproj": {
-      "version": "5.0.2",
+      "version": "5.0.5",
       "restore": {
         "projectUniqueName": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Business.Financial\\Milos.Business.Financial.csproj",
         "projectName": "Milos.Business.Financial",
@@ -70,7 +70,7 @@
       }
     },
     "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Business.Names\\Milos.Business.Names.csproj": {
-      "version": "5.0.2",
+      "version": "5.0.5",
       "restore": {
         "projectUniqueName": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Business.Names\\Milos.Business.Names.csproj",
         "projectName": "Milos.Business.Names",
@@ -135,7 +135,7 @@
       }
     },
     "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.BusinessObjects\\Milos.BusinessObjects.csproj": {
-      "version": "5.0.2",
+      "version": "5.0.5",
       "restore": {
         "projectUniqueName": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.BusinessObjects\\Milos.BusinessObjects.csproj",
         "projectName": "Milos.BusinessObjects",
@@ -200,7 +200,7 @@
       }
     },
     "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Data\\Milos.Data.csproj": {
-      "version": "5.0.2",
+      "version": "5.0.5",
       "restore": {
         "projectUniqueName": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Data\\Milos.Data.csproj",
         "projectName": "Milos.Data",

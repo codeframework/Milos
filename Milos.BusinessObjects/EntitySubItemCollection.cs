@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 using System.Reflection;
 using CODE.Framework.Fundamentals.Utilities;
 using Milos.Data;
@@ -560,12 +561,10 @@ namespace Milos.BusinessObjects
             if (!(value is IEntitySubItemCollectionItem)) 
                 throw new InvalidObjectTypeInEntityException("Parameter is not an entity sub item collection item.");
 
-            if (this is IList list)
-            {
-                var itemIndex = list.IndexOf(value);
-                if (itemIndex > -1)
-                    Remove(itemIndex);
-            }
+            if (!(this is IList list)) return;
+            var itemIndex = list.IndexOf(value);
+            if (itemIndex > -1)
+                Remove(itemIndex);
         }
 
         /// <summary>
@@ -811,55 +810,23 @@ namespace Milos.BusinessObjects
         /// <returns></returns>
         protected virtual int GetItemCount(bool ignoreSorting)
         {
-            var rowCount = 0;
             if (ignoreSorting || IsRawTable)
                 // This really is the number of items in the DataTable which we are abstracting away here...
                 // Note: The collection of rows may contain deleted items, so we can not just use the current number
-                foreach (DataRow row in InternalDataTable.Rows)
-                    if (row.RowState != DataRowState.Deleted && row.RowState != DataRowState.Detached)
-                        rowCount++;
-                    else
-                        // This is a filtered or sorted collection. We use the special view (array or rows)
-                        // as the sort order.
-                        foreach (var row2 in SpecialView)
-                            if (row2.RowState != DataRowState.Deleted && row2.RowState != DataRowState.Detached)
-                                rowCount++;
+                return InternalDataTable.Rows.Cast<DataRow>().Count(row => row.RowState != DataRowState.Deleted && row.RowState != DataRowState.Detached);
 
-            return rowCount;
+            // This is a filtered or sorted collection. We use the special view (array or rows) as the sort order.
+            return SpecialView.Count(row2 => row2.RowState != DataRowState.Deleted && row2.RowState != DataRowState.Detached);
         }
 
         /// <summary>Retrieves an item from the collection by its index.</summary>
         /// <param name="key">Guid Key</param>
         /// <returns>Item</returns>
-        public virtual IEntitySubItemCollectionItem GetItemByKey(Guid key)
+        public virtual EntitySubItemCollectionItem GetItemByKey(Guid key)
         {
-            // Note that this collection really only contains one member object (at a time).
-            // This object is configured with an index, to know what row in the
-            // DataTable to access. That object is then returned, and appears to be
-            // a new object to the outside.
-            var item = GetItemObject();
-            item.PrimaryKeyField = PrimaryKeyField;
-            // We need to find the row index of the item, considering that there might be deleted
-            // records that need to be skipped.
-            if (IsRawTable)
-                foreach (DataRow row in InternalDataTable.Rows)
-                {
-                    if (row.RowState != DataRowState.Deleted && row.RowState != DataRowState.Detached) continue;
-                    if (row[PrimaryKeyField].ToGuidSafe() != key) continue;
-                    // We found the record we are after
-                    item.SetCurrentRow(row);
-                    return item;
-                }
-            else
-                // We can simply go through the array of rows in this filtered or sorted collection
-                foreach (var row in SpecialView)
-                {
-                    if (row.RowState != DataRowState.Deleted && row.RowState != DataRowState.Detached) continue;
-                    if (row[PrimaryKeyField].ToGuidSafe() != key) continue;
-                    // We found the record we are after
-                    item.SetCurrentRow(row);
-                    return item;
-                }
+            foreach (var item in this)
+                if (item is EntitySubItemCollectionItem item2 && item2.PK == key)
+                    return item2;
 
             throw new IndexOutOfBoundsException();
         }

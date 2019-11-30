@@ -220,6 +220,18 @@ namespace Milos.BusinessObjects
         /// <returns>Item</returns>
         public override IEntitySubItemCollectionItem GetItemByIndex(int index) => GetItemByIndex(index, false);
 
+        /// <summary>Retrieves an item from the collection by its index.</summary>
+        /// <param name="key">Guid Key</param>
+        /// <returns>Item</returns>
+        public new virtual EntitySubItemCollectionXLinkItem GetItemByKey(Guid key)
+        {
+            foreach (var item in this)
+                if (item is EntitySubItemCollectionXLinkItem item2 && item2.PK == key)
+                    return item2;
+
+            throw new IndexOutOfBoundsException();
+        }
+
         /// <summary>
         ///     This method is not supported here, as we need to know what to link to...
         /// </summary>
