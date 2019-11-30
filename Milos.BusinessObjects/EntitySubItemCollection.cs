@@ -174,10 +174,8 @@ namespace Milos.BusinessObjects
         /// <summary>Indexer reference to an item in the collection.</summary>
         public virtual IEntitySubItemCollectionItem this[int index] => GetItemByIndex(index);
 
-        /// <summary>Retrieves an item from the collection by its index.</summary>
-        /// <param name="index">Numeric index</param>
-        /// <returns>Item</returns>
-        public virtual IEntitySubItemCollectionItem GetItemByIndex(int index) => GetItemByIndex(index, false);
+        /// <summary>Indexer reference to an item in the collection.</summary>
+        public virtual IEntitySubItemCollectionItem this[Guid key] => GetItemByKey(key);
 
         /// <summary>
         ///     This method instantiated the appropriate item collection object
@@ -254,25 +252,20 @@ namespace Milos.BusinessObjects
         /// </exception>
         void IBindingList.ApplySort(PropertyDescriptor property, ListSortDirection direction)
         {
-            var entity = ParentEntity as BusinessEntity;
-            if (entity != null)
+            if (!(ParentEntity is BusinessEntity entity)) return;
+            var propertyName = property.Name;
+            var fieldName = entity.GetInternalFieldName(propertyName, InternalDataTable.TableName);
+            if (string.IsNullOrEmpty(fieldName))
+                fieldName = propertyName;
+            if (InternalDataTable.Columns.Contains(fieldName))
             {
-                var propertyName = property.Name;
-                var fieldName = entity.GetInternalFieldName(propertyName, InternalDataTable.TableName);
-                if (string.IsNullOrEmpty(fieldName))
-                    fieldName = propertyName;
-                if (InternalDataTable.Columns.Contains(fieldName))
-                {
-                    var sortExpression = fieldName;
-                    if (direction == ListSortDirection.Descending)
-                        sortExpression += " DESC";
-                    SortBy = sortExpression;
-                }
-                else
-                {
-                    ((IBindingList) this).RemoveSort();
-                }
+                var sortExpression = fieldName;
+                if (direction == ListSortDirection.Descending)
+                    sortExpression += " DESC";
+                SortBy = sortExpression;
             }
+            else
+                ((IBindingList) this).RemoveSort();
         }
 
         /// <summary>
@@ -751,6 +744,7 @@ namespace Milos.BusinessObjects
         {
             var retVal = false;
             if (ParentEntity.PrimaryKeyType == KeyType.Guid)
+            {
                 foreach (IEntitySubItemCollectionItem entity in this)
                     if (entity.PK == key)
                     {
@@ -758,10 +752,9 @@ namespace Milos.BusinessObjects
                         retVal = true;
                         break;
                     }
-                    else
-                    {
-                        throw new UnsupportedKeyTypeException("Key type not supported.");
-                    }
+            }
+            else
+                throw new UnsupportedKeyTypeException("Key type not supported.");
 
             return retVal;
         }
@@ -773,6 +766,7 @@ namespace Milos.BusinessObjects
         {
             var retVal = false;
             if (ParentEntity.PrimaryKeyType == KeyType.Integer || ParentEntity.PrimaryKeyType == KeyType.IntegerAutoIncrement)
+            {
                 foreach (IEntitySubItemCollectionItem entity in this)
                     if (entity.PKInteger == key)
                     {
@@ -780,10 +774,9 @@ namespace Milos.BusinessObjects
                         retVal = true;
                         break;
                     }
-                    else
-                    {
-                        throw new UnsupportedKeyTypeException("Key type not supported.");
-                    }
+            }
+            else
+                throw new UnsupportedKeyTypeException("Key type not supported.");
 
             return retVal;
         }
@@ -795,6 +788,7 @@ namespace Milos.BusinessObjects
         {
             var retVal = false;
             if (ParentEntity.PrimaryKeyType == KeyType.String)
+            {
                 foreach (IEntitySubItemCollectionItem entity in this)
                     if (entity.PKString == key)
                     {
@@ -802,10 +796,9 @@ namespace Milos.BusinessObjects
                         retVal = true;
                         break;
                     }
-                    else
-                    {
-                        throw new UnsupportedKeyTypeException("Key type not supported.");
-                    }
+            }
+            else
+                throw new UnsupportedKeyTypeException("Key type not supported.");
 
             return retVal;
         }
@@ -834,6 +827,44 @@ namespace Milos.BusinessObjects
 
             return rowCount;
         }
+
+        /// <summary>Retrieves an item from the collection by its index.</summary>
+        /// <param name="key">Guid Key</param>
+        /// <returns>Item</returns>
+        public virtual IEntitySubItemCollectionItem GetItemByKey(Guid key)
+        {
+            // Note that this collection really only contains one member object (at a time).
+            // This object is configured with an index, to know what row in the
+            // DataTable to access. That object is then returned, and appears to be
+            // a new object to the outside.
+            var item = GetItemObject();
+            item.PrimaryKeyField = PrimaryKeyField;
+            // We need to find the row index of the item, considering that there might be deleted
+            // records that need to be skipped.
+            if (IsRawTable)
+                foreach (DataRow row in InternalDataTable.Rows)
+                {
+                    if (row.RowState != DataRowState.Deleted && row.RowState != DataRowState.Detached) continue;
+                    if (row[PrimaryKeyField].ToGuidSafe() != key) continue;
+                    // We found the record we are after
+                    item.SetCurrentRow(row);
+                    return item;
+                }
+            else
+                // We can simply go through the array of rows in this filtered or sorted collection
+                foreach (var row in SpecialView)
+                {
+                    if (row.RowState != DataRowState.Deleted && row.RowState != DataRowState.Detached) continue;
+                    if (row[PrimaryKeyField].ToGuidSafe() != key) continue;
+                    // We found the record we are after
+                    item.SetCurrentRow(row);
+                    return item;
+                }
+
+            throw new IndexOutOfBoundsException();
+        }
+
+        public virtual IEntitySubItemCollectionItem GetItemByIndex(int index) => GetItemByIndex(index, false); // This method implementation is required by the interface
 
         /// <summary>Retrieves an item from the collection by its index.</summary>
         /// <param name="index">Numeric index</param>

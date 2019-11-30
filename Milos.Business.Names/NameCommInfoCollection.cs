@@ -43,7 +43,7 @@ namespace Milos.Business.Names
         /// </summary>
         /// <param name="type">Type</param>
         /// <param name="value">Value</param>
-        /// <returns>Added entiry</returns>
+        /// <returns>Added entity</returns>
         public INameCommInfoEntity Add(CommInfoType type, string value)
         {
             var entCommInfo = (INameCommInfoEntity) Add();

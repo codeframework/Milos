@@ -1,13 +1,13 @@
 {
   "runtimeTarget": {
     "name": ".NETStandard,Version=v2.0/",
-    "signature": "301b31c0bec98eac472f605a2c2d6f8ebd48ffd9"
+    "signature": ""
   },
   "compilationOptions": {},
   "targets": {
     ".NETStandard,Version=v2.0": {},
     ".NETStandard,Version=v2.0/": {
-      "Milos.Services.Contracts/5.0.1": {
+      "Milos.Services.Contracts/5.0.2": {
         "dependencies": {
           "NETStandard.Library": "2.0.3",
           "System.ServiceModel.Primitives": "4.5.3"
@@ -63,7 +63,7 @@
     }
   },
   "libraries": {
-    "Milos.Services.Contracts/5.0.1": {
+    "Milos.Services.Contracts/5.0.2": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

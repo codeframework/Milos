@@ -352,7 +352,7 @@ namespace Milos.BusinessObjects
         ///     and adds the appropriate data to the new object.
         /// </summary>
         /// <param name="index">Numeric index</param>
-        /// <param name="absoluteTableIndex">If true, the index is based on the data table, not the (potrentially) sorted view</param>
+        /// <param name="absoluteTableIndex">If true, the index is based on the data table, not the (potentially) sorted view</param>
         /// <returns>Item</returns>
         public override IEntitySubItemCollectionItem GetItemByIndex(int index, bool absoluteTableIndex)
         {
@@ -457,9 +457,7 @@ namespace Milos.BusinessObjects
             }
             else
                 // We may choose to ignore the target table. This would be the case if it is handled manually in a sub-class
-            {
                 item.SetCurrentRow(InternalDataTable.Rows[rowIndex - 1]);
-            }
 
             // We keep a reference to the primary key field in the new item, so we can get that value if we have to
             item.PrimaryKeyField = TargetForeignKeyField;

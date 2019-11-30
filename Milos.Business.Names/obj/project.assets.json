@@ -273,11 +273,11 @@
           "ref/netstandard1.3/System.Threading.Tasks.dll": {}
         }
       },
-      "Milos.BusinessObjects/5.0.1": {
+      "Milos.BusinessObjects/5.0.2": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
-          "Milos.Data": "5.0.1"
+          "Milos.Data": "5.0.2"
         },
         "compile": {
           "bin/placeholder/Milos.BusinessObjects.dll": {}
@@ -286,7 +286,7 @@
           "bin/placeholder/Milos.BusinessObjects.dll": {}
         }
       },
-      "Milos.Data/5.0.1": {
+      "Milos.Data/5.0.2": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
@@ -1324,12 +1324,12 @@
         "system.threading.tasks.nuspec"
       ]
     },
-    "Milos.BusinessObjects/5.0.1": {
+    "Milos.BusinessObjects/5.0.2": {
       "type": "project",
       "path": "../Milos.BusinessObjects/Milos.BusinessObjects.csproj",
       "msbuildProject": "../Milos.BusinessObjects/Milos.BusinessObjects.csproj"
     },
-    "Milos.Data/5.0.1": {
+    "Milos.Data/5.0.2": {
       "type": "project",
       "path": "../Milos.Data/Milos.Data.csproj",
       "msbuildProject": "../Milos.Data/Milos.Data.csproj"
@@ -1337,7 +1337,7 @@
   },
   "projectFileDependencyGroups": {
     ".NETStandard,Version=v2.0": [
-      "Milos.BusinessObjects >= 5.0.1",
+      "Milos.BusinessObjects >= 5.0.2",
       "NETStandard.Library >= 2.0.3"
     ]
   },
@@ -1347,7 +1347,7 @@
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
-    "version": "5.0.1",
+    "version": "5.0.2",
     "restore": {
       "projectUniqueName": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Business.Names\\Milos.Business.Names.csproj",
       "projectName": "Milos.Business.Names",
@@ -1398,10 +1398,16 @@
           }
         },
         "imports": [
-          "net461"
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48"
         ],
         "assetTargetFallback": true,
-        "warn": true
+        "warn": true,
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.0.100\\RuntimeIdentifierGraph.json"
       }
     }
   }

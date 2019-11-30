@@ -6,7 +6,6 @@ C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Business.DocumentManagement\b
 C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Business.DocumentManagement\bin\Release\netstandard2.0\Milos.BusinessObjects.pdb
 C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Business.DocumentManagement\bin\Release\netstandard2.0\Milos.Data.pdb
 C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Business.DocumentManagement\obj\Release\netstandard2.0\Milos.Business.DocumentManagement.csprojAssemblyReference.cache
-C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Business.DocumentManagement\obj\Release\netstandard2.0\Milos.Business.DocumentManagement.csproj.CoreCompileInputs.cache
 C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Business.DocumentManagement\obj\Release\netstandard2.0\Milos.Business.DocumentManagement.AssemblyInfoInputs.cache
 C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Business.DocumentManagement\obj\Release\netstandard2.0\Milos.Business.DocumentManagement.AssemblyInfo.cs
 C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Business.DocumentManagement\obj\Release\netstandard2.0\Milos.Business.DocumentManagement.csproj.CopyComplete

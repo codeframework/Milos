@@ -18,7 +18,6 @@ C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Data.SqlServer\bin\Release\ne
 C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Data.SqlServer\bin\Release\netstandard2.0\Milos.Data.dll
 C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Data.SqlServer\bin\Release\netstandard2.0\Milos.Data.pdb
 C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Data.SqlServer\obj\Release\netstandard2.0\Milos.Data.SqlServer.csprojAssemblyReference.cache
-C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Data.SqlServer\obj\Release\netstandard2.0\Milos.Data.SqlServer.csproj.CoreCompileInputs.cache
 C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Data.SqlServer\obj\Release\netstandard2.0\Milos.Data.SqlServer.AssemblyInfoInputs.cache
 C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Data.SqlServer\obj\Release\netstandard2.0\Milos.Data.SqlServer.AssemblyInfo.cs
 C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Data.SqlServer\obj\Release\netstandard2.0\Milos.Data.SqlServer.csproj.CopyComplete

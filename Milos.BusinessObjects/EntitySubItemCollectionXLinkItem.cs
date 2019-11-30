@@ -298,9 +298,40 @@ namespace Milos.BusinessObjects
         ///     We provide a more meaningful "ToString" value.
         /// </summary>
         /// <returns>Text</returns>
-        public override string ToString()
+        public override string ToString() => Text;
+
+        public override void Remove() => Remove(XLinkItemRemoveMode.LinkRecordOnly);
+
+        public virtual bool Remove(XLinkItemRemoveMode mode)
         {
-            return Text;
+            if (mode == XLinkItemRemoveMode.LinkAndTargetRecord)
+            {
+                // We first need to check if the current table x-linked to this entity can actually be deleted.
+                // It may not be possible to do so, if other items are x-linked to it.
+                if (!CanRemoveTargetRecord()) return false; 
+
+                // Apparently it is OK to delete the linked record, so we remove it.
+                CurrentTargetRow.Delete();
+            }
+
+            // Now we remove the assignment record, which removes the x-link
+            CurrentRow.Delete();
+
+            // We raise an update event
+            if (ParentEntity is BusinessEntity entity)
+                entity.DataUpdated(string.Empty, CurrentRow.Table.TableName);
+            if (ParentCollection is EntitySubItemCollection collection)
+                collection.DataUpdated(string.Empty, CurrentRow);
+
+            return true;
         }
+
+        public virtual bool CanRemoveTargetRecord() => true;
+    }
+
+    public enum XLinkItemRemoveMode
+    {
+        LinkRecordOnly,
+        LinkAndTargetRecord
     }
 }

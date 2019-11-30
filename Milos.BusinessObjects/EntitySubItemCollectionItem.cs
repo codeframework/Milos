@@ -256,15 +256,12 @@ namespace Milos.BusinessObjects
         /// Method used to assign the internal current row field
         /// </summary>
         /// <param name="currentRow">DataRow</param>
-        public virtual void SetCurrentRow(DataRow currentRow)
-        {
-            CurrentRow = currentRow;
-        }
+        public virtual void SetCurrentRow(DataRow currentRow) => CurrentRow = currentRow;
 
         /// <summary>
         /// Removes the current item from the collection
         /// </summary>
-        public void Remove()
+        public virtual void Remove()
         {
             CurrentRow.Delete();
 
