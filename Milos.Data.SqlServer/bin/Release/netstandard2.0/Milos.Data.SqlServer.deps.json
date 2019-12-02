@@ -7,9 +7,9 @@
   "targets": {
     ".NETStandard,Version=v2.0": {},
     ".NETStandard,Version=v2.0/": {
-      "Milos.Data.SqlServer/5.0.6": {
+      "Milos.Data.SqlServer/5.0.7": {
         "dependencies": {
-          "Milos.Data": "5.0.6",
+          "Milos.Data": "5.0.7",
           "NETStandard.Library": "2.0.3",
           "System.Configuration.ConfigurationManager": "4.5.0",
           "System.Data.SqlClient": "4.6.0"
@@ -268,7 +268,7 @@
           "System.Runtime": "4.3.0"
         }
       },
-      "Milos.Data/5.0.6": {
+      "Milos.Data/5.0.7": {
         "dependencies": {
           "CODE.Framework.Fundamentals": "1.0.1",
           "System.Configuration.ConfigurationManager": "4.5.0"
@@ -280,7 +280,7 @@
     }
   },
   "libraries": {
-    "Milos.Data.SqlServer/5.0.6": {
+    "Milos.Data.SqlServer/5.0.7": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
@@ -495,7 +495,7 @@
       "path": "system.threading.tasks/4.3.0",
       "hashPath": "system.threading.tasks.4.3.0.nupkg.sha512"
     },
-    "Milos.Data/5.0.6": {
+    "Milos.Data/5.0.7": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

@@ -1311,7 +1311,7 @@
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
-    "version": "5.0.6",
+    "version": "5.0.7",
     "restore": {
       "projectUniqueName": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Data\\Milos.Data.csproj",
       "projectName": "Milos.Data",

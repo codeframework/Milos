@@ -344,7 +344,7 @@ namespace Milos.BusinessObjects
             return true;
         }
 
-        public XLinkItemRemoveMode DefaultRemoveMode { get; } = XLinkItemRemoveMode.LinkRecordOnly;
+        public virtual XLinkItemRemoveMode DefaultRemoveMode { get; set; } = XLinkItemRemoveMode.LinkRecordOnly;
 
         public virtual bool CanRemoveTargetRecord() => true;
     }
