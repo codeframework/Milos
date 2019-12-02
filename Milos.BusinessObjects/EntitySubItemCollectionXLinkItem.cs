@@ -22,10 +22,28 @@ namespace Milos.BusinessObjects
         /// <param name="mode">Target or link table?</param>
         /// <returns>True or false</returns>
         bool IsFieldNull(string fieldName, XLinkItemAccessMode mode);
+
+        /// <summary>
+        /// Remove method that indicates whether or not a remove operation should only remove the link or also the record that is cross-linked
+        /// </summary>
+        /// <param name="mode">Remove mode</param>
+        /// <returns></returns>
+        bool Remove(XLinkItemRemoveMode mode);
+
+        /// <summary>
+        /// Defines the default removal mode if no specific remove parameter is specified
+        /// </summary>
+        XLinkItemRemoveMode DefaultRemoveMode { get; }
+
+        /// <summary>
+        /// Indicates whether the target record can be removed.
+        /// </summary>
+        /// <returns></returns>
+        bool CanRemoveTargetRecord();
     }
 
     /// <summary>Item object used as members of x-link collections.</summary>
-    public class EntitySubItemCollectionXLinkItem : EntitySubItemCollectionItem
+    public class EntitySubItemCollectionXLinkItem : EntitySubItemCollectionItem, IEntitySubItemCollectionXLinkItem
     {
         /// <summary>Internal reference to the target row.</summary>
         private DataRow currentTargetRow;
@@ -300,7 +318,7 @@ namespace Milos.BusinessObjects
         /// <returns>Text</returns>
         public override string ToString() => Text;
 
-        public override void Remove() => Remove(XLinkItemRemoveMode.LinkRecordOnly);
+        public override void Remove() => Remove(DefaultRemoveMode);
 
         public virtual bool Remove(XLinkItemRemoveMode mode)
         {
@@ -325,6 +343,8 @@ namespace Milos.BusinessObjects
 
             return true;
         }
+
+        public XLinkItemRemoveMode DefaultRemoveMode { get; } = XLinkItemRemoveMode.LinkRecordOnly;
 
         public virtual bool CanRemoveTargetRecord() => true;
     }
