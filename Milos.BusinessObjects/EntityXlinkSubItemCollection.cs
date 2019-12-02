@@ -420,10 +420,11 @@ namespace Milos.BusinessObjects
                 DataRow row = null;
                 for (var counter = 0; counter < InternalTargetDataTable.Rows.Count; counter++)
                 {
+                    if (InternalTargetDataTable.Rows[counter].RowState == DataRowState.Deleted || InternalTargetDataTable.Rows[counter].RowState == DataRowState.Detached) continue;
                     switch (ParentEntity.PrimaryKeyType)
                     {
                         case KeyType.Guid:
-                            if ((Guid) InternalTargetDataTable.Rows[counter][TargetPrimaryKeyField] == (Guid) foreignKey)
+                            if ((Guid)InternalTargetDataTable.Rows[counter][TargetPrimaryKeyField] == foreignKey.ToGuidSafe())
                             {
                                 // We found the item!
                                 row = InternalTargetDataTable.Rows[counter];
@@ -432,7 +433,7 @@ namespace Milos.BusinessObjects
 
                             break;
                         case KeyType.Integer:
-                            if ((int) InternalTargetDataTable.Rows[counter][TargetPrimaryKeyField] == (int) foreignKey)
+                            if ((int)InternalTargetDataTable.Rows[counter][TargetPrimaryKeyField] == foreignKey.ToIntegerSafe())
                             {
                                 // We found the item!
                                 row = InternalTargetDataTable.Rows[counter];
@@ -441,7 +442,7 @@ namespace Milos.BusinessObjects
 
                             break;
                         case KeyType.IntegerAutoIncrement:
-                            if ((int) InternalTargetDataTable.Rows[counter][TargetPrimaryKeyField] == (int) foreignKey)
+                            if ((int)InternalTargetDataTable.Rows[counter][TargetPrimaryKeyField] == foreignKey.ToIntegerSafe())
                             {
                                 // We found the item!
                                 row = InternalTargetDataTable.Rows[counter];
@@ -450,7 +451,7 @@ namespace Milos.BusinessObjects
 
                             break;
                         case KeyType.String:
-                            if ((string) InternalTargetDataTable.Rows[counter][TargetPrimaryKeyField] == (string) foreignKey)
+                            if ((string)InternalTargetDataTable.Rows[counter][TargetPrimaryKeyField] == foreignKey.ToStringSafe())
                             {
                                 // We found the item!
                                 row = InternalTargetDataTable.Rows[counter];
@@ -463,13 +464,12 @@ namespace Milos.BusinessObjects
                     if (found) break;
                 }
 
-                if (found != true) throw new TargetItemNotFoundException();
+                if (!found) throw new TargetItemNotFoundException();
 
                 item.SetCurrentRow(InternalDataTable.Rows[rowIndex - 1], row, TargetTextField);
             }
-            else
-                // We may choose to ignore the target table. This would be the case if it is handled manually in a sub-class
-                item.SetCurrentRow(InternalDataTable.Rows[rowIndex - 1]);
+
+            item.SetCurrentRow(InternalDataTable.Rows[rowIndex - 1]);
 
             // We keep a reference to the primary key field in the new item, so we can get that value if we have to
             item.PrimaryKeyField = TargetForeignKeyField;
