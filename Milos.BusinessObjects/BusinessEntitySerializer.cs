@@ -217,12 +217,11 @@ namespace Milos.BusinessObjects
                                         {
                                             case "System.DateTime":
                                                 var datTime = (DateTime) property.GetValue(sourceObject, null);
-                                                // TODO: Need to do this conversion differently
-                                                var sMonth = datTime.Month.ToString(CultureInfo.InvariantCulture).Trim();
-                                                if (sMonth.Length < 2) sMonth = "0" + sMonth;
-                                                var sDay = datTime.Day.ToString(CultureInfo.InvariantCulture).Trim();
-                                                if (sDay.Length < 2) sDay = "0" + sDay;
-                                                valueString = datTime.Year.ToString(CultureInfo.InvariantCulture) + "-" + sMonth + "-" + sDay + "T00:00:00.0000000-05:00";
+                                                var month = datTime.Month.ToString(CultureInfo.InvariantCulture).Trim();
+                                                if (month.Length < 2) month = "0" + month;
+                                                var day = datTime.Day.ToString(CultureInfo.InvariantCulture).Trim();
+                                                if (day.Length < 2) day = "0" + day;
+                                                valueString = $"{datTime.Year.ToString(CultureInfo.InvariantCulture)}-{month}-{day}T00:00:00.0000000-05:00";
                                                 break;
                                             default:
                                                 valueString = property.GetValue(sourceObject, null).ToString();

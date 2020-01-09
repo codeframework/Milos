@@ -10,7 +10,6 @@ namespace Milos.Business.Names
     /// </summary>
     public class AddressBusinessEntity : BusinessEntity
     {
-        // TODO: Constructors should be private. Create static loader methods instead.
         /// <summary>
         /// Constructor
         /// </summary>
@@ -33,6 +32,9 @@ namespace Milos.Business.Names
         /// </summary>
         /// <returns></returns>
         public override IBusinessObject GetBusinessObject() => new AddressBusinessObject();
+
+        public static AddressBusinessEntity LoadEntity(Guid id) => new AddressBusinessEntity(id);
+        public static AddressBusinessEntity NewEntity() => new AddressBusinessEntity();
 
         /// <summary>
         /// This method returns a well formatted address string, based on the country
@@ -215,7 +217,6 @@ namespace Milos.Business.Names
         /// </summary>
         public string FullAddress
         {
-            // TODO: Revisit the set method and see if we can do anything with it. Then perhaps remove the above code analysis exclusion.
             get => GetFormattedAddress();
             set
             {

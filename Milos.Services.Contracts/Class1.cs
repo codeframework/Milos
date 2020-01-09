@@ -7,7 +7,7 @@ namespace Milos.Services.Contracts
     /// <summary>
     /// Basic service ping functionality
     /// </summary>
-    [ServiceContract]
+    [ServiceContract, Obsolete("Use the Ping Service from the CODE.Framework assemblies instead.")]
     public interface IPingService
     {
         /// <summary>
@@ -20,6 +20,7 @@ namespace Milos.Services.Contracts
     /// <summary>
     /// Ping service implementation
     /// </summary>
+    [Obsolete("Use the Ping Service from the CODE.Framework assemblies instead.")]
     public class PingService : IPingService
     {
         /// <summary>
@@ -47,7 +48,7 @@ namespace Milos.Services.Contracts
     /// <summary>
     /// Ping response information
     /// </summary>
-    [DataContract]
+    [DataContract, Obsolete("Use the Ping Service from the CODE.Framework assemblies instead.")]
     public class PingResponse
     {
         /// <summary>

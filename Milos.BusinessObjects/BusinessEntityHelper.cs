@@ -1,31 +1,23 @@
 ﻿using System;
 using System.Data;
+using System.Diagnostics;
 using CODE.Framework.Fundamentals.Utilities;
 using Milos.Data;
 
 namespace Milos.BusinessObjects
 {
-    /// <summary>
-    ///     This class contains various helper methods used by the business entity class
-    /// </summary>
+    /// <summary>This class contains various helper methods used by the business entity class</summary>
     public static class BusinessEntityHelper
     {
-        /// <summary>
-        ///     Returns the value of a field in the specified table of the specified DataSet
-        /// </summary>
+        /// <summary>Returns the value of a field in the specified table of the specified DataSet</summary>
         /// <typeparam name="TField">The expected returned type for the field.</typeparam>
         /// <param name="entity">The business entity the field belongs to.</param>
         /// <param name="dataSet">The data set the field lives in.</param>
         /// <param name="tableName">Name of the table containing the field.</param>
         /// <param name="fieldName">Name of the field.</param>
         /// <param name="rowIndex">Index of the row of interest within the DataSet.</param>
-        /// <param name="ignoreNulls">
-        ///     Should null values be ignored and returned as null (true) or should they be turned into
-        ///     default values (false)?
-        /// </param>
-        /// <returns>
-        ///     Field value (or type default in exception scenarios)
-        /// </returns>
+        /// <param name="ignoreNulls">Should null values be ignored and returned as null (true) or should they be turned into default values (false)?</param>
+        /// <returns>Field value (or type default in exception scenarios)</returns>
         public static TField GetFieldValue<TField>(BusinessEntity entity, DataSet dataSet, string tableName, string fieldName, int rowIndex, bool ignoreNulls)
         {
             if (entity == null) throw new NullReferenceException("Parameter 'entity' cannot be null or empty.");
@@ -38,22 +30,15 @@ namespace Milos.BusinessObjects
             return GetFieldValue<TField>(entity, dataSet, tableName, fieldName, dataSet.Tables[internalTableName].Rows[rowIndex], ignoreNulls);
         }
 
-        /// <summary>
-        ///     Returns the value of a field in the specified table of the specified DataSet
-        /// </summary>
+        /// <summary>Returns the value of a field in the specified table of the specified DataSet</summary>
         /// <typeparam name="TField">The expected returned type for the field.</typeparam>
         /// <param name="entity">The business entity the field belongs to.</param>
         /// <param name="dataSet">The data set the field lives in.</param>
         /// <param name="tableName">Name of the table containing the field.</param>
         /// <param name="fieldName">Name of the field.</param>
         /// <param name="dataRow">The data row.</param>
-        /// <param name="ignoreNulls">
-        ///     Should null values be ignored and returned as null (true) or should they be turned into
-        ///     default values (false)?
-        /// </param>
-        /// <returns>
-        ///     Field value (or type default in exception scenarios)
-        /// </returns>
+        /// <param name="ignoreNulls">Should null values be ignored and returned as null (true) or should they be turned into default values (false)?</param>
+        /// <returns>Field value (or type default in exception scenarios)</returns>
         public static TField GetFieldValue<TField>(BusinessEntity entity, DataSet dataSet, string tableName, string fieldName, DataRow dataRow, bool ignoreNulls)
         {
             if (entity == null) throw new NullReferenceException("Parameter 'entity' cannot be null or empty.");
@@ -116,9 +101,7 @@ namespace Milos.BusinessObjects
             }
         }
 
-        /// <summary>
-        ///     Use this method to assign any value to the specified table in the provided data set
-        /// </summary>
+        /// <summary>Use this method to assign any value to the specified table in the provided data set</summary>
         /// <typeparam name="TField">The type of the field.</typeparam>
         /// <param name="entity">The entity.</param>
         /// <param name="fieldName">Name of the field that is to be assigned</param>
@@ -126,10 +109,7 @@ namespace Milos.BusinessObjects
         /// <param name="tableName">Name of the table the field is in</param>
         /// <param name="dataSet">The data set.</param>
         /// <param name="rowIndex">Index of the row.</param>
-        /// <param name="forceSet">
-        ///     Should the value be set, even if it is the same as before? (Causes the object to be dirty,
-        ///     possibly without changes)
-        /// </param>
+        /// <param name="forceSet">Should the value be set, even if it is the same as before? (Causes the object to be dirty, possibly without changes)</param>
         /// <returns>True if update succeeded</returns>
         public static bool SetFieldValue<TField>(BusinessEntity entity, string fieldName, TField value, string tableName, DataSet dataSet, int rowIndex, bool forceSet)
         {
@@ -140,9 +120,7 @@ namespace Milos.BusinessObjects
             return SetFieldValue(entity, fieldName, value, tableName, dataSet, dataSet.Tables[tableName].Rows[rowIndex], forceSet);
         }
 
-        /// <summary>
-        ///     Use this method to assign any value to the specified table in the provided data set
-        /// </summary>
+        /// <summary>Use this method to assign any value to the specified table in the provided data set</summary>
         /// <typeparam name="TField">The type of the field.</typeparam>
         /// <param name="entity">The entity.</param>
         /// <param name="fieldName">Name of the field that is to be assigned</param>
@@ -150,17 +128,14 @@ namespace Milos.BusinessObjects
         /// <param name="tableName">Name of the table the field is in</param>
         /// <param name="dataSet">The data set.</param>
         /// <param name="dataRow">The data row.</param>
-        /// <param name="forceSet">
-        ///     Should the value be set, even if it is the same as before? (Causes the object to be dirty,
-        ///     possibly without changes)
-        /// </param>
+        /// <param name="forceSet">Should the value be set, even if it is the same as before? (Causes the object to be dirty, possibly without changes)</param>
         /// <returns>True if update succeeded</returns>
         public static bool SetFieldValue<TField>(BusinessEntity entity, string fieldName, TField value, string tableName, DataSet dataSet, DataRow dataRow, bool forceSet)
         {
             if (entity == null) throw new NullReferenceException("Parameter 'entity' cannot be null or empty.");
             if (string.IsNullOrEmpty(fieldName)) throw new NullReferenceException("Parameter 'fieldName' cannot be null or empty.");
             if (dataSet == null) throw new NullReferenceException("Parameter 'dataSet' cannot be null or empty.");
-            if (dataRow == null) throw new NullReferenceException("Parameter 'dataRowv");
+            if (dataRow == null) throw new NullReferenceException("Parameter 'dataRow");
 
             // We get the mapped names
             // If there's no mapping for the field, we get an empty string.
@@ -209,8 +184,10 @@ namespace Milos.BusinessObjects
                 var invalid = IsValueInvalid(dataSet.Tables[tableName], fieldName, value, entity);
 
                 if (invalid && entity.InvalidFieldUpdateMode == InvalidFieldBehavior.RejectInvalidValues)
-                    // TODO: EPS.QA.Asserts.Alert(Properties.Resources.InvalidValueForField + fieldName + Properties.Resources.OfTable + tableName + Properties.Resources.Rejected);
+                {
+                    Debug.Assert(false, $"Invalid Value for Field {fieldName} of Table {tableName} rejected.");
                     return false;
+                }
                 if (invalid)
                     // We attempt to fix the value
                     value = GetValidValue(dataSet.Tables[tableName], fieldName, value, entity);
@@ -226,16 +203,11 @@ namespace Milos.BusinessObjects
             return true;
         }
 
-        /// <summary>
-        ///     Checks whether a given column exists in the given table. If the column does not exists and should be
-        ///     created on the fly, call the overload that takes the column's value instead.
-        /// </summary>
+        /// <summary>Checks whether a given column exists in the given table. If the column does not exists and should be created on the fly, call the overload that takes the column's value instead.</summary>
         /// <param name="dataSet">The DataSet.</param>
         /// <param name="fieldName">Field name to check for.</param>
         /// <param name="tableName">Name of the table the field is in</param>
-        /// <returns>
-        ///     True or false to indicate whether or not the column exists on the table.
-        /// </returns>
+        /// <returns>True or false to indicate whether or not the column exists on the table.</returns>
         public static bool CheckColumn(DataSet dataSet, string fieldName, string tableName)
         {
             if (dataSet == null) throw new NullReferenceException("Parameter 'dataSet' cannot be null or empty.");
@@ -246,39 +218,27 @@ namespace Milos.BusinessObjects
             return table.Columns.Contains(fieldName);
         }
 
-        /// <summary>
-        ///     Checks whether a given column exists in the given table. If the column does not exists and should be
-        ///     created on the fly, call the overload that takes the column's value instead.
-        /// </summary>
+        /// <summary>Checks whether a given column exists in the given table. If the column does not exists and should be created on the fly, call the overload that takes the column's value instead.</summary>
         /// <param name="table">The data table.</param>
         /// <param name="fieldName">Field name to check for.</param>
         /// <remarks>Field and table names used here must be INTERNAL names, not mapped names.</remarks>
-        /// <returns>
-        ///     True or false to indicate whether or not the column exists on the table.
-        /// </returns>
+        /// <returns>True or false to indicate whether or not the column exists on the table.</returns>
         public static bool CheckColumn(DataTable table, string fieldName)
         {
-            // TODO: Seems to me that all CheckColumn methods everywhere should support mappings right here?
-
             if (table == null) throw new NullReferenceException("Parameter 'table' cannot be null or empty.");
             if (string.IsNullOrEmpty(fieldName)) throw new NullReferenceException("Parameter 'fieldName' cannot be null or empty.");
 
-            var retVal = table.Columns.Contains(fieldName);
-            if (!retVal)
+            if (!table.Columns.Contains(fieldName))
             {
                 table.Columns.Add(fieldName);
                 foreach (DataRow row in table.Rows)
                     row[fieldName] = string.Empty;
-                retVal = true;
             }
 
-            return retVal;
+            return true;
         }
 
-        /// <summary>
-        ///     This method can be used to make sure the default table in the internal recordset has all the required fields.
-        ///     If the field (column) doesn't exist, it will be added.
-        /// </summary>
+        /// <summary>This method can be used to make sure the default table in the internal RecordSet has all the required fields. If the field (column) doesn't exist, it will be added.</summary>
         /// <param name="dataSet">The DataSet.</param>
         /// <param name="fieldName">Field name to check for.</param>
         /// <param name="tableName">Name of the table the field is in</param>
@@ -290,18 +250,14 @@ namespace Milos.BusinessObjects
             if (string.IsNullOrEmpty(fieldName)) throw new NullReferenceException("Parameter 'fieldName' cannot be null or empty.");
             if (string.IsNullOrEmpty(tableName)) throw new NullReferenceException("Parameter 'tableName' cannot be null or empty.");
 
-            var retVal = true;
             var table = dataSet.Tables[tableName];
             if (!table.Columns.Contains(fieldName))
                 // Apparently, that column doesn't exist. Let's add it...
                 table.Columns.Add(fieldName, value.GetType());
-            return retVal;
+            return true;
         }
 
-        /// <summary>
-        ///     This method can be used to make sure the default table in the internal recordset has all the required fields.
-        ///     If the field (column) doesn't exist, it will be added.
-        /// </summary>
+        /// <summary>This method can be used to make sure the default table in the internal recordset has all the required fields. If the field (column) doesn't exist, it will be added.</summary>
         /// <typeparam name="TField">The type of the field.</typeparam>
         /// <param name="dataSet">The DataSet.</param>
         /// <param name="fieldName">Field name to check for.</param>
@@ -313,19 +269,15 @@ namespace Milos.BusinessObjects
             if (string.IsNullOrEmpty(fieldName)) throw new NullReferenceException("Parameter 'fieldName' cannot be null or empty.");
             if (string.IsNullOrEmpty(tableName)) throw new NullReferenceException("Parameter 'tableName' cannot be null or empty.");
 
-            var retVal = true;
             var table = dataSet.Tables[tableName];
             if (!table.Columns.Contains(fieldName))
                 // Apparently, that column doesn't exist. Let's add it...
                 table.Columns.Add(fieldName, typeof(TField));
-            return retVal;
+            return true;
         }
 
-        /// <summary>
-        ///     Inspects the provided column and returns an appropriate default value for the column,
-        ///     cast as an object type.
-        /// </summary>
-        /// <param name="column">The column used to detirmine the appropriate default value.</param>
+        /// <summary>Inspects the provided column and returns an appropriate default value for the column, cast as an object type.</summary>
+        /// <param name="column">The column used to determine the appropriate default value.</param>
         /// <returns>Default value for the column.</returns>
         public static object GenerateDefaultValueForColumn(DataColumn column)
         {
@@ -334,11 +286,9 @@ namespace Milos.BusinessObjects
             if (column.DataType == typeof(bool)) return false;
 
             if (column.DataType == typeof(byte[]))
-            {
-                byte[] aB1 = {byte.MinValue};
-                return aB1;
-            }
-
+                return Array.Empty<byte>();
+            if (column.DataType == typeof(sbyte[]))
+                return Array.Empty<sbyte>();
             if (column.DataType == typeof(byte))
                 return byte.MinValue;
             if (column.DataType == typeof(sbyte))
@@ -352,21 +302,21 @@ namespace Milos.BusinessObjects
             if (column.DataType == typeof(decimal))
                 return 0m;
             if (column.DataType == typeof(double))
-                return 0;
+                return 0d;
             if (column.DataType == typeof(short))
-                return Convert.ToInt16(0);
+                return (short)0;
             if (column.DataType == typeof(int))
-                return Convert.ToInt32(0);
+                return 0;
             if (column.DataType == typeof(long))
-                return Convert.ToUInt64(0);
+                return (long)0;
             if (column.DataType == typeof(ushort))
-                return Convert.ToUInt16(0);
+                return (ushort)0;
             if (column.DataType == typeof(uint))
-                return Convert.ToUInt32(0);
+                return (uint)0;
             if (column.DataType == typeof(ulong))
-                return Convert.ToUInt64(0);
+                return (ulong)0;
             if (column.DataType == typeof(float))
-                return Convert.ToSingle(0);
+                return 0f;
             if (column.DataType == typeof(TimeSpan))
                 return TimeSpan.MinValue;
             if (column.DataType == typeof(Guid))
@@ -374,9 +324,7 @@ namespace Milos.BusinessObjects
             return 0;
         }
 
-        /// <summary>
-        ///     Checks whether the value is valid based on the definition of the field in the provided data table.
-        /// </summary>
+        /// <summary>Checks whether the value is valid based on the definition of the field in the provided data table.</summary>
         /// <typeparam name="TField">The type of the field.</typeparam>
         /// <param name="table">Data table</param>
         /// <param name="fieldName">Field name within the data table</param>
@@ -415,9 +363,7 @@ namespace Milos.BusinessObjects
             return false;
         }
 
-        /// <summary>
-        ///     Fixes the value to be valid based on the current field type
-        /// </summary>
+        /// <summary>Fixes the value to be valid based on the current field type</summary>
         /// <typeparam name="TField">The type of the field.</typeparam>
         /// <param name="table">Data table</param>
         /// <param name="fieldName">Field name within the data table</param>
@@ -443,8 +389,7 @@ namespace Milos.BusinessObjects
                 var associatedBusinessObject = entity.AssociatedBusinessObject;
                 if (associatedBusinessObject is BusinessObject currentBusinessObject)
                 {
-                    // Date checking can only work if the business object is a subclass
-                    // of the EPS Business Object class
+                    // Date checking can only work if the business object is a subclass of the EPS Business Object class
                     var datValue = (DateTime) (object) value;
                     if (datValue < currentBusinessObject.DataService.DateMinValue)
                         return (TField) (object) currentBusinessObject.DataService.DateMinValue;
@@ -456,12 +401,10 @@ namespace Milos.BusinessObjects
             return value;
         }
 
-        /// <summary>
-        ///     Clears the rows from the specified table.
-        /// </summary>
+        /// <summary>Clears the rows from the specified table.</summary>
         /// <param name="dataSet">The data set.</param>
         /// <param name="tableName">Name of the table.</param>
-        /// <returns></returns>
+        /// <returns>Success indicator</returns>
         public static bool ClearRows(DataSet dataSet, string tableName)
         {
             if (dataSet == null) throw new NullReferenceException("Parameter 'dataSet' cannot be null or empty.");
@@ -477,20 +420,14 @@ namespace Milos.BusinessObjects
             return false;
         }
 
-        /// <summary>
-        ///     Checks whether a certain table has the specified minimum number of rows.
-        ///     If the table doesn't have the specified minimum number of rows (and
-        ///     autoAddRows is passed as true), the rows are automatically created.
-        /// </summary>
+        /// <summary>Checks whether a certain table has the specified minimum number of rows. If the table doesn't have the specified minimum number of rows (and autoAddRows is passed as true), the rows are automatically created.</summary>
         /// <param name="tableName">Name of the table.</param>
         /// <param name="primaryKeyField">The primary key field.</param>
         /// <param name="minimumRowCount">The minimum row count.</param>
         /// <param name="autoAddRows">If set to <c>true</c>, adds missing rows automatically.</param>
         /// <param name="dataSet">The data set.</param>
         /// <param name="entity">The entity.</param>
-        /// <returns>
-        ///     True if the table has the appropriate number of rows (or the appropriate number of rows has been added)
-        /// </returns>
+        /// <returns>True if the table has the appropriate number of rows (or the appropriate number of rows has been added)</returns>
         public static bool CheckRows(string tableName, string primaryKeyField, int minimumRowCount, bool autoAddRows, DataSet dataSet, BusinessEntity entity)
         {
             if (dataSet == null) throw new NullReferenceException("Parameter 'dataSet' cannot be null or empty.");
@@ -498,46 +435,41 @@ namespace Milos.BusinessObjects
             if (string.IsNullOrEmpty(tableName)) throw new NullReferenceException("Parameter 'tableName' cannot be null or empty.");
             if (string.IsNullOrEmpty(primaryKeyField)) throw new NullReferenceException("Parameter 'primaryKeyField' cannot be null or empty.");
 
-            var retVal = false;
+            if (!dataSet.Tables.Contains(tableName)) return false;
+            if (dataSet.Tables[tableName].Rows.Count >= minimumRowCount) return true;
 
-            if (dataSet.Tables.Contains(tableName))
+            if (!autoAddRows) return false;
+
+            // We need to know the actual name of the pk field
+            var primaryKeyFieldName = entity.GetInternalFieldName(primaryKeyField, tableName);
+
+            // There aren't enough rows, so we add them...
+            while (dataSet.Tables[tableName].Rows.Count < minimumRowCount)
             {
-                if (dataSet.Tables[tableName].Rows.Count >= minimumRowCount)
-                    retVal = true;
-                else if (autoAddRows)
+                // We must add more records
+                var newRow = dataSet.Tables[tableName].NewRow();
+                switch (entity.PrimaryKeyType)
                 {
-                    // We need to know the actual name of the pk field
-                    var primaryKeyFieldName = entity.GetInternalFieldName(primaryKeyField, tableName);
-
-                    // There aren't enough rows, so we add them...
-                    while (dataSet.Tables[tableName].Rows.Count < minimumRowCount)
-                    {
-                        // We must add more records
-                        var newRow = dataSet.Tables[tableName].NewRow();
-                        switch (entity.PrimaryKeyType)
-                        {
-                            case KeyType.Guid:
-                                newRow[primaryKeyFieldName] = Guid.NewGuid();
-                                break;
-                            case KeyType.Integer:
-                                newRow[primaryKeyFieldName] = entity.AssociatedBusinessObject.GetNewIntegerKey(tableName, dataSet);
-                                break;
-                            case KeyType.IntegerAutoIncrement:
-                                newRow[primaryKeyFieldName] = entity.AssociatedBusinessObject.GetNewIntegerKey(tableName, dataSet);
-                                break;
-                            case KeyType.String:
-                                newRow[primaryKeyFieldName] = entity.AssociatedBusinessObject.GetNewStringKey(tableName, dataSet);
-                                break;
-                        }
-
-                        if (entity.AssociatedBusinessObject is BusinessObject associatedBusinessObject)
-                            associatedBusinessObject.CallPopulateNewRecord(newRow, tableName, dataSet);
-                        dataSet.Tables[tableName].Rows.Add(newRow);
-                    }
+                    case KeyType.Guid:
+                        newRow[primaryKeyFieldName] = Guid.NewGuid();
+                        break;
+                    case KeyType.Integer:
+                        newRow[primaryKeyFieldName] = entity.AssociatedBusinessObject.GetNewIntegerKey(tableName, dataSet);
+                        break;
+                    case KeyType.IntegerAutoIncrement:
+                        newRow[primaryKeyFieldName] = entity.AssociatedBusinessObject.GetNewIntegerKey(tableName, dataSet);
+                        break;
+                    case KeyType.String:
+                        newRow[primaryKeyFieldName] = entity.AssociatedBusinessObject.GetNewStringKey(tableName, dataSet);
+                        break;
                 }
+
+                if (entity.AssociatedBusinessObject is BusinessObject associatedBusinessObject)
+                    associatedBusinessObject.CallPopulateNewRecord(newRow, tableName, dataSet);
+                dataSet.Tables[tableName].Rows.Add(newRow);
             }
 
-            return retVal;
+            return true;
         }
     }
 }

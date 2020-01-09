@@ -372,9 +372,8 @@ namespace Milos.Data
                 switch (para.DbType)
                 {
                     case DbType.Binary:
-                        // TODO: We need to convert this into a base64 encoded binary string (or something along those lines
-                        var aBuf = (byte[]) para.Value;
-                        writer.WriteAttributeString("value", Convert.ToBase64String(aBuf, 0, aBuf.Length));
+                        var buffer = (byte[]) para.Value;
+                        writer.WriteAttributeString("value", Convert.ToBase64String(buffer, 0, buffer.Length));
                         break;
                     default:
                         writer.WriteAttributeString("value", para.Value.ToString());

@@ -215,9 +215,6 @@ namespace Milos.BusinessObjects.Generic
         /// <returns>Collection item object</returns>
         public override IEntitySubItemCollectionItem GetItemObject()
         {
-            //TODO: CL on 3/17/2008 - The SetParentCollection method isn't part of the interface,
-            // so we must cast it to the concrete type. This should be improved.
-
             var item = new TItem();
             if (item is EntitySubItemCollectionItem item2) item2.SetParentCollection(this);
             return item;

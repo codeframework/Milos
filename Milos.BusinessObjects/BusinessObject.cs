@@ -85,8 +85,8 @@ namespace Milos.BusinessObjects
                 // the current object to find things such as data services.
                 // (Note: Data context objects clearly are the exception)
                 if (internalDataContext == null)
-                {
                     // The first time around, we need to create an appropriate DataService
+                {
                     if (dataService == null)
                         try
                         {

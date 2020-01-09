@@ -143,7 +143,7 @@ namespace Milos.Business.Financial
             //       given the lines of code it has to execute in order to handle the line number).
             newLine.LineNumber = Count;
 
-            // The new line should be placed imediately under the line being passed.
+            // The new line should be placed immediately under the line being passed.
             newLine.LineNumber = line.LineNumber + 1;
 
             return newLine;

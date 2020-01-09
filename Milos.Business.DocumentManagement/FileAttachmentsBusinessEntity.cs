@@ -177,7 +177,6 @@ namespace Milos.Business.DocumentManagement
                     FileName = fileInfo.Name;
                     Type = fileInfo.Extension;
                     if (Title.Length == 0) Title = fileInfo.Name;
-                    // TODO: Perhaps we can also automatically create a thumbnail/preview image
                     break;
                 case FileAttachmentIndex.SecondAttachment:
                     Attachment2 = fileData;

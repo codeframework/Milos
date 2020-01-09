@@ -165,7 +165,7 @@ namespace Milos.BusinessObjects
                 if (parentEntity == null)
                 {
                     // This is a real problem!
-                    // TODO: EPS.QA.Asserts.Alert(Properties.Resources.NoParentEntity);
+                    Debug.Assert(false, "No parent entity!");
                 }
 
                 return parentEntity;

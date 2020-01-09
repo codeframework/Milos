@@ -1029,7 +1029,7 @@ namespace Milos.BusinessObjects
         }
 
         /// <summary>
-        ///     This method can be used to make sure the default table in the internal recordset has all the required fields.
+        ///     This method can be used to make sure the default table in the internal DataSet has all the required fields.
         ///     If the field (column) doesn't exist, it will be added.
         /// </summary>
         /// <param name="fieldName">Field name to check for.</param>

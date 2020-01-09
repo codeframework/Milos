@@ -5,7 +5,7 @@
   },
   "projects": {
     "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Data\\Milos.Data.csproj": {
-      "version": "5.0.8",
+      "version": "5.0.9",
       "restore": {
         "projectUniqueName": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Data\\Milos.Data.csproj",
         "projectName": "Milos.Data",
@@ -69,7 +69,7 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.0.100\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.100\\RuntimeIdentifierGraph.json"
         }
       }
     }
