@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "dgSpecHash": "y2qzKsoMVOCY8a9OfqiPV7I0Hr/buzdPIqOS7CF6Acf/gI4Sts4m22+8F7deqRKgz0CXNsyTZmSoyDSlHHvOow==",
+  "success": true,
+  "projectFilePath": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Services.Contracts\\Milos.Services.Contracts.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\megge\\.nuget\\packages\\microsoft.netcore.platforms\\2.1.0\\microsoft.netcore.platforms.2.1.0.nupkg.sha512",
+    "C:\\Users\\megge\\.nuget\\packages\\netstandard.library\\2.0.3\\netstandard.library.2.0.3.nupkg.sha512",
+    "C:\\Users\\megge\\.nuget\\packages\\system.private.servicemodel\\4.5.3\\system.private.servicemodel.4.5.3.nupkg.sha512",
+    "C:\\Users\\megge\\.nuget\\packages\\system.reflection.dispatchproxy\\4.5.0\\system.reflection.dispatchproxy.4.5.0.nupkg.sha512",
+    "C:\\Users\\megge\\.nuget\\packages\\system.security.principal.windows\\4.5.0\\system.security.principal.windows.4.5.0.nupkg.sha512",
+    "C:\\Users\\megge\\.nuget\\packages\\system.servicemodel.primitives\\4.5.3\\system.servicemodel.primitives.4.5.3.nupkg.sha512"
+  ],
+  "logs": []
+}

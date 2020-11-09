@@ -3,6 +3,6 @@ C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Services.Contracts\bin\Releas
 C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Services.Contracts\obj\Release\netstandard2.0\Milos.Services.Contracts.AssemblyInfoInputs.cache
 C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Services.Contracts\obj\Release\netstandard2.0\Milos.Services.Contracts.AssemblyInfo.cs
 C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Services.Contracts\bin\Release\netstandard2.0\Milos.Services.Contracts.pdb
-C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Services.Contracts\obj\Release\netstandard2.0\Milos.Services.Contracts.csprojAssemblyReference.cache
 C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Services.Contracts\obj\Release\netstandard2.0\Milos.Services.Contracts.dll
 C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Services.Contracts\obj\Release\netstandard2.0\Milos.Services.Contracts.pdb
+C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Services.Contracts\obj\Release\netstandard2.0\Milos.Services.Contracts.csproj.CoreCompileInputs.cache

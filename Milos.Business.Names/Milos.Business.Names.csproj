@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>5.0.9</Version>
+    <Version>5.0.10</Version>
     <Company>EPS Software Corp.</Company>
     <Product>CODE Framework: Milos Solution Platform</Product>
     <Copyright>EPS Software Corp.</Copyright>
@@ -11,8 +11,8 @@
     <PackageProjectUrl>http://www.codeframework.io</PackageProjectUrl>
     <Description>The Milos Solution Platform is the spiritual predecessor of CODE Framework, and some parts of the Milos Solution Platform (especially those important for data access, business logic, and services) are maintained as part of CODE Framework.</Description>
     <PackageTags />
-    <AssemblyVersion>5.0.8.0</AssemblyVersion>
-    <FileVersion>5.0.8.0</FileVersion>
+    <AssemblyVersion>5.0.10.0</AssemblyVersion>
+    <FileVersion>5.0.10.0</FileVersion>
     <Authors>EPS Software Corp./Markus Egger Inc.</Authors>
     <PackageIconUrl>https://raw.githubusercontent.com/codeframework/Docs/master/_meta/Milos.png</PackageIconUrl>
   </PropertyGroup>

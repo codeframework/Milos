@@ -273,7 +273,7 @@
           "ref/netstandard1.3/System.Threading.Tasks.dll": {}
         }
       },
-      "Milos.Data/5.0.9": {
+      "Milos.Data/5.0.10": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
@@ -1311,7 +1311,7 @@
         "system.threading.tasks.nuspec"
       ]
     },
-    "Milos.Data/5.0.9": {
+    "Milos.Data/5.0.10": {
       "type": "project",
       "path": "../Milos.Data/Milos.Data.csproj",
       "msbuildProject": "../Milos.Data/Milos.Data.csproj"
@@ -1319,7 +1319,7 @@
   },
   "projectFileDependencyGroups": {
     ".NETStandard,Version=v2.0": [
-      "Milos.Data >= 5.0.9",
+      "Milos.Data >= 5.0.10",
       "NETStandard.Library >= 2.0.3"
     ]
   },
@@ -1329,7 +1329,7 @@
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
-    "version": "5.0.9",
+    "version": "5.0.10",
     "restore": {
       "projectUniqueName": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.BusinessObjects\\Milos.BusinessObjects.csproj",
       "projectName": "Milos.BusinessObjects",
@@ -1389,7 +1389,7 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.100\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.403\\RuntimeIdentifierGraph.json"
       }
     }
   }

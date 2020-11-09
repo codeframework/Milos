@@ -4,7 +4,6 @@
     <id>Milos.Business.DocumentManagement</id>
     <version>5.0.9</version>
     <authors>EPS Software Corp./Markus Egger Inc.</authors>
-    <owners>EPS Software Corp./Markus Egger Inc.</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <license type="expression">MIT</license>
     <licenseUrl>https://licenses.nuget.org/MIT</licenseUrl>
@@ -14,7 +13,7 @@
     <copyright>EPS Software Corp.</copyright>
     <dependencies>
       <group targetFramework=".NETStandard2.0">
-        <dependency id="Milos.BusinessObjects" version="5.0.9" exclude="Build,Analyzers" />
+        <dependency id="Milos.BusinessObjects" version="5.0.10" exclude="Build,Analyzers" />
       </group>
     </dependencies>
   </metadata>

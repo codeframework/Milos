@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>Milos.Services.Contracts</id>
+    <version>5.0.10</version>
+    <authors>EPS Software Corp./Markus Egger Inc.</authors>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
+    <licenseUrl>https://licenses.nuget.org/MIT</licenseUrl>
+    <projectUrl>http://www.codeframework.io/</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/codeframework/Docs/master/_meta/Milos.png</iconUrl>
+    <description>The Milos Solution Platform is the spiritual predecessor of CODE Framework, and some parts of the Milos Solution Platform (especially those important for data access, business logic, and services) are maintained as part of CODE Framework.</description>
+    <copyright>EPS Software Corp.</copyright>
+    <dependencies>
+      <group targetFramework=".NETStandard2.0">
+        <dependency id="System.ServiceModel.Primitives" version="4.5.3" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.Services.Contracts\bin\Release\netstandard2.0\Milos.Services.Contracts.dll" target="lib\netstandard2.0\Milos.Services.Contracts.dll" />
+  </files>
+</package>

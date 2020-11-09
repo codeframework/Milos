@@ -50,13 +50,25 @@ namespace Milos.Business.Names
                 var address = string.Empty;
                 if (includeName)
                 {
-                    if (AddressCompany.Length > 0) address += AddressCompany.Trim() + "\n";
-                    if (AddressName.Length > 0) address += AddressName.Trim() + "\n";
+                    var nameFound = false;
+                    if (!string.IsNullOrEmpty(AddressCompany)) 
+                    {
+                        nameFound = true;
+                        address += AddressCompany.Trim() + "\n";
+                    }
+                    if (!string.IsNullOrEmpty(AddressName)) 
+                    {
+                        nameFound = true;
+                        address += AddressName.Trim() + "\n";
+                    }
+
+                    if (!nameFound) // We didn't fine the name yet, so we get it from the associated name record
+                        address += GetAddressNameFromData() + "\n";
                 }
 
                 address += Street.Trim() + "\n";
-                if (Street2.Length > 0) address += Street2.Trim() + "\n";
-                if (Street3.Length > 0) address += Street3.Trim() + "\n";
+                if (!string.IsNullOrEmpty(Street2)) address += Street2.Trim() + "\n";
+                if (!string.IsNullOrEmpty(Street3)) address += Street3.Trim() + "\n";
                 switch (entCountry.AddressFormat)
                 {
                     case AddressFormat.CityStateZip:
@@ -78,6 +90,12 @@ namespace Milos.Business.Names
             }
         }
 
+        private string GetAddressNameFromData()
+        {
+            using (var biz = new AddressBusinessObject())
+                return biz.GetNameByAddressId(PK);
+        }
+
         /// <summary>
         /// This method returns a well formatted address string (HTML), based on the country
         /// </summary>
@@ -92,26 +110,42 @@ namespace Milos.Business.Names
                 var address = string.Empty;
                 if (includeName)
                 {
-                    if (AddressCompany.Length > 0) address += "<b>" + AddressCompany.Trim() + "</b><br>";
-                    if (AddressName.Length > 0) address += "<b>" + AddressName.Trim() + "</b><br>";
+                    var nameFound = false;
+                    if (!string.IsNullOrEmpty(AddressCompany)) 
+                    {
+                        nameFound = true;
+                        address += "<b>" + AddressCompany.Trim() + "</b><br/>";
+                    }
+                    if (!string.IsNullOrEmpty(AddressName)) 
+                    {
+                        nameFound = true;
+                        address += "<b>" + AddressName.Trim() + "</b><br/>";
+                    }
+
+                    if (!nameFound) // We didn't fine the name yet, so we get it from the associated name record
+                        address += "<b>" + GetAddressNameFromData().Replace("\n", "<br/>") + "</b><br/>";
+                }
+                {
+                    if (AddressCompany.Length > 0) address += "<b>" + AddressCompany.Trim() + "</b><br/>";
+                    if (AddressName.Length > 0) address += "<b>" + AddressName.Trim() + "</b><br/>";
                 }
 
-                address += Street.Trim() + "<br>";
-                if (Street2.Length > 0) address += Street2.Trim() + "<br>";
-                if (Street3.Length > 0) address += Street3.Trim() + "<br>";
+                address += Street.Trim() + "<br/>";
+                if (Street2.Length > 0) address += Street2.Trim() + "<br/>";
+                if (Street3.Length > 0) address += Street3.Trim() + "<br/>";
                 switch (entCountry.AddressFormat)
                 {
                     case AddressFormat.CityStateZip:
-                        address += City.Trim() + ", " + State.Trim() + " " + Zip.Trim() + "<br>";
+                        address += City.Trim() + ", " + State.Trim() + " " + Zip.Trim() + "<br/>";
                         break;
                     case AddressFormat.CityPostalCode:
-                        address += City.Trim() + ", " + Zip.Trim() + "<br>";
+                        address += City.Trim() + ", " + Zip.Trim() + "<br/>";
                         break;
                     case AddressFormat.PostalCodeCity:
-                        address += Zip.Trim() + " " + City.Trim() + "<br>";
+                        address += Zip.Trim() + " " + City.Trim() + "<br/>";
                         break;
                     case AddressFormat.PostalCodeCityState:
-                        address += Zip.Trim() + " " + City.Trim() + ", " + State.Trim() + "<br>";
+                        address += Zip.Trim() + " " + City.Trim() + ", " + State.Trim() + "<br/>";
                         break;
                 }
 
