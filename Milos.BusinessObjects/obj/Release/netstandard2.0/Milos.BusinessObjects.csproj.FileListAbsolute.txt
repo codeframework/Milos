@@ -24,3 +24,5 @@ C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.BusinessObjects\obj\Release\n
 C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.BusinessObjects\obj\Release\netstandard2.0\Milos.BusinessObjects.dll
 C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.BusinessObjects\obj\Release\netstandard2.0\Milos.BusinessObjects.pdb
 C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.BusinessObjects\obj\Release\netstandard2.0\Milos.BusinessObjects.csproj.CoreCompileInputs.cache
+C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.BusinessObjects\obj\Release\netstandard2.0\Milos.BusinessObjects.csproj.AssemblyReference.cache
+C:\Projects\MilosSolutionPlatform\Core\Milos\Milos.BusinessObjects\obj\Release\netstandard2.0\Milos.BusinessObjects.GeneratedMSBuildEditorConfig.editorconfig
