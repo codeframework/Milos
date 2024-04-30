@@ -10,3 +10,14 @@ C:\Projects\MilosSolutionPlatform\Core\MilosSolutionPlatform\Milos.Data\obj\Debu
 C:\Projects\MilosSolutionPlatform\Core\MilosSolutionPlatform\Milos.Data\obj\Debug\netstandard2.0\Milos.Data.csproj.CopyComplete
 C:\Projects\MilosSolutionPlatform\Core\MilosSolutionPlatform\Milos.Data\obj\Debug\netstandard2.0\Milos.Data.dll
 C:\Projects\MilosSolutionPlatform\Core\MilosSolutionPlatform\Milos.Data\obj\Debug\netstandard2.0\Milos.Data.pdb
+C:\Projects\CODEFramework\Milos\Milos.Data\bin\Debug\netstandard2.0\Milos.Data.deps.json
+C:\Projects\CODEFramework\Milos\Milos.Data\bin\Debug\netstandard2.0\Milos.Data.dll
+C:\Projects\CODEFramework\Milos\Milos.Data\bin\Debug\netstandard2.0\Milos.Data.pdb
+C:\Projects\CODEFramework\Milos\Milos.Data\obj\Debug\netstandard2.0\Milos.Data.csproj.AssemblyReference.cache
+C:\Projects\CODEFramework\Milos\Milos.Data\obj\Debug\netstandard2.0\Milos.Data.GeneratedMSBuildEditorConfig.editorconfig
+C:\Projects\CODEFramework\Milos\Milos.Data\obj\Debug\netstandard2.0\Milos.Data.AssemblyInfoInputs.cache
+C:\Projects\CODEFramework\Milos\Milos.Data\obj\Debug\netstandard2.0\Milos.Data.AssemblyInfo.cs
+C:\Projects\CODEFramework\Milos\Milos.Data\obj\Debug\netstandard2.0\Milos.Data.csproj.CoreCompileInputs.cache
+C:\Projects\CODEFramework\Milos\Milos.Data\obj\Debug\netstandard2.0\Milos.Data.sourcelink.json
+C:\Projects\CODEFramework\Milos\Milos.Data\obj\Debug\netstandard2.0\Milos.Data.dll
+C:\Projects\CODEFramework\Milos\Milos.Data\obj\Debug\netstandard2.0\Milos.Data.pdb

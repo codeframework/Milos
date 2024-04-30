@@ -1,34 +1,32 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Business.Financial\\Milos.Business.Financial.csproj": {}
+    "C:\\Projects\\CODEFramework\\Milos\\Milos.Business.Financial\\Milos.Business.Financial.csproj": {}
   },
   "projects": {
-    "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Business.Financial\\Milos.Business.Financial.csproj": {
-      "version": "5.0.11",
+    "C:\\Projects\\CODEFramework\\Milos\\Milos.Business.Financial\\Milos.Business.Financial.csproj": {
+      "version": "5.1.0",
       "restore": {
-        "projectUniqueName": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Business.Financial\\Milos.Business.Financial.csproj",
+        "projectUniqueName": "C:\\Projects\\CODEFramework\\Milos\\Milos.Business.Financial\\Milos.Business.Financial.csproj",
         "projectName": "Milos.Business.Financial",
-        "projectPath": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Business.Financial\\Milos.Business.Financial.csproj",
+        "projectPath": "C:\\Projects\\CODEFramework\\Milos\\Milos.Business.Financial\\Milos.Business.Financial.csproj",
         "packagesPath": "C:\\Users\\megge\\.nuget\\packages\\",
-        "outputPath": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Business.Financial\\obj\\",
+        "outputPath": "C:\\Projects\\CODEFramework\\Milos\\Milos.Business.Financial\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
-          "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\",
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
           "C:\\Users\\megge\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "netstandard2.0"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {},
           "https://pkgs.dev.azure.com/eps-software/_packaging/EPSPackages/nuget/v3/index.json": {}
         },
@@ -36,8 +34,8 @@
           "netstandard2.0": {
             "targetAlias": "netstandard2.0",
             "projectReferences": {
-              "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Business.Names\\Milos.Business.Names.csproj": {
-                "projectPath": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Business.Names\\Milos.Business.Names.csproj"
+              "C:\\Projects\\CODEFramework\\Milos\\Milos.Business.Names\\Milos.Business.Names.csproj": {
+                "projectPath": "C:\\Projects\\CODEFramework\\Milos\\Milos.Business.Names\\Milos.Business.Names.csproj"
               }
             }
           }
@@ -46,6 +44,11 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -65,39 +68,38 @@
             "net47",
             "net471",
             "net472",
-            "net48"
+            "net48",
+            "net481"
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.100-preview.5.21302.13\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300-preview.24203.14\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Business.Names\\Milos.Business.Names.csproj": {
-      "version": "5.0.11",
+    "C:\\Projects\\CODEFramework\\Milos\\Milos.Business.Names\\Milos.Business.Names.csproj": {
+      "version": "5.1.0",
       "restore": {
-        "projectUniqueName": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Business.Names\\Milos.Business.Names.csproj",
+        "projectUniqueName": "C:\\Projects\\CODEFramework\\Milos\\Milos.Business.Names\\Milos.Business.Names.csproj",
         "projectName": "Milos.Business.Names",
-        "projectPath": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Business.Names\\Milos.Business.Names.csproj",
+        "projectPath": "C:\\Projects\\CODEFramework\\Milos\\Milos.Business.Names\\Milos.Business.Names.csproj",
         "packagesPath": "C:\\Users\\megge\\.nuget\\packages\\",
-        "outputPath": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Business.Names\\obj\\",
+        "outputPath": "C:\\Projects\\CODEFramework\\Milos\\Milos.Business.Names\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
-          "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\",
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
           "C:\\Users\\megge\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "netstandard2.0"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {},
           "https://pkgs.dev.azure.com/eps-software/_packaging/EPSPackages/nuget/v3/index.json": {}
         },
@@ -105,8 +107,8 @@
           "netstandard2.0": {
             "targetAlias": "netstandard2.0",
             "projectReferences": {
-              "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.BusinessObjects\\Milos.BusinessObjects.csproj": {
-                "projectPath": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.BusinessObjects\\Milos.BusinessObjects.csproj"
+              "C:\\Projects\\CODEFramework\\Milos\\Milos.BusinessObjects\\Milos.BusinessObjects.csproj": {
+                "projectPath": "C:\\Projects\\CODEFramework\\Milos\\Milos.BusinessObjects\\Milos.BusinessObjects.csproj"
               }
             }
           }
@@ -115,6 +117,11 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -134,39 +141,38 @@
             "net47",
             "net471",
             "net472",
-            "net48"
+            "net48",
+            "net481"
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.100-preview.5.21302.13\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300-preview.24203.14\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.BusinessObjects\\Milos.BusinessObjects.csproj": {
-      "version": "5.0.11",
+    "C:\\Projects\\CODEFramework\\Milos\\Milos.BusinessObjects\\Milos.BusinessObjects.csproj": {
+      "version": "5.1.0",
       "restore": {
-        "projectUniqueName": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.BusinessObjects\\Milos.BusinessObjects.csproj",
+        "projectUniqueName": "C:\\Projects\\CODEFramework\\Milos\\Milos.BusinessObjects\\Milos.BusinessObjects.csproj",
         "projectName": "Milos.BusinessObjects",
-        "projectPath": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.BusinessObjects\\Milos.BusinessObjects.csproj",
+        "projectPath": "C:\\Projects\\CODEFramework\\Milos\\Milos.BusinessObjects\\Milos.BusinessObjects.csproj",
         "packagesPath": "C:\\Users\\megge\\.nuget\\packages\\",
-        "outputPath": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.BusinessObjects\\obj\\",
+        "outputPath": "C:\\Projects\\CODEFramework\\Milos\\Milos.BusinessObjects\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
-          "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\",
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
           "C:\\Users\\megge\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "netstandard2.0"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {},
           "https://pkgs.dev.azure.com/eps-software/_packaging/EPSPackages/nuget/v3/index.json": {}
         },
@@ -174,8 +180,8 @@
           "netstandard2.0": {
             "targetAlias": "netstandard2.0",
             "projectReferences": {
-              "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Data\\Milos.Data.csproj": {
-                "projectPath": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Data\\Milos.Data.csproj"
+              "C:\\Projects\\CODEFramework\\Milos\\Milos.Data\\Milos.Data.csproj": {
+                "projectPath": "C:\\Projects\\CODEFramework\\Milos\\Milos.Data\\Milos.Data.csproj"
               }
             }
           }
@@ -184,6 +190,11 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -203,39 +214,38 @@
             "net47",
             "net471",
             "net472",
-            "net48"
+            "net48",
+            "net481"
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.100-preview.5.21302.13\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300-preview.24203.14\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Data\\Milos.Data.csproj": {
-      "version": "5.0.11",
+    "C:\\Projects\\CODEFramework\\Milos\\Milos.Data\\Milos.Data.csproj": {
+      "version": "5.1.0",
       "restore": {
-        "projectUniqueName": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Data\\Milos.Data.csproj",
+        "projectUniqueName": "C:\\Projects\\CODEFramework\\Milos\\Milos.Data\\Milos.Data.csproj",
         "projectName": "Milos.Data",
-        "projectPath": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Data\\Milos.Data.csproj",
+        "projectPath": "C:\\Projects\\CODEFramework\\Milos\\Milos.Data\\Milos.Data.csproj",
         "packagesPath": "C:\\Users\\megge\\.nuget\\packages\\",
-        "outputPath": "C:\\Projects\\MilosSolutionPlatform\\Core\\Milos\\Milos.Data\\obj\\",
+        "outputPath": "C:\\Projects\\CODEFramework\\Milos\\Milos.Data\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
-          "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\",
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
           "C:\\Users\\megge\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "netstandard2.0"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {},
           "https://pkgs.dev.azure.com/eps-software/_packaging/EPSPackages/nuget/v3/index.json": {}
         },
@@ -249,6 +259,11 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -257,7 +272,7 @@
           "dependencies": {
             "CODE.Framework.Fundamentals": {
               "target": "Package",
-              "version": "[1.0.1, )"
+              "version": "[2.0.17, )"
             },
             "NETStandard.Library": {
               "suppressParent": "All",
@@ -276,11 +291,12 @@
             "net47",
             "net471",
             "net472",
-            "net48"
+            "net48",
+            "net481"
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.100-preview.5.21302.13\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300-preview.24203.14\\RuntimeIdentifierGraph.json"
         }
       }
     }

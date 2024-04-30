@@ -12,3 +12,17 @@ C:\Projects\MilosSolutionPlatform\Core\MilosSolutionPlatform\Milos.Data.SqlServe
 C:\Projects\MilosSolutionPlatform\Core\MilosSolutionPlatform\Milos.Data.SqlServer\obj\Debug\netstandard2.0\Milos.Data.SqlServer.csproj.CopyComplete
 C:\Projects\MilosSolutionPlatform\Core\MilosSolutionPlatform\Milos.Data.SqlServer\obj\Debug\netstandard2.0\Milos.Data.SqlServer.dll
 C:\Projects\MilosSolutionPlatform\Core\MilosSolutionPlatform\Milos.Data.SqlServer\obj\Debug\netstandard2.0\Milos.Data.SqlServer.pdb
+C:\Projects\CODEFramework\Milos\Milos.Data.SqlServer\obj\Debug\netstandard2.0\Milos.Data.SqlServer.dll
+C:\Projects\CODEFramework\Milos\Milos.Data.SqlServer\obj\Debug\netstandard2.0\Milos.Data.SqlServer.pdb
+C:\Projects\CODEFramework\Milos\Milos.Data.SqlServer\obj\Debug\netstandard2.0\Milos.Data.SqlServer.csproj.AssemblyReference.cache
+C:\Projects\CODEFramework\Milos\Milos.Data.SqlServer\obj\Debug\netstandard2.0\Milos.Data.SqlServer.GeneratedMSBuildEditorConfig.editorconfig
+C:\Projects\CODEFramework\Milos\Milos.Data.SqlServer\obj\Debug\netstandard2.0\Milos.Data.SqlServer.AssemblyInfoInputs.cache
+C:\Projects\CODEFramework\Milos\Milos.Data.SqlServer\obj\Debug\netstandard2.0\Milos.Data.SqlServer.AssemblyInfo.cs
+C:\Projects\CODEFramework\Milos\Milos.Data.SqlServer\obj\Debug\netstandard2.0\Milos.Data.SqlServer.csproj.CoreCompileInputs.cache
+C:\Projects\CODEFramework\Milos\Milos.Data.SqlServer\obj\Debug\netstandard2.0\Milos.Data.SqlServer.sourcelink.json
+C:\Projects\CODEFramework\Milos\Milos.Data.SqlServer\bin\Debug\netstandard2.0\Milos.Data.SqlServer.deps.json
+C:\Projects\CODEFramework\Milos\Milos.Data.SqlServer\bin\Debug\netstandard2.0\Milos.Data.SqlServer.dll
+C:\Projects\CODEFramework\Milos\Milos.Data.SqlServer\bin\Debug\netstandard2.0\Milos.Data.SqlServer.pdb
+C:\Projects\CODEFramework\Milos\Milos.Data.SqlServer\bin\Debug\netstandard2.0\Milos.Data.dll
+C:\Projects\CODEFramework\Milos\Milos.Data.SqlServer\bin\Debug\netstandard2.0\Milos.Data.pdb
+C:\Projects\CODEFramework\Milos\Milos.Data.SqlServer\obj\Debug\netstandard2.0\Milos.Da.91495210.Up2Date
