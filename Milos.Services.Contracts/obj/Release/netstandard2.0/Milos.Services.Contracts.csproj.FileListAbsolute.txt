@@ -19,3 +19,14 @@ C:\Projects\CODEFramework\Milos\Milos.Services.Contracts\obj\Release\netstandard
 C:\Projects\CODEFramework\Milos\Milos.Services.Contracts\obj\Release\netstandard2.0\Milos.Services.Contracts.sourcelink.json
 C:\Projects\CODEFramework\Milos\Milos.Services.Contracts\obj\Release\netstandard2.0\Milos.Services.Contracts.dll
 C:\Projects\CODEFramework\Milos\Milos.Services.Contracts\obj\Release\netstandard2.0\Milos.Services.Contracts.pdb
+C:\Projects\CODE.Framework\Milos\Milos.Services.Contracts\bin\Release\netstandard2.0\Milos.Services.Contracts.deps.json
+C:\Projects\CODE.Framework\Milos\Milos.Services.Contracts\bin\Release\netstandard2.0\Milos.Services.Contracts.dll
+C:\Projects\CODE.Framework\Milos\Milos.Services.Contracts\bin\Release\netstandard2.0\Milos.Services.Contracts.pdb
+C:\Projects\CODE.Framework\Milos\Milos.Services.Contracts\obj\Release\netstandard2.0\Milos.Services.Contracts.csproj.AssemblyReference.cache
+C:\Projects\CODE.Framework\Milos\Milos.Services.Contracts\obj\Release\netstandard2.0\Milos.Services.Contracts.GeneratedMSBuildEditorConfig.editorconfig
+C:\Projects\CODE.Framework\Milos\Milos.Services.Contracts\obj\Release\netstandard2.0\Milos.Services.Contracts.AssemblyInfoInputs.cache
+C:\Projects\CODE.Framework\Milos\Milos.Services.Contracts\obj\Release\netstandard2.0\Milos.Services.Contracts.AssemblyInfo.cs
+C:\Projects\CODE.Framework\Milos\Milos.Services.Contracts\obj\Release\netstandard2.0\Milos.Services.Contracts.csproj.CoreCompileInputs.cache
+C:\Projects\CODE.Framework\Milos\Milos.Services.Contracts\obj\Release\netstandard2.0\Milos.Services.Contracts.sourcelink.json
+C:\Projects\CODE.Framework\Milos\Milos.Services.Contracts\obj\Release\netstandard2.0\Milos.Services.Contracts.dll
+C:\Projects\CODE.Framework\Milos\Milos.Services.Contracts\obj\Release\netstandard2.0\Milos.Services.Contracts.pdb
