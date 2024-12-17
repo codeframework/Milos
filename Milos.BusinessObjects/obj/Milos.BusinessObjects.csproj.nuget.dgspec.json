@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Projects\\CODEFramework\\Milos\\Milos.BusinessObjects\\Milos.BusinessObjects.csproj": {}
+    "C:\\Projects\\CODE.Framework\\Milos\\Milos.BusinessObjects\\Milos.BusinessObjects.csproj": {}
   },
   "projects": {
-    "C:\\Projects\\CODEFramework\\Milos\\Milos.BusinessObjects\\Milos.BusinessObjects.csproj": {
-      "version": "5.1.0",
+    "C:\\Projects\\CODE.Framework\\Milos\\Milos.BusinessObjects\\Milos.BusinessObjects.csproj": {
+      "version": "5.2.0",
       "restore": {
-        "projectUniqueName": "C:\\Projects\\CODEFramework\\Milos\\Milos.BusinessObjects\\Milos.BusinessObjects.csproj",
+        "projectUniqueName": "C:\\Projects\\CODE.Framework\\Milos\\Milos.BusinessObjects\\Milos.BusinessObjects.csproj",
         "projectName": "Milos.BusinessObjects",
-        "projectPath": "C:\\Projects\\CODEFramework\\Milos\\Milos.BusinessObjects\\Milos.BusinessObjects.csproj",
+        "projectPath": "C:\\Projects\\CODE.Framework\\Milos\\Milos.BusinessObjects\\Milos.BusinessObjects.csproj",
         "packagesPath": "C:\\Users\\megge\\.nuget\\packages\\",
-        "outputPath": "C:\\Projects\\CODEFramework\\Milos\\Milos.BusinessObjects\\obj\\",
+        "outputPath": "C:\\Projects\\CODE.Framework\\Milos\\Milos.BusinessObjects\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -34,8 +34,8 @@
           "netstandard2.0": {
             "targetAlias": "netstandard2.0",
             "projectReferences": {
-              "C:\\Projects\\CODEFramework\\Milos\\Milos.Data\\Milos.Data.csproj": {
-                "projectPath": "C:\\Projects\\CODEFramework\\Milos\\Milos.Data\\Milos.Data.csproj"
+              "C:\\Projects\\CODE.Framework\\Milos\\Milos.Data\\Milos.Data.csproj": {
+                "projectPath": "C:\\Projects\\CODE.Framework\\Milos\\Milos.Data\\Milos.Data.csproj"
               }
             }
           }
@@ -48,8 +48,9 @@
         "restoreAuditProperties": {
           "enableAudit": "true",
           "auditLevel": "low",
-          "auditMode": "direct"
-        }
+          "auditMode": "all"
+        },
+        "SdkAnalysisLevel": "9.0.200"
       },
       "frameworks": {
         "netstandard2.0": {
@@ -73,18 +74,18 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300-preview.24203.14\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200-preview.0.24575.35\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Projects\\CODEFramework\\Milos\\Milos.Data\\Milos.Data.csproj": {
-      "version": "5.1.0",
+    "C:\\Projects\\CODE.Framework\\Milos\\Milos.Data\\Milos.Data.csproj": {
+      "version": "5.2.0",
       "restore": {
-        "projectUniqueName": "C:\\Projects\\CODEFramework\\Milos\\Milos.Data\\Milos.Data.csproj",
+        "projectUniqueName": "C:\\Projects\\CODE.Framework\\Milos\\Milos.Data\\Milos.Data.csproj",
         "projectName": "Milos.Data",
-        "projectPath": "C:\\Projects\\CODEFramework\\Milos\\Milos.Data\\Milos.Data.csproj",
+        "projectPath": "C:\\Projects\\CODE.Framework\\Milos\\Milos.Data\\Milos.Data.csproj",
         "packagesPath": "C:\\Users\\megge\\.nuget\\packages\\",
-        "outputPath": "C:\\Projects\\CODEFramework\\Milos\\Milos.Data\\obj\\",
+        "outputPath": "C:\\Projects\\CODE.Framework\\Milos\\Milos.Data\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -117,8 +118,9 @@
         "restoreAuditProperties": {
           "enableAudit": "true",
           "auditLevel": "low",
-          "auditMode": "direct"
-        }
+          "auditMode": "all"
+        },
+        "SdkAnalysisLevel": "9.0.200"
       },
       "frameworks": {
         "netstandard2.0": {
@@ -126,7 +128,7 @@
           "dependencies": {
             "CODE.Framework.Fundamentals": {
               "target": "Package",
-              "version": "[2.0.17, )"
+              "version": "[2.0.18, )"
             },
             "NETStandard.Library": {
               "suppressParent": "All",
@@ -136,7 +138,7 @@
             },
             "System.Configuration.ConfigurationManager": {
               "target": "Package",
-              "version": "[4.5.0, )"
+              "version": "[9.0.0, )"
             }
           },
           "imports": [
@@ -150,7 +152,7 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300-preview.24203.14\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200-preview.0.24575.35\\RuntimeIdentifierGraph.json"
         }
       }
     }

@@ -26,3 +26,17 @@ C:\Projects\CODEFramework\Milos\Milos.Data.SqlServer\bin\Debug\netstandard2.0\Mi
 C:\Projects\CODEFramework\Milos\Milos.Data.SqlServer\bin\Debug\netstandard2.0\Milos.Data.dll
 C:\Projects\CODEFramework\Milos\Milos.Data.SqlServer\bin\Debug\netstandard2.0\Milos.Data.pdb
 C:\Projects\CODEFramework\Milos\Milos.Data.SqlServer\obj\Debug\netstandard2.0\Milos.Da.91495210.Up2Date
+C:\Projects\CODE.Framework\Milos\Milos.Data.SqlServer\bin\Debug\netstandard2.0\Milos.Data.SqlServer.deps.json
+C:\Projects\CODE.Framework\Milos\Milos.Data.SqlServer\bin\Debug\netstandard2.0\Milos.Data.SqlServer.dll
+C:\Projects\CODE.Framework\Milos\Milos.Data.SqlServer\bin\Debug\netstandard2.0\Milos.Data.SqlServer.pdb
+C:\Projects\CODE.Framework\Milos\Milos.Data.SqlServer\bin\Debug\netstandard2.0\Milos.Data.dll
+C:\Projects\CODE.Framework\Milos\Milos.Data.SqlServer\bin\Debug\netstandard2.0\Milos.Data.pdb
+C:\Projects\CODE.Framework\Milos\Milos.Data.SqlServer\obj\Debug\netstandard2.0\Milos.Data.SqlServer.csproj.AssemblyReference.cache
+C:\Projects\CODE.Framework\Milos\Milos.Data.SqlServer\obj\Debug\netstandard2.0\Milos.Data.SqlServer.GeneratedMSBuildEditorConfig.editorconfig
+C:\Projects\CODE.Framework\Milos\Milos.Data.SqlServer\obj\Debug\netstandard2.0\Milos.Data.SqlServer.AssemblyInfoInputs.cache
+C:\Projects\CODE.Framework\Milos\Milos.Data.SqlServer\obj\Debug\netstandard2.0\Milos.Data.SqlServer.AssemblyInfo.cs
+C:\Projects\CODE.Framework\Milos\Milos.Data.SqlServer\obj\Debug\netstandard2.0\Milos.Data.SqlServer.csproj.CoreCompileInputs.cache
+C:\Projects\CODE.Framework\Milos\Milos.Data.SqlServer\obj\Debug\netstandard2.0\Milos.Data.SqlServer.sourcelink.json
+C:\Projects\CODE.Framework\Milos\Milos.Data.SqlServer\obj\Debug\netstandard2.0\Milos.Da.91495210.Up2Date
+C:\Projects\CODE.Framework\Milos\Milos.Data.SqlServer\obj\Debug\netstandard2.0\Milos.Data.SqlServer.dll
+C:\Projects\CODE.Framework\Milos\Milos.Data.SqlServer\obj\Debug\netstandard2.0\Milos.Data.SqlServer.pdb

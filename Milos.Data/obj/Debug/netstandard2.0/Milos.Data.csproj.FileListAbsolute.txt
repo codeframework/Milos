@@ -21,3 +21,14 @@ C:\Projects\CODEFramework\Milos\Milos.Data\obj\Debug\netstandard2.0\Milos.Data.c
 C:\Projects\CODEFramework\Milos\Milos.Data\obj\Debug\netstandard2.0\Milos.Data.sourcelink.json
 C:\Projects\CODEFramework\Milos\Milos.Data\obj\Debug\netstandard2.0\Milos.Data.dll
 C:\Projects\CODEFramework\Milos\Milos.Data\obj\Debug\netstandard2.0\Milos.Data.pdb
+C:\Projects\CODE.Framework\Milos\Milos.Data\bin\Debug\netstandard2.0\Milos.Data.deps.json
+C:\Projects\CODE.Framework\Milos\Milos.Data\bin\Debug\netstandard2.0\Milos.Data.dll
+C:\Projects\CODE.Framework\Milos\Milos.Data\bin\Debug\netstandard2.0\Milos.Data.pdb
+C:\Projects\CODE.Framework\Milos\Milos.Data\obj\Debug\netstandard2.0\Milos.Data.csproj.AssemblyReference.cache
+C:\Projects\CODE.Framework\Milos\Milos.Data\obj\Debug\netstandard2.0\Milos.Data.GeneratedMSBuildEditorConfig.editorconfig
+C:\Projects\CODE.Framework\Milos\Milos.Data\obj\Debug\netstandard2.0\Milos.Data.AssemblyInfoInputs.cache
+C:\Projects\CODE.Framework\Milos\Milos.Data\obj\Debug\netstandard2.0\Milos.Data.AssemblyInfo.cs
+C:\Projects\CODE.Framework\Milos\Milos.Data\obj\Debug\netstandard2.0\Milos.Data.csproj.CoreCompileInputs.cache
+C:\Projects\CODE.Framework\Milos\Milos.Data\obj\Debug\netstandard2.0\Milos.Data.sourcelink.json
+C:\Projects\CODE.Framework\Milos\Milos.Data\obj\Debug\netstandard2.0\Milos.Data.dll
+C:\Projects\CODE.Framework\Milos\Milos.Data\obj\Debug\netstandard2.0\Milos.Data.pdb

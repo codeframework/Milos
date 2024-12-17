@@ -26,3 +26,17 @@ C:\Projects\CODEFramework\Milos\Milos.BusinessObjects\obj\Debug\netstandard2.0\M
 C:\Projects\CODEFramework\Milos\Milos.BusinessObjects\obj\Debug\netstandard2.0\Milos.Bu.F90A328A.Up2Date
 C:\Projects\CODEFramework\Milos\Milos.BusinessObjects\obj\Debug\netstandard2.0\Milos.BusinessObjects.dll
 C:\Projects\CODEFramework\Milos\Milos.BusinessObjects\obj\Debug\netstandard2.0\Milos.BusinessObjects.pdb
+C:\Projects\CODE.Framework\Milos\Milos.BusinessObjects\bin\Debug\netstandard2.0\Milos.BusinessObjects.deps.json
+C:\Projects\CODE.Framework\Milos\Milos.BusinessObjects\bin\Debug\netstandard2.0\Milos.BusinessObjects.dll
+C:\Projects\CODE.Framework\Milos\Milos.BusinessObjects\bin\Debug\netstandard2.0\Milos.BusinessObjects.pdb
+C:\Projects\CODE.Framework\Milos\Milos.BusinessObjects\bin\Debug\netstandard2.0\Milos.Data.dll
+C:\Projects\CODE.Framework\Milos\Milos.BusinessObjects\bin\Debug\netstandard2.0\Milos.Data.pdb
+C:\Projects\CODE.Framework\Milos\Milos.BusinessObjects\obj\Debug\netstandard2.0\Milos.BusinessObjects.csproj.AssemblyReference.cache
+C:\Projects\CODE.Framework\Milos\Milos.BusinessObjects\obj\Debug\netstandard2.0\Milos.BusinessObjects.GeneratedMSBuildEditorConfig.editorconfig
+C:\Projects\CODE.Framework\Milos\Milos.BusinessObjects\obj\Debug\netstandard2.0\Milos.BusinessObjects.AssemblyInfoInputs.cache
+C:\Projects\CODE.Framework\Milos\Milos.BusinessObjects\obj\Debug\netstandard2.0\Milos.BusinessObjects.AssemblyInfo.cs
+C:\Projects\CODE.Framework\Milos\Milos.BusinessObjects\obj\Debug\netstandard2.0\Milos.BusinessObjects.csproj.CoreCompileInputs.cache
+C:\Projects\CODE.Framework\Milos\Milos.BusinessObjects\obj\Debug\netstandard2.0\Milos.BusinessObjects.sourcelink.json
+C:\Projects\CODE.Framework\Milos\Milos.BusinessObjects\obj\Debug\netstandard2.0\Milos.Bu.F90A328A.Up2Date
+C:\Projects\CODE.Framework\Milos\Milos.BusinessObjects\obj\Debug\netstandard2.0\Milos.BusinessObjects.dll
+C:\Projects\CODE.Framework\Milos\Milos.BusinessObjects\obj\Debug\netstandard2.0\Milos.BusinessObjects.pdb
