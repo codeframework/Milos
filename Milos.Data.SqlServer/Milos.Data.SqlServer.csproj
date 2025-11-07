@@ -11,9 +11,9 @@
 		<PackageProjectUrl>http://www.codeframework.io</PackageProjectUrl>
 		<Description>The Milos Solution Platform is the spiritual predecessor of CODE Framework, and some parts of the Milos Solution Platform (especially those important for data access, business logic, and services) are maintained as part of CODE Framework.</Description>
 		<PackageTags />
-		<Version>5.2.0</Version>
-		<AssemblyVersion>5.2.0.0</AssemblyVersion>
-		<FileVersion>5.2.0.0</FileVersion>
+		<Version>5.2.1</Version>
+		<AssemblyVersion>5.2.1.0</AssemblyVersion>
+		<FileVersion>5.2.1.0</FileVersion>
 		<Authors>EPS Software Corp./Markus Egger Inc.</Authors>
 		<PackageIconUrl>https://raw.githubusercontent.com/codeframework/Docs/master/_meta/Milos.png</PackageIconUrl>
 	</PropertyGroup>
@@ -23,8 +23,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="System.Configuration.ConfigurationManager" Version="9.0.0" />
-		<PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.2" />
+		<PackageReference Include="System.Configuration.ConfigurationManager" Version="9.0.10" />
+		<PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.2" />
 	</ItemGroup>
 
 	<ItemGroup>

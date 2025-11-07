@@ -7,19 +7,12 @@
   "targets": {
     ".NETStandard,Version=v2.0": {},
     ".NETStandard,Version=v2.0/": {
-      "Milos.Services.Contracts/5.2.0": {
+      "Milos.Services.Contracts/5.2.1": {
         "dependencies": {
-          "NETStandard.Library": "2.0.3",
-          "System.ServiceModel.Primitives": "8.1.1"
+          "System.ServiceModel.Primitives": "8.1.2"
         },
         "runtime": {
           "Milos.Services.Contracts.dll": {}
-        }
-      },
-      "Microsoft.NETCore.Platforms/1.1.0": {},
-      "NETStandard.Library/2.0.3": {
-        "dependencies": {
-          "Microsoft.NETCore.Platforms": "1.1.0"
         }
       },
       "System.Security.Principal.Windows/5.0.0": {
@@ -30,46 +23,32 @@
           }
         }
       },
-      "System.ServiceModel.Primitives/8.1.1": {
+      "System.ServiceModel.Primitives/8.1.2": {
         "dependencies": {
           "System.Security.Principal.Windows": "5.0.0"
         },
         "runtime": {
           "lib/netstandard2.0/System.ServiceModel.Duplex.dll": {
-            "assemblyVersion": "8.1.1.0",
-            "fileVersion": "8.100.124.61002"
+            "assemblyVersion": "8.1.2.0",
+            "fileVersion": "8.100.225.15402"
           },
           "lib/netstandard2.0/System.ServiceModel.Primitives.dll": {
-            "assemblyVersion": "8.1.1.0",
-            "fileVersion": "8.100.124.61002"
+            "assemblyVersion": "8.1.2.0",
+            "fileVersion": "8.100.225.15402"
           },
           "lib/netstandard2.0/System.ServiceModel.Security.dll": {
-            "assemblyVersion": "8.1.1.0",
-            "fileVersion": "8.100.124.61002"
+            "assemblyVersion": "8.1.2.0",
+            "fileVersion": "8.100.225.15402"
           }
         }
       }
     }
   },
   "libraries": {
-    "Milos.Services.Contracts/5.2.0": {
+    "Milos.Services.Contracts/5.2.1": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
-    },
-    "Microsoft.NETCore.Platforms/1.1.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-kz0PEW2lhqygehI/d6XsPCQzD7ff7gUJaVGPVETX611eadGsA3A877GdSlU0LRVMCTH/+P3o2iDTak+S08V2+A==",
-      "path": "microsoft.netcore.platforms/1.1.0",
-      "hashPath": "microsoft.netcore.platforms.1.1.0.nupkg.sha512"
-    },
-    "NETStandard.Library/2.0.3": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-st47PosZSHrjECdjeIzZQbzivYBJFv6P2nv4cj2ypdI204DO+vZ7l5raGMiX4eXMJ53RfOIg+/s4DHVZ54Nu2A==",
-      "path": "netstandard.library/2.0.3",
-      "hashPath": "netstandard.library.2.0.3.nupkg.sha512"
     },
     "System.Security.Principal.Windows/5.0.0": {
       "type": "package",
@@ -78,12 +57,12 @@
       "path": "system.security.principal.windows/5.0.0",
       "hashPath": "system.security.principal.windows.5.0.0.nupkg.sha512"
     },
-    "System.ServiceModel.Primitives/8.1.1": {
+    "System.ServiceModel.Primitives/8.1.2": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-v+jwURtpzg1eI5RDARP9AAQg5GmtNu6rWAOVTauL74cB8jcuP6DB8PVpz1IPTRavX6qlFAKkS+X+9QR5S84QyA==",
-      "path": "system.servicemodel.primitives/8.1.1",
-      "hashPath": "system.servicemodel.primitives.8.1.1.nupkg.sha512"
+      "sha512": "sha512-xlJ07FAUSDjPL/GhvVY1/KVPWn2ce056X4nHPwqAa5rkNLiNN5rqh6VcgMUoF6J7ckwhkVJ1vVx/K/47nyyR9g==",
+      "path": "system.servicemodel.primitives/8.1.2",
+      "hashPath": "system.servicemodel.primitives.8.1.2.nupkg.sha512"
     }
   }
 }

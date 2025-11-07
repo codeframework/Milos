@@ -45,13 +45,15 @@
           }
         }
       },
-      "System.ServiceModel.Primitives/8.1.1": {
+      "System.ServiceModel.Primitives/8.1.2": {
         "type": "package",
         "dependencies": {
           "System.Security.Principal.Windows": "5.0.0"
         },
         "compile": {
-          "ref/netstandard2.0/System.ServiceModel.Primitives.dll": {}
+          "ref/netstandard2.0/System.ServiceModel.Duplex.dll": {},
+          "ref/netstandard2.0/System.ServiceModel.Primitives.dll": {},
+          "ref/netstandard2.0/System.ServiceModel.Security.dll": {}
         },
         "runtime": {
           "lib/netstandard2.0/System.ServiceModel.Duplex.dll": {
@@ -266,10 +268,10 @@
         "version.txt"
       ]
     },
-    "System.ServiceModel.Primitives/8.1.1": {
-      "sha512": "v+jwURtpzg1eI5RDARP9AAQg5GmtNu6rWAOVTauL74cB8jcuP6DB8PVpz1IPTRavX6qlFAKkS+X+9QR5S84QyA==",
+    "System.ServiceModel.Primitives/8.1.2": {
+      "sha512": "xlJ07FAUSDjPL/GhvVY1/KVPWn2ce056X4nHPwqAa5rkNLiNN5rqh6VcgMUoF6J7ckwhkVJ1vVx/K/47nyyR9g==",
       "type": "package",
-      "path": "system.servicemodel.primitives/8.1.1",
+      "path": "system.servicemodel.primitives/8.1.2",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -316,11 +318,18 @@
         "lib/xamarinmac20/_._",
         "lib/xamarintvos10/_._",
         "lib/xamarinwatchos10/_._",
+        "ref/net462/System.ServiceModel.Duplex.dll",
         "ref/net462/System.ServiceModel.Primitives.dll",
+        "ref/net462/System.ServiceModel.Security.dll",
+        "ref/net8.0/System.ServiceModel.Duplex.dll",
         "ref/net8.0/System.ServiceModel.Primitives.dll",
+        "ref/net8.0/System.ServiceModel.Security.dll",
+        "ref/net8.0/System.ServiceModel.dll",
         "ref/netcoreapp2.0/_._",
+        "ref/netstandard2.0/System.ServiceModel.Duplex.dll",
         "ref/netstandard2.0/System.ServiceModel.Primitives.dll",
-        "system.servicemodel.primitives.8.1.1.nupkg.sha512",
+        "ref/netstandard2.0/System.ServiceModel.Security.dll",
+        "system.servicemodel.primitives.8.1.2.nupkg.sha512",
         "system.servicemodel.primitives.nuspec"
       ]
     }
@@ -328,7 +337,7 @@
   "projectFileDependencyGroups": {
     ".NETStandard,Version=v2.0": [
       "NETStandard.Library >= 2.0.3",
-      "System.ServiceModel.Primitives >= 8.1.1"
+      "System.ServiceModel.Primitives >= 8.1.2"
     ]
   },
   "packageFolders": {
@@ -336,7 +345,7 @@
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
-    "version": "5.2.0",
+    "version": "5.2.1",
     "restore": {
       "projectUniqueName": "C:\\Projects\\CODE.Framework\\Milos\\Milos.Services.Contracts\\Milos.Services.Contracts.csproj",
       "projectName": "Milos.Services.Contracts",
@@ -357,7 +366,6 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {},
         "https://pkgs.dev.azure.com/eps-software/_packaging/EPSPackages/nuget/v3/index.json": {}
       },
@@ -375,9 +383,9 @@
       "restoreAuditProperties": {
         "enableAudit": "true",
         "auditLevel": "low",
-        "auditMode": "all"
+        "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "9.0.200"
+      "SdkAnalysisLevel": "10.0.100"
     },
     "frameworks": {
       "netstandard2.0": {
@@ -391,7 +399,7 @@
           },
           "System.ServiceModel.Primitives": {
             "target": "Package",
-            "version": "[8.1.1, )"
+            "version": "[8.1.2, )"
           }
         },
         "imports": [
@@ -405,7 +413,7 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200-preview.0.24575.35\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.100-rc.2.25502.107\\RuntimeIdentifierGraph.json"
       }
     }
   }
