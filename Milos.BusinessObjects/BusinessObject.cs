@@ -662,6 +662,9 @@ public abstract class BusinessObject : IBusinessObject
                 // We are ready to go.
                 var comLoad = DataService.BuildSingleRecordQueryCommand(MasterEntity, "*", PrimaryKeyField, entityKey, QueryMethod);
                 var dsInternal = ExecuteQuery(comLoad, MasterEntity);
+                if (dsInternal == null || dsInternal.Tables.Count == 0 || dsInternal.Tables[MasterEntity].Rows.Count == 0)
+                    throw new KeyNotFoundException($"Key: {entityKey}");
+
                 LoadSecondaryTables(entityKey, dsInternal);
                 return dsInternal;
             default:
@@ -680,6 +683,9 @@ public abstract class BusinessObject : IBusinessObject
         // We are ready to go.
         var loadCommand = DataService.BuildSingleRecordQueryCommand(MasterEntity, "*", PrimaryKeyField, entityKey, QueryMethod);
         var dsInternal = ExecuteQuery(loadCommand, MasterEntity);
+        if (dsInternal == null || dsInternal.Tables.Count == 0 || dsInternal.Tables[MasterEntity].Rows.Count == 0)
+            throw new KeyNotFoundException($"Key: {entityKey}"); 
+
         LoadSecondaryTables(entityKey, dsInternal);
         return dsInternal;
     }
@@ -696,6 +702,9 @@ public abstract class BusinessObject : IBusinessObject
         // We are ready to go.
         var loadCommand = DataService.BuildSingleRecordQueryCommand(MasterEntity, "*", PrimaryKeyField, entityKey, QueryMethod);
         var dsInternal = ExecuteQuery(loadCommand, MasterEntity);
+        if (dsInternal == null || dsInternal.Tables.Count == 0 || dsInternal.Tables[MasterEntity].Rows.Count == 0)
+            throw new KeyNotFoundException($"Key: {entityKey}");
+
         LoadSecondaryTables(entityKey, dsInternal);
         return dsInternal;
     }

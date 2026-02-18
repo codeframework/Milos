@@ -1,6 +1,6 @@
 is_global = true
 build_property.RootNamespace = Milos.BusinessObjects
-build_property.ProjectDir = C:\Projects\CODE.Framework\Milos\Milos.BusinessObjects\
+build_property.ProjectDir = D:\Repos\CodeFramework\Milos\Milos.BusinessObjects\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.CsWinRTUseWindowsUIXamlProjections = false

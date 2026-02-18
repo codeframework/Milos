@@ -45,7 +45,7 @@
           }
         }
       },
-      "System.ServiceModel.Primitives/8.1.2": {
+      "System.ServiceModel.Primitives/10.0.652802": {
         "type": "package",
         "dependencies": {
           "System.Security.Principal.Windows": "5.0.0"
@@ -268,10 +268,10 @@
         "version.txt"
       ]
     },
-    "System.ServiceModel.Primitives/8.1.2": {
-      "sha512": "xlJ07FAUSDjPL/GhvVY1/KVPWn2ce056X4nHPwqAa5rkNLiNN5rqh6VcgMUoF6J7ckwhkVJ1vVx/K/47nyyR9g==",
+    "System.ServiceModel.Primitives/10.0.652802": {
+      "sha512": "ULfGNl75BNXkpF42wNV2CDXJ64dUZZEa8xO2mBsc4tqbW9QjruxjEB6bAr4Z/T1rNU+leOztIjCJQYsBGFWYlw==",
       "type": "package",
-      "path": "system.servicemodel.primitives/8.1.2",
+      "path": "system.servicemodel.primitives/10.0.652802",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -281,33 +281,33 @@
         "THIRD-PARTY-NOTICES.TXT",
         "lib/MonoAndroid10/_._",
         "lib/MonoTouch10/_._",
+        "lib/net10.0/System.ServiceModel.Duplex.dll",
+        "lib/net10.0/System.ServiceModel.Duplex.pdb",
+        "lib/net10.0/System.ServiceModel.Primitives.dll",
+        "lib/net10.0/System.ServiceModel.Primitives.pdb",
+        "lib/net10.0/System.ServiceModel.Security.dll",
+        "lib/net10.0/System.ServiceModel.Security.pdb",
+        "lib/net10.0/System.ServiceModel.dll",
+        "lib/net10.0/System.ServiceModel.pdb",
+        "lib/net10.0/cs/System.ServiceModel.Primitives.resources.dll",
+        "lib/net10.0/de/System.ServiceModel.Primitives.resources.dll",
+        "lib/net10.0/es/System.ServiceModel.Primitives.resources.dll",
+        "lib/net10.0/fr/System.ServiceModel.Primitives.resources.dll",
+        "lib/net10.0/it/System.ServiceModel.Primitives.resources.dll",
+        "lib/net10.0/ja/System.ServiceModel.Primitives.resources.dll",
+        "lib/net10.0/ko/System.ServiceModel.Primitives.resources.dll",
+        "lib/net10.0/pl/System.ServiceModel.Primitives.resources.dll",
+        "lib/net10.0/pt-BR/System.ServiceModel.Primitives.resources.dll",
+        "lib/net10.0/ru/System.ServiceModel.Primitives.resources.dll",
+        "lib/net10.0/tr/System.ServiceModel.Primitives.resources.dll",
+        "lib/net10.0/zh-Hans/System.ServiceModel.Primitives.resources.dll",
+        "lib/net10.0/zh-Hant/System.ServiceModel.Primitives.resources.dll",
         "lib/net462/System.ServiceModel.Duplex.dll",
         "lib/net462/System.ServiceModel.Duplex.pdb",
         "lib/net462/System.ServiceModel.Primitives.dll",
         "lib/net462/System.ServiceModel.Primitives.pdb",
         "lib/net462/System.ServiceModel.Security.dll",
         "lib/net462/System.ServiceModel.Security.pdb",
-        "lib/net8.0/System.ServiceModel.Duplex.dll",
-        "lib/net8.0/System.ServiceModel.Duplex.pdb",
-        "lib/net8.0/System.ServiceModel.Primitives.dll",
-        "lib/net8.0/System.ServiceModel.Primitives.pdb",
-        "lib/net8.0/System.ServiceModel.Security.dll",
-        "lib/net8.0/System.ServiceModel.Security.pdb",
-        "lib/net8.0/System.ServiceModel.dll",
-        "lib/net8.0/System.ServiceModel.pdb",
-        "lib/net8.0/cs/System.ServiceModel.Primitives.resources.dll",
-        "lib/net8.0/de/System.ServiceModel.Primitives.resources.dll",
-        "lib/net8.0/es/System.ServiceModel.Primitives.resources.dll",
-        "lib/net8.0/fr/System.ServiceModel.Primitives.resources.dll",
-        "lib/net8.0/it/System.ServiceModel.Primitives.resources.dll",
-        "lib/net8.0/ja/System.ServiceModel.Primitives.resources.dll",
-        "lib/net8.0/ko/System.ServiceModel.Primitives.resources.dll",
-        "lib/net8.0/pl/System.ServiceModel.Primitives.resources.dll",
-        "lib/net8.0/pt-BR/System.ServiceModel.Primitives.resources.dll",
-        "lib/net8.0/ru/System.ServiceModel.Primitives.resources.dll",
-        "lib/net8.0/tr/System.ServiceModel.Primitives.resources.dll",
-        "lib/net8.0/zh-Hans/System.ServiceModel.Primitives.resources.dll",
-        "lib/net8.0/zh-Hant/System.ServiceModel.Primitives.resources.dll",
         "lib/netstandard2.0/System.ServiceModel.Duplex.dll",
         "lib/netstandard2.0/System.ServiceModel.Duplex.pdb",
         "lib/netstandard2.0/System.ServiceModel.Primitives.dll",
@@ -318,18 +318,18 @@
         "lib/xamarinmac20/_._",
         "lib/xamarintvos10/_._",
         "lib/xamarinwatchos10/_._",
+        "ref/net10.0/System.ServiceModel.Duplex.dll",
+        "ref/net10.0/System.ServiceModel.Primitives.dll",
+        "ref/net10.0/System.ServiceModel.Security.dll",
+        "ref/net10.0/System.ServiceModel.dll",
         "ref/net462/System.ServiceModel.Duplex.dll",
         "ref/net462/System.ServiceModel.Primitives.dll",
         "ref/net462/System.ServiceModel.Security.dll",
-        "ref/net8.0/System.ServiceModel.Duplex.dll",
-        "ref/net8.0/System.ServiceModel.Primitives.dll",
-        "ref/net8.0/System.ServiceModel.Security.dll",
-        "ref/net8.0/System.ServiceModel.dll",
         "ref/netcoreapp2.0/_._",
         "ref/netstandard2.0/System.ServiceModel.Duplex.dll",
         "ref/netstandard2.0/System.ServiceModel.Primitives.dll",
         "ref/netstandard2.0/System.ServiceModel.Security.dll",
-        "system.servicemodel.primitives.8.1.2.nupkg.sha512",
+        "system.servicemodel.primitives.10.0.652802.nupkg.sha512",
         "system.servicemodel.primitives.nuspec"
       ]
     }
@@ -337,27 +337,27 @@
   "projectFileDependencyGroups": {
     ".NETStandard,Version=v2.0": [
       "NETStandard.Library >= 2.0.3",
-      "System.ServiceModel.Primitives >= 8.1.2"
+      "System.ServiceModel.Primitives >= 10.0.652802"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\megge\\.nuget\\packages\\": {},
+    "C:\\Users\\myeag\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "5.2.1",
     "restore": {
-      "projectUniqueName": "C:\\Projects\\CODE.Framework\\Milos\\Milos.Services.Contracts\\Milos.Services.Contracts.csproj",
+      "projectUniqueName": "D:\\Repos\\CodeFramework\\Milos\\Milos.Services.Contracts\\Milos.Services.Contracts.csproj",
       "projectName": "Milos.Services.Contracts",
-      "projectPath": "C:\\Projects\\CODE.Framework\\Milos\\Milos.Services.Contracts\\Milos.Services.Contracts.csproj",
-      "packagesPath": "C:\\Users\\megge\\.nuget\\packages\\",
-      "outputPath": "C:\\Projects\\CODE.Framework\\Milos\\Milos.Services.Contracts\\obj\\",
+      "projectPath": "D:\\Repos\\CodeFramework\\Milos\\Milos.Services.Contracts\\Milos.Services.Contracts.csproj",
+      "packagesPath": "C:\\Users\\myeag\\.nuget\\packages\\",
+      "outputPath": "D:\\Repos\\CodeFramework\\Milos\\Milos.Services.Contracts\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\megge\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\myeag\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -366,6 +366,7 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {},
         "https://pkgs.dev.azure.com/eps-software/_packaging/EPSPackages/nuget/v3/index.json": {}
       },
@@ -399,7 +400,7 @@
           },
           "System.ServiceModel.Primitives": {
             "target": "Package",
-            "version": "[8.1.2, )"
+            "version": "[10.0.652802, )"
           }
         },
         "imports": [
@@ -413,7 +414,7 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.100-rc.2.25502.107\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.103\\RuntimeIdentifierGraph.json"
       }
     }
   }

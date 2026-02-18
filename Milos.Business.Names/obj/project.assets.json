@@ -238,7 +238,7 @@
           }
         }
       },
-      "System.Buffers/4.6.0": {
+      "System.Buffers/4.6.1": {
         "type": "package",
         "compile": {
           "lib/netstandard2.0/System.Buffers.dll": {
@@ -262,10 +262,10 @@
           "lib/netstandard2.0/System.ComponentModel.Annotations.dll": {}
         }
       },
-      "System.Configuration.ConfigurationManager/9.0.10": {
+      "System.Configuration.ConfigurationManager/10.0.3": {
         "type": "package",
         "dependencies": {
-          "System.Security.Cryptography.ProtectedData": "9.0.10"
+          "System.Security.Cryptography.ProtectedData": "10.0.3"
         },
         "compile": {
           "lib/netstandard2.0/System.Configuration.ConfigurationManager.dll": {
@@ -311,12 +311,12 @@
           }
         }
       },
-      "System.Memory/4.6.0": {
+      "System.Memory/4.6.3": {
         "type": "package",
         "dependencies": {
-          "System.Buffers": "4.6.0",
-          "System.Numerics.Vectors": "4.6.0",
-          "System.Runtime.CompilerServices.Unsafe": "6.1.0"
+          "System.Buffers": "4.6.1",
+          "System.Numerics.Vectors": "4.6.1",
+          "System.Runtime.CompilerServices.Unsafe": "6.1.2"
         },
         "compile": {
           "lib/netstandard2.0/System.Memory.dll": {
@@ -329,7 +329,7 @@
           }
         }
       },
-      "System.Numerics.Vectors/4.6.0": {
+      "System.Numerics.Vectors/4.6.1": {
         "type": "package",
         "compile": {
           "lib/netstandard2.0/System.Numerics.Vectors.dll": {
@@ -371,7 +371,7 @@
           }
         }
       },
-      "System.Runtime.CompilerServices.Unsafe/6.1.0": {
+      "System.Runtime.CompilerServices.Unsafe/6.1.2": {
         "type": "package",
         "compile": {
           "lib/netstandard2.0/System.Runtime.CompilerServices.Unsafe.dll": {
@@ -384,10 +384,10 @@
           }
         }
       },
-      "System.Security.Cryptography.ProtectedData/9.0.10": {
+      "System.Security.Cryptography.ProtectedData/10.0.3": {
         "type": "package",
         "dependencies": {
-          "System.Memory": "4.5.5"
+          "System.Memory": "4.6.3"
         },
         "compile": {
           "lib/netstandard2.0/System.Security.Cryptography.ProtectedData.dll": {
@@ -453,7 +453,7 @@
         "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
           "CODE.Framework.Fundamentals": "2.0.20",
-          "System.Configuration.ConfigurationManager": "9.0.10"
+          "System.Configuration.ConfigurationManager": "10.0.3"
         },
         "compile": {
           "bin/placeholder/Milos.Data.dll": {}
@@ -990,10 +990,10 @@
         "packageIcon.png"
       ]
     },
-    "System.Buffers/4.6.0": {
-      "sha512": "lN6tZi7Q46zFzAbRYXTIvfXcyvQQgxnY7Xm6C6xQ9784dEL1amjM6S6Iw4ZpsvesAKnRVsM4scrDQaDqSClkjA==",
+    "System.Buffers/4.6.1": {
+      "sha512": "N8GXpmiLMtljq7gwvyS+1QvKT/W2J8sNAvx+HVg4NGmsG/H+2k/y9QI23auLJRterrzCiDH+IWAw4V/GPwsMlw==",
       "type": "package",
-      "path": "system.buffers/4.6.0",
+      "path": "system.buffers/4.6.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -1003,10 +1003,11 @@
         "buildTransitive/net462/_._",
         "lib/net462/System.Buffers.dll",
         "lib/net462/System.Buffers.xml",
-        "lib/netcoreapp2.1/_._",
+        "lib/netcoreapp2.0/_._",
         "lib/netstandard2.0/System.Buffers.dll",
         "lib/netstandard2.0/System.Buffers.xml",
-        "system.buffers.4.6.0.nupkg.sha512",
+        "lib/netstandard2.1/_._",
+        "system.buffers.4.6.1.nupkg.sha512",
         "system.buffers.nuspec"
       ]
     },
@@ -1100,21 +1101,22 @@
         "version.txt"
       ]
     },
-    "System.Configuration.ConfigurationManager/9.0.10": {
-      "sha512": "5CBhl5dWmckKEtvk8F6GXtmHxNBoqAC8xILxIntNm7AzHiXQ09CXSLhncIJ/cQWaiNYzLjHZCgtMfx9tkCKHdA==",
+    "System.Configuration.ConfigurationManager/10.0.3": {
+      "sha512": "69ZT/MYxQSxwdiiHRtI08noXiG5drj/bXDDZISmeWkNUtbIfYgmTiof16tCVOLTdmSQY7W7gwxkMliKdreWHGQ==",
       "type": "package",
-      "path": "system.configuration.configurationmanager/9.0.10",
+      "path": "system.configuration.configurationmanager/10.0.3",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "Icon.png",
-        "LICENSE.TXT",
         "PACKAGE.md",
         "THIRD-PARTY-NOTICES.TXT",
         "buildTransitive/net461/System.Configuration.ConfigurationManager.targets",
         "buildTransitive/net462/_._",
         "buildTransitive/net8.0/_._",
         "buildTransitive/netcoreapp2.0/System.Configuration.ConfigurationManager.targets",
+        "lib/net10.0/System.Configuration.ConfigurationManager.dll",
+        "lib/net10.0/System.Configuration.ConfigurationManager.xml",
         "lib/net462/System.Configuration.ConfigurationManager.dll",
         "lib/net462/System.Configuration.ConfigurationManager.xml",
         "lib/net8.0/System.Configuration.ConfigurationManager.dll",
@@ -1123,7 +1125,7 @@
         "lib/net9.0/System.Configuration.ConfigurationManager.xml",
         "lib/netstandard2.0/System.Configuration.ConfigurationManager.dll",
         "lib/netstandard2.0/System.Configuration.ConfigurationManager.xml",
-        "system.configuration.configurationmanager.9.0.10.nupkg.sha512",
+        "system.configuration.configurationmanager.10.0.3.nupkg.sha512",
         "system.configuration.configurationmanager.nuspec",
         "useSharedDesignerContext.txt"
       ]
@@ -1189,10 +1191,10 @@
         "useSharedDesignerContext.txt"
       ]
     },
-    "System.Memory/4.6.0": {
-      "sha512": "OEkbBQoklHngJ8UD8ez2AERSk2g+/qpAaSWWCBFbpH727HxDq5ydVkuncBaKcKfwRqXGWx64dS6G1SUScMsitg==",
+    "System.Memory/4.6.3": {
+      "sha512": "qdcDOgnFZY40+Q9876JUHnlHu7bosOHX8XISRoH94fwk6hgaeQGSgfZd8srWRZNt5bV9ZW2TljcegDNxsf+96A==",
       "type": "package",
-      "path": "system.memory/4.6.0",
+      "path": "system.memory/4.6.3",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -1205,14 +1207,15 @@
         "lib/netcoreapp2.1/_._",
         "lib/netstandard2.0/System.Memory.dll",
         "lib/netstandard2.0/System.Memory.xml",
-        "system.memory.4.6.0.nupkg.sha512",
+        "lib/netstandard2.1/_._",
+        "system.memory.4.6.3.nupkg.sha512",
         "system.memory.nuspec"
       ]
     },
-    "System.Numerics.Vectors/4.6.0": {
-      "sha512": "t+SoieZsRuEyiw/J+qXUbolyO219tKQQI0+2/YI+Qv7YdGValA6WiuokrNKqjrTNsy5ABWU11bdKOzUdheteXg==",
+    "System.Numerics.Vectors/4.6.1": {
+      "sha512": "sQxefTnhagrhoq2ReR0D/6K0zJcr9Hrd6kikeXsA1I8kOCboTavcUC4r7TSfpKFeE163uMuxZcyfO1mGO3EN8Q==",
       "type": "package",
-      "path": "system.numerics.vectors/4.6.0",
+      "path": "system.numerics.vectors/4.6.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -1225,7 +1228,8 @@
         "lib/netcoreapp2.0/_._",
         "lib/netstandard2.0/System.Numerics.Vectors.dll",
         "lib/netstandard2.0/System.Numerics.Vectors.xml",
-        "system.numerics.vectors.4.6.0.nupkg.sha512",
+        "lib/netstandard2.1/_._",
+        "system.numerics.vectors.4.6.1.nupkg.sha512",
         "system.numerics.vectors.nuspec"
       ]
     },
@@ -1341,10 +1345,10 @@
         "version.txt"
       ]
     },
-    "System.Runtime.CompilerServices.Unsafe/6.1.0": {
-      "sha512": "5o/HZxx6RVqYlhKSq8/zronDkALJZUT2Vz0hx43f0gwe8mwlM0y2nYlqdBwLMzr262Bwvpikeb/yEwkAa5PADg==",
+    "System.Runtime.CompilerServices.Unsafe/6.1.2": {
+      "sha512": "2hBr6zdbIBTDE3EhK7NSVNdX58uTK6iHW/P/Axmm9sl1xoGSLqDvMtpecn226TNwHByFokYwJmt/aQQNlO5CRw==",
       "type": "package",
-      "path": "system.runtime.compilerservices.unsafe/6.1.0",
+      "path": "system.runtime.compilerservices.unsafe/6.1.2",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -1356,22 +1360,23 @@
         "buildTransitive/netcoreapp2.0/System.Runtime.CompilerServices.Unsafe.targets",
         "lib/net462/System.Runtime.CompilerServices.Unsafe.dll",
         "lib/net462/System.Runtime.CompilerServices.Unsafe.xml",
+        "lib/net6.0/System.Runtime.CompilerServices.Unsafe.dll",
+        "lib/net6.0/System.Runtime.CompilerServices.Unsafe.xml",
         "lib/net7.0/_._",
         "lib/netstandard2.0/System.Runtime.CompilerServices.Unsafe.dll",
         "lib/netstandard2.0/System.Runtime.CompilerServices.Unsafe.xml",
-        "system.runtime.compilerservices.unsafe.6.1.0.nupkg.sha512",
+        "system.runtime.compilerservices.unsafe.6.1.2.nupkg.sha512",
         "system.runtime.compilerservices.unsafe.nuspec"
       ]
     },
-    "System.Security.Cryptography.ProtectedData/9.0.10": {
-      "sha512": "iC0InhfWdk0nHlbcTAAUyWt9X4+CsaZz9elQy0otFcsUkd/Wm+DmEwjqyH9PgFl1XcSowzhv67njCstABTc3Hw==",
+    "System.Security.Cryptography.ProtectedData/10.0.3": {
+      "sha512": "JCKbH/CN5l0CSoJBILEvJmNQVp5vV+FY3q2ue4K9p4eDT4mFEv0bjTQCV+MD6Qk1b/qk9fWmZZKhG1TklbXw1Q==",
       "type": "package",
-      "path": "system.security.cryptography.protecteddata/9.0.10",
+      "path": "system.security.cryptography.protecteddata/10.0.3",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "Icon.png",
-        "LICENSE.TXT",
         "PACKAGE.md",
         "THIRD-PARTY-NOTICES.TXT",
         "buildTransitive/net461/System.Security.Cryptography.ProtectedData.targets",
@@ -1380,6 +1385,8 @@
         "buildTransitive/netcoreapp2.0/System.Security.Cryptography.ProtectedData.targets",
         "lib/MonoAndroid10/_._",
         "lib/MonoTouch10/_._",
+        "lib/net10.0/System.Security.Cryptography.ProtectedData.dll",
+        "lib/net10.0/System.Security.Cryptography.ProtectedData.xml",
         "lib/net462/System.Security.Cryptography.ProtectedData.dll",
         "lib/net462/System.Security.Cryptography.ProtectedData.xml",
         "lib/net8.0/System.Security.Cryptography.ProtectedData.dll",
@@ -1392,7 +1399,7 @@
         "lib/xamarinmac20/_._",
         "lib/xamarintvos10/_._",
         "lib/xamarinwatchos10/_._",
-        "system.security.cryptography.protecteddata.9.0.10.nupkg.sha512",
+        "system.security.cryptography.protecteddata.10.0.3.nupkg.sha512",
         "system.security.cryptography.protecteddata.nuspec",
         "useSharedDesignerContext.txt"
       ]
@@ -1507,23 +1514,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\megge\\.nuget\\packages\\": {},
+    "C:\\Users\\myeag\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "5.2.1",
     "restore": {
-      "projectUniqueName": "C:\\Projects\\CODE.Framework\\Milos\\Milos.Business.Names\\Milos.Business.Names.csproj",
+      "projectUniqueName": "D:\\Repos\\CodeFramework\\Milos\\Milos.Business.Names\\Milos.Business.Names.csproj",
       "projectName": "Milos.Business.Names",
-      "projectPath": "C:\\Projects\\CODE.Framework\\Milos\\Milos.Business.Names\\Milos.Business.Names.csproj",
-      "packagesPath": "C:\\Users\\megge\\.nuget\\packages\\",
-      "outputPath": "C:\\Projects\\CODE.Framework\\Milos\\Milos.Business.Names\\obj\\",
+      "projectPath": "D:\\Repos\\CodeFramework\\Milos\\Milos.Business.Names\\Milos.Business.Names.csproj",
+      "packagesPath": "C:\\Users\\myeag\\.nuget\\packages\\",
+      "outputPath": "D:\\Repos\\CodeFramework\\Milos\\Milos.Business.Names\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\megge\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\myeag\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -1532,6 +1539,7 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {},
         "https://pkgs.dev.azure.com/eps-software/_packaging/EPSPackages/nuget/v3/index.json": {}
       },
@@ -1539,8 +1547,8 @@
         "netstandard2.0": {
           "targetAlias": "netstandard2.0",
           "projectReferences": {
-            "C:\\Projects\\CODE.Framework\\Milos\\Milos.BusinessObjects\\Milos.BusinessObjects.csproj": {
-              "projectPath": "C:\\Projects\\CODE.Framework\\Milos\\Milos.BusinessObjects\\Milos.BusinessObjects.csproj"
+            "D:\\Repos\\CodeFramework\\Milos\\Milos.BusinessObjects\\Milos.BusinessObjects.csproj": {
+              "projectPath": "D:\\Repos\\CodeFramework\\Milos\\Milos.BusinessObjects\\Milos.BusinessObjects.csproj"
             }
           }
         }
@@ -1579,7 +1587,7 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.100-rc.2.25502.107\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.103\\RuntimeIdentifierGraph.json"
       }
     }
   }
