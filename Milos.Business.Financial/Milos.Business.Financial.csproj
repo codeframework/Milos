@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -25,6 +24,4 @@
 	<ItemGroup>
 		<ProjectReference Include="..\Milos.Business.Names\Milos.Business.Names.csproj" />
 	</ItemGroup>
-
-
 </Project>

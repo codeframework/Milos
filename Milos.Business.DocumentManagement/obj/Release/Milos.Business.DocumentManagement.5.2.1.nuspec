@@ -10,7 +10,7 @@
     <iconUrl>https://raw.githubusercontent.com/codeframework/Docs/master/_meta/Milos.png</iconUrl>
     <description>The Milos Solution Platform is the spiritual predecessor of CODE Framework, and some parts of the Milos Solution Platform (especially those important for data access, business logic, and services) are maintained as part of CODE Framework.</description>
     <copyright>EPS Software Corp.</copyright>
-    <repository type="git" commit="25e2e11cb4944205fb56ed97e8c160dc9f7c89a8" />
+    <repository type="git" commit="bdaddf0029a3a06479eaa65e405e51674af15163" />
     <dependencies>
       <group targetFramework=".NETStandard2.0">
         <dependency id="Milos.BusinessObjects" version="5.2.1" exclude="Build,Analyzers" />

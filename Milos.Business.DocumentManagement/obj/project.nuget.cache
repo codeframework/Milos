@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "ndE24zZzGT4=",
+  "dgSpecHash": "vLm/AntynZM=",
   "success": true,
   "projectFilePath": "C:\\Projects\\CODE.Framework\\Milos\\Milos.Business.DocumentManagement\\Milos.Business.DocumentManagement.csproj",
   "expectedPackageFiles": [
@@ -30,7 +30,9 @@
     "C:\\Users\\megge\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.1.0\\system.runtime.compilerservices.unsafe.6.1.0.nupkg.sha512",
     "C:\\Users\\megge\\.nuget\\packages\\system.security.cryptography.protecteddata\\9.0.10\\system.security.cryptography.protecteddata.9.0.10.nupkg.sha512",
     "C:\\Users\\megge\\.nuget\\packages\\system.security.principal.windows\\5.0.0\\system.security.principal.windows.5.0.0.nupkg.sha512",
-    "C:\\Users\\megge\\.nuget\\packages\\system.threading.tasks.extensions\\4.5.4\\system.threading.tasks.extensions.4.5.4.nupkg.sha512"
+    "C:\\Users\\megge\\.nuget\\packages\\system.threading.tasks.extensions\\4.5.4\\system.threading.tasks.extensions.4.5.4.nupkg.sha512",
+    "C:\\Users\\megge\\.nuget\\packages\\milos.businessobjects\\5.2.1\\milos.businessobjects.5.2.1.nupkg.sha512",
+    "C:\\Users\\megge\\.nuget\\packages\\milos.data\\5.2.1\\milos.data.5.2.1.nupkg.sha512"
   ],
   "logs": []
 }

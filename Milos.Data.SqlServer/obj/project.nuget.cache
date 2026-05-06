@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "UGOJs7VVUXY=",
+  "dgSpecHash": "kGfo5tGMmK0=",
   "success": true,
   "projectFilePath": "C:\\Projects\\CODE.Framework\\Milos\\Milos.Data.SqlServer\\Milos.Data.SqlServer.csproj",
   "expectedPackageFiles": [
@@ -58,7 +58,8 @@
     "C:\\Users\\megge\\.nuget\\packages\\system.security.principal.windows\\5.0.0\\system.security.principal.windows.5.0.0.nupkg.sha512",
     "C:\\Users\\megge\\.nuget\\packages\\system.text.encodings.web\\9.0.5\\system.text.encodings.web.9.0.5.nupkg.sha512",
     "C:\\Users\\megge\\.nuget\\packages\\system.text.json\\9.0.5\\system.text.json.9.0.5.nupkg.sha512",
-    "C:\\Users\\megge\\.nuget\\packages\\system.threading.tasks.extensions\\4.5.4\\system.threading.tasks.extensions.4.5.4.nupkg.sha512"
+    "C:\\Users\\megge\\.nuget\\packages\\system.threading.tasks.extensions\\4.5.4\\system.threading.tasks.extensions.4.5.4.nupkg.sha512",
+    "C:\\Users\\megge\\.nuget\\packages\\milos.data\\5.2.1\\milos.data.5.2.1.nupkg.sha512"
   ],
   "logs": []
 }
