@@ -53,11 +53,11 @@ public static class Data
     public static async Task<DataSet> GetAllRecordsAsync(string tableName, string fieldList = "*", string orderBy = "", DataRowProcessMethod selectMethod = DataRowProcessMethod.Default) => await DataService.GetAllRecordsAsync(tableName, fieldList, orderBy, selectMethod);
 
     /// <summary>
-    ///     Returns a single record or multiple records (with a specified list of fields) by primary key.
+    /// Returns a single record or multiple records (with a specified list of fields) by primary key.
     /// </summary>
     /// <remarks>
-    ///     The name of the method is a little misleading. It can actually return more than one query *if* the key
-    ///     field used for the query is non-unique (in other words: not a primary key field).
+    /// The name of the method is a little misleading. It can actually return more than one query *if* the key
+    /// field used for the query is non-unique (in other words: not a primary key field).
     /// </remarks>
     /// <param name="tableName">Name of the table to query.</param>
     /// <param name="fieldList">List of fields to return.</param>
@@ -66,19 +66,19 @@ public static class Data
     /// <param name="selectMethod">Select method (such as stored procedure or select commands)</param>
     /// <returns>DataSet with the returned data</returns>
     /// <example>
-    ///     using (var data = Data.GetSingleRecord("Customers", "*", "CustomerKey", key))
-    ///     {
-    ///         // Do something with the data
-    ///     }
+    /// using (var data = Data.GetSingleRecord("Customers", "*", "CustomerKey", key))
+    /// {
+    /// // Do something with the data
+    /// }
     /// </example>
     public static DataSet GetSingleRecord(string tableName, string fieldList = "*", string primaryKeyFieldName = "Id", object primaryKeyValue = null, DataRowProcessMethod selectMethod = DataRowProcessMethod.Default) => DataService.GetSingleRecord(tableName, fieldList, primaryKeyFieldName, primaryKeyValue, selectMethod);
 
     /// <summary>
-    ///     Returns a single record or multiple records (with a specified list of fields) by primary key (async).
+    /// Returns a single record or multiple records (with a specified list of fields) by primary key (async).
     /// </summary>
     /// <remarks>
-    ///     The name of the method is a little misleading. It can actually return more than one query *if* the key
-    ///     field used for the query is non-unique (in other words: not a primary key field).
+    /// The name of the method is a little misleading. It can actually return more than one query *if* the key
+    /// field used for the query is non-unique (in other words: not a primary key field).
     /// </remarks>
     /// <param name="tableName">Name of the table to query.</param>
     /// <param name="fieldList">List of fields to return.</param>
@@ -87,10 +87,10 @@ public static class Data
     /// <param name="selectMethod">Select method (such as stored procedure or select commands)</param>
     /// <returns>DataSet with the returned data</returns>
     /// <example>
-    ///     using (var data = await Data.GetSingleRecordAsync("Customers", "*", "CustomerKey", key))
-    ///     {
-    ///         // Do something with the data
-    ///     }
+    /// using (var data = await Data.GetSingleRecordAsync("Customers", "*", "CustomerKey", key))
+    /// {
+    /// // Do something with the data
+    /// }
     /// </example>
     public static async Task<DataSet> GetSingleRecordAsync(string tableName, string fieldList = "*", string primaryKeyFieldName = "Id", object primaryKeyValue = null, DataRowProcessMethod selectMethod = DataRowProcessMethod.Default) => await DataService.GetSingleRecordAsync(tableName, fieldList, primaryKeyFieldName, primaryKeyValue, selectMethod);
 
@@ -106,7 +106,7 @@ public static class Data
     /// var parameters = new object[] { "Chris", "Pronger", true };
     /// using (var data = Data.Query("Customers", "*", fieldNames, parameters);
     /// {
-    ///     // Do something with the data
+    /// // Do something with the data
     /// }
     /// </example>
     public static DataSet Query(string tableName, string fieldList, IList<string> fieldNames, IList<object> filterParameters, DataRowProcessMethod selectMethod = DataRowProcessMethod.Default) => DataService.Query(tableName, fieldList, fieldNames, filterParameters, selectMethod);
@@ -122,7 +122,7 @@ public static class Data
     /// var parameters = new object[] { "Chris", "Pronger", true };
     /// using (var data = await Data.QueryAsync("Customers", "*", fieldNames, parameters);
     /// {
-    ///     // Do something with the data
+    /// // Do something with the data
     /// }
     /// </example>
     public static async Task<DataSet> QueryAsync(string tableName, string fieldList, IList<string> fieldNames, IList<object> filterParameters, DataRowProcessMethod selectMethod = DataRowProcessMethod.Default) => await DataService.QueryAsync(tableName, fieldList, fieldNames, filterParameters, selectMethod);
@@ -135,14 +135,12 @@ public static class Data
     /// using (var command = NewCommand("SELECT * FROM Customers"))
     /// using (var data = Data.Query(command);
     /// {
-    ///     // Do something with the data
+    /// // Do something with the data
     /// }
-    ///
-    ///  or:
-    /// 
-    /// using (var data = Data.Query(NewCommand("SELECT * FROM Customers"));
+    /// ///  or:
+    /// /// using (var data = Data.Query(NewCommand("SELECT * FROM Customers"));
     /// {
-    ///     // Do something with the data
+    /// // Do something with the data
     /// }
     /// </example>
     public static DataSet Query(IDbCommand command, string entityName = "") => DataService.Query(command, entityName);
@@ -155,14 +153,12 @@ public static class Data
     /// using (var command = NewCommand("SELECT * FROM Customers"))
     /// using (var data = await Data.QueryAsync(command);
     /// {
-    ///     // Do something with the data
+    /// // Do something with the data
     /// }
-    ///
-    ///  or:
-    /// 
-    /// using (var data = await Data.QueryAsync(NewCommand("SELECT * FROM Customers"));
+    /// ///  or:
+    /// /// using (var data = await Data.QueryAsync(NewCommand("SELECT * FROM Customers"));
     /// {
-    ///     // Do something with the data
+    /// // Do something with the data
     /// }
     /// </example>
     public static async Task<DataSet> QueryAsync(IDbCommand command, string entityName = "") => await DataService.QueryAsync(command, entityName);
@@ -175,32 +171,26 @@ public static class Data
     /// <example>
     /// using (var data = Data.Query("SELECT * FROM Customers");
     /// {
-    ///     // Do something with the data
+    /// // Do something with the data
     /// }
-    /// 
-    /// // or:
-    /// 
-    /// var parameters = new Dictionary&lt;string, object&gt;();
+    /// /// // or:
+    /// /// var parameters = new Dictionary&lt;string, object&gt;();
     /// parameters.Add("@FirstName", "Markus");
     /// parameters.Add("@LastName", "Egger%");
     /// using (var data = Data.Query("SELECT * FROM Customers WHERE l_lane LIKE @LastName AND f_name LIKE @FirstName", parameters));
     /// {
-    ///     // Do something with the data
+    /// // Do something with the data
     /// }
-    /// 
-    /// // or:
-    /// 
-    /// var parameters = new Dictionary&lt;string, object&gt; {{"@FirstName", "Markus"}, {"@LastName", "Egger%"}};
+    /// /// // or:
+    /// /// var parameters = new Dictionary&lt;string, object&gt; {{"@FirstName", "Markus"}, {"@LastName", "Egger%"}};
     /// using (var data = Data.Query("SELECT * FROM Customers WHERE l_lane LIKE @LastName AND f_name LIKE @FirstName", parameters));
     /// {
-    ///     // Do something with the data
+    /// // Do something with the data
     /// }
-    /// 
-    /// // or:
-    /// 
-    /// using (var data = Data.Query("SELECT * FROM Customers WHERE l_lane LIKE @LastName AND f_name LIKE @FirstName", new Dictionary&lt;string, object&gt; {{"@FirstName", "Markus"}, {"@LastName", "Egger%"}}));
+    /// /// // or:
+    /// /// using (var data = Data.Query("SELECT * FROM Customers WHERE l_lane LIKE @LastName AND f_name LIKE @FirstName", new Dictionary&lt;string, object&gt; {{"@FirstName", "Markus"}, {"@LastName", "Egger%"}}));
     /// {
-    ///     // Do something with the data
+    /// // Do something with the data
     /// }
     /// </example>
     public static DataSet Query(string command, Dictionary<string, object> parameters = null, string entityName = "") => DataService.Query(command, parameters, entityName);
@@ -213,32 +203,26 @@ public static class Data
     /// <example>
     /// using (var data = await Data.QueryAsync("SELECT * FROM Customers");
     /// {
-    ///     // Do something with the data
+    /// // Do something with the data
     /// }
-    /// 
-    /// // or:
-    /// 
-    /// var parameters = new Dictionary&lt;string, object&gt;();
+    /// /// // or:
+    /// /// var parameters = new Dictionary&lt;string, object&gt;();
     /// parameters.Add("@FirstName", "Markus");
     /// parameters.Add("@LastName", "Egger%");
     /// using (var data = await service.QueryAsync("SELECT * FROM Customers WHERE l_lane LIKE @LastName AND f_name LIKE @FirstName", parameters));
     /// {
-    ///     // Do something with the data
+    /// // Do something with the data
     /// }
-    /// 
-    /// // or:
-    /// 
-    /// var parameters = new Dictionary&lt;string, object&gt; {{"@FirstName", "Markus"}, {"@LastName", "Egger%"}};
+    /// /// // or:
+    /// /// var parameters = new Dictionary&lt;string, object&gt; {{"@FirstName", "Markus"}, {"@LastName", "Egger%"}};
     /// using (var data = await Data.QueryAsync("SELECT * FROM Customers WHERE l_lane LIKE @LastName AND f_name LIKE @FirstName", parameters));
     /// {
-    ///     // Do something with the data
+    /// // Do something with the data
     /// }
-    /// 
-    /// // or:
-    /// 
-    /// using (var data = await Data.QueryAsync("SELECT * FROM Customers WHERE l_lane LIKE @LastName AND f_name LIKE @FirstName", new Dictionary&lt;string, object&gt; {{"@FirstName", "Markus"}, {"@LastName", "Egger%"}}));
+    /// /// // or:
+    /// /// using (var data = await Data.QueryAsync("SELECT * FROM Customers WHERE l_lane LIKE @LastName AND f_name LIKE @FirstName", new Dictionary&lt;string, object&gt; {{"@FirstName", "Markus"}, {"@LastName", "Egger%"}}));
     /// {
-    ///     // Do something with the data
+    /// // Do something with the data
     /// }
     /// </example>
     public static async Task<DataSet> QueryAsync(string command, Dictionary<string, object> parameters = null, string entityName = "") => await DataService.QueryAsync(command, parameters, entityName);

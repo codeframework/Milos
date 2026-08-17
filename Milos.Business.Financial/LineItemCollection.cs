@@ -59,15 +59,14 @@ public class LineItemCollection(IBusinessEntity parentEntity) : EntitySubItemCol
     /// <param name="index"></param>
     /// <remarks>
     /// CL on 07/15/2005
-    ///   A line item may have children lines. In such case, the children
-    ///   must be removed as well. Notice that a child line could 
-    ///   potentially have children of its own, so those should be removed as well.
-    ///   The logic here should take care of all that.
-    ///   
-    ///   Notice that as we remove things from the collection, the indexes
-    ///   get re-evaluated. That means we cannot just loop through the collection
-    ///   removing things because the internal data of the virtual collection changes,
-    ///   and therefore the iterator won't work right any longer.
+    /// A line item may have children lines. In such case, the children
+    /// must be removed as well. Notice that a child line could 
+    /// potentially have children of its own, so those should be removed as well.
+    /// The logic here should take care of all that.
+    /// ///   Notice that as we remove things from the collection, the indexes
+    /// get re-evaluated. That means we cannot just loop through the collection
+    /// removing things because the internal data of the virtual collection changes,
+    /// and therefore the iterator won't work right any longer.
     /// </remarks>
     public override void Remove(int index)
     {

@@ -1,30 +1,28 @@
 ﻿using System.Threading.Tasks;
 using Milos.Data;
 
-// TODO: We should check all the methods in this object to see which overloads can be handled by optional parameters
-
 namespace Milos.BusinessObjects;
 
 /// <summary>This class is an abstract business object class. It's purpose is to be sub-classed into individual business objects.</summary>
 public abstract class BusinessObject : IBusinessObject
 {
     /// <summary>Secondary list of primary key types that may be used for secondary tables.</summary>
-    private readonly Hashtable primaryKeyTypes = new Hashtable();
+    private readonly Hashtable primaryKeyTypes = [];
 
-    /// <summary>\The following fields are for internal use only, and are not exposed through public properties.</summary>
-    private IDataService dataService;
+    /// <summary>The following fields are for internal use only, and are not exposed through public properties.</summary>
+    private IDataService _dataService;
 
     /// <summary>Stores the deletion business rules.</summary>
-    private BusinessRuleCollection deletionBusinessRules;
+    private BusinessRuleCollection _deletionBusinessRules;
 
     /// <summary>Stores a reference to a data context (internal use only).</summary>
-    private SharedDataContext internalDataContext;
+    private SharedDataContext _internalDataContext;
 
     /// <summary>Internal reference to the business rules collection.</summary>
-    private BusinessRuleCollection rules;
+    private BusinessRuleCollection _rules;
 
     /// <summary>For internal use only.</summary>
-    private bool startedTransaction;
+    private bool _startedTransaction;
 
     /// <summary>Constructor</summary>
     protected BusinessObject()
@@ -77,25 +75,25 @@ public abstract class BusinessObject : IBusinessObject
             // If a shared data context is in use, we use it rather than
             // the current object to find things such as data services.
             // (Note: Data context objects clearly are the exception)
-            if (internalDataContext == null)
+            if (_internalDataContext == null)
                 // The first time around, we need to create an appropriate DataService
             {
-                if (dataService == null)
+                if (_dataService == null)
                     try
                     {
-                        dataService = DataServiceFactory.GetDataService(DataConfigurationPrefix);
+                        _dataService = DataServiceFactory.GetDataService(DataConfigurationPrefix);
                     }
                     catch (DataServiceInstantiationException ex)
                     {
                         throw new NoDataServiceAvailableException("No data service available\r\nCheck inner exception for details.", ex);
                     }
 
-                service = dataService;
+                service = _dataService;
             }
             else
             {
                 // A data context is in use, so we use its data service
-                service = internalDataContext.DataService;
+                service = _internalDataContext.DataService;
             }
 
             // If no service exists, we raise an error
@@ -110,13 +108,8 @@ public abstract class BusinessObject : IBusinessObject
     {
         get
         {
-            if (internalDataContext == null)
-            {
-                var context = new SharedDataContext(DataService);
-                internalDataContext = context;
-            }
-
-            return internalDataContext;
+            _internalDataContext ??= new SharedDataContext(DataService);
+            return _internalDataContext;
         }
     }
 
@@ -125,18 +118,18 @@ public abstract class BusinessObject : IBusinessObject
     protected internal virtual string BrokenRulesTableName { get; set; } = "__BrokenRules";
 
     /// <summary>Business Rules collection.</summary>
-    protected virtual BusinessRuleCollection BusinessRules => rules ?? (rules = new BusinessRuleCollection(this));
+    protected virtual BusinessRuleCollection BusinessRules => _rules ??= new BusinessRuleCollection(this);
 
     /// <summary>This property indicates whether a save operation for secondary tables is triggered as a delete operation or an update/insert operation.</summary>
     protected virtual DataSaveMode SaveMode { get; set; } = DataSaveMode.AllChanges;
 
     /// <summary>Gets the deletion business rules.</summary>
     /// <value>The deletion business rules.</value>
-    public BusinessRuleCollection DeletionBusinessRules => deletionBusinessRules ?? (deletionBusinessRules = new BusinessRuleCollection(this));
+    public BusinessRuleCollection DeletionBusinessRules => _deletionBusinessRules ?? (_deletionBusinessRules = new BusinessRuleCollection(this));
 
     /// <summary>Gets or sets a value indicating whether or not a business object should be allowed to delete a record that violates a rule.</summary>
     /// <value>
-    ///     <c>true</c> if [allow delete with violations]; otherwise, <c>false</c>.
+    /// <c>true</c> if [allow delete with violations]; otherwise, <c>false</c>.
     /// </value>
     public bool AllowDeleteWithViolations { get; set; }
 
@@ -183,7 +176,7 @@ public abstract class BusinessObject : IBusinessObject
     }
 
     /// <summary>This method verifies and saves the passed DataSet.</summary>
-    /// <remarks>This method is to be overridden in subclasses for anything but the simplest save operations.</remarks>
+    /// <remarks>This method is to be overridden in subclasses for anything but the simplest save operations. Prefer SaveAsync(DataSet) for new code.</remarks>
     /// <param name="masterDataSet">DataSet</param>
     /// <returns>True or False</returns>
     public virtual bool Save(DataSet masterDataSet)
@@ -343,14 +336,185 @@ public abstract class BusinessObject : IBusinessObject
         return saved;
     }
 
+    /// <summary>This method verifies and saves the passed DataSet asynchronously.</summary>
+    /// <remarks>This method is to be overridden in subclasses for anything but the simplest save operations.</remarks>
+    /// <param name="masterDataSet">DataSet</param>
+    /// <returns>True or False</returns>
+    public virtual async Task<bool> SaveAsync(DataSet masterDataSet)
+    {
+        if (masterDataSet == null) throw new NullReferenceException("Parameter 'masterDataSet' cannot be null.");
+
+        // Before we do anything else, we need to make sure that
+        // the DataSet contains valid data.
+        if (!Verify(masterDataSet))
+            if (!AllowSaveWithViolations)
+                if (DataSetHasViolations(masterDataSet, RuleViolationType.Violation))
+                {
+                    // Critical problems are in fact present, so we will not save
+                    // the data in this business object, which does not allow
+                    // to save data with critical errors (violations)
+                    return false;
+                }
+                else
+                {
+                    // We did not find critical errors in the data.
+                    // Now we need to check whether it is OK to save
+                    // with warnings.
+                    if (!AllowSaveWithWarnings) return false;
+                }
+
+        // We check for app roles
+        if (!string.IsNullOrEmpty(AppRole)) DataService.ApplyAppRole(AppRole, AppRolePassword);
+
+        // We are good to go. We wrap all saving operations into a transaction
+        var previousTransactionStatus = DataService.TransactionStatus;
+        if (!BeginTransaction())
+            if (previousTransactionStatus != TransactionStatus.TransactionInProgress)
+                throw new TransactionException("Cannot start transaction");
+
+        // We use this variable to determine whether save operations are executes successfully
+        var saved = false;
+
+        // Before we save the master entity, we process all deletions that may have occurred
+        // in secondary entities
+        SaveMode = DataSaveMode.DeletesOnly;
+        var primaryKeyType = GetPrimaryKeyType();
+
+        if (masterDataSet.Tables[MasterEntity].Rows.Count > 0 && masterDataSet.Tables[MasterEntity].Rows[0].RowState != DataRowState.Deleted)
+            switch (primaryKeyType)
+            {
+                case KeyType.Guid:
+                    saved = await SaveSecondaryTablesAsync((Guid) masterDataSet.Tables[MasterEntity].Rows[0][PrimaryKeyField], masterDataSet);
+                    break;
+                case KeyType.Integer:
+                    saved = await SaveSecondaryTablesAsync((int) masterDataSet.Tables[MasterEntity].Rows[0][PrimaryKeyField], masterDataSet);
+                    break;
+                case KeyType.IntegerAutoIncrement:
+                    saved = await SaveSecondaryTablesAsync((int) masterDataSet.Tables[MasterEntity].Rows[0][PrimaryKeyField], masterDataSet);
+                    break;
+                case KeyType.String:
+                    saved = await SaveSecondaryTablesAsync(masterDataSet.Tables[MasterEntity].Rows[0][PrimaryKeyField].ToString(), masterDataSet);
+                    break;
+            }
+        else
+            switch (primaryKeyType)
+            {
+                case KeyType.Guid:
+                    saved = await SaveSecondaryTablesAsync(Guid.Empty, masterDataSet);
+                    break;
+                case KeyType.Integer:
+                    saved = await SaveSecondaryTablesAsync(0, masterDataSet);
+                    break;
+                case KeyType.IntegerAutoIncrement:
+                    saved = await SaveSecondaryTablesAsync(0, masterDataSet);
+                    break;
+                case KeyType.String:
+                    saved = await SaveSecondaryTablesAsync(string.Empty, masterDataSet);
+                    break;
+            }
+
+        SaveMode = DataSaveMode.AllChanges;
+        if (!saved)
+        {
+            // We reset the app role if we set a role
+            if (!string.IsNullOrEmpty(AppRole)) DataService.RevertAppRole();
+
+            // The operation failed. We need to roll back our update attempt!
+            if (!AbortTransaction()) throw new TransactionException("Unable to roll back transaction during failed save.");
+            return false;
+        }
+
+        // We save the master entity
+        saved = await SaveMasterEntityAsync(masterDataSet.Tables[MasterEntity]);
+
+        // If we save the master entity and no errors occured, we proceed to saving changes
+        // and additions in the secondary tables. Otherwise, we revert.
+        if (saved != true)
+        {
+            // We reset the app role if we set a role
+            if (!string.IsNullOrEmpty(AppRole)) DataService.RevertAppRole();
+
+            // There already was a problem. We do not even have to go further...
+            if (!AbortTransaction()) throw new TransactionException("Cannot roll back transaction");
+            return false;
+        }
+
+        // We also provide an opportunity to save secondary tables, without having to override this method
+        // This time, we process inserts and updates, but no deletes.
+        SaveMode = DataSaveMode.AllChangesExceptDeletes;
+        primaryKeyType = GetPrimaryKeyType();
+        if (masterDataSet.Tables[MasterEntity].Rows.Count > 0 && masterDataSet.Tables[MasterEntity].Rows[0].RowState != DataRowState.Deleted)
+            switch (primaryKeyType)
+            {
+                case KeyType.Guid:
+                    saved = await SaveSecondaryTablesAsync((Guid) masterDataSet.Tables[MasterEntity].Rows[0][PrimaryKeyField], masterDataSet);
+                    break;
+                case KeyType.Integer:
+                    saved = await SaveSecondaryTablesAsync((int) masterDataSet.Tables[MasterEntity].Rows[0][PrimaryKeyField], masterDataSet);
+                    break;
+                case KeyType.IntegerAutoIncrement:
+                    saved = await SaveSecondaryTablesAsync((int) masterDataSet.Tables[MasterEntity].Rows[0][PrimaryKeyField], masterDataSet);
+                    break;
+                case KeyType.String:
+                    saved = await SaveSecondaryTablesAsync(masterDataSet.Tables[MasterEntity].Rows[0][PrimaryKeyField].ToString(), masterDataSet);
+                    break;
+            }
+        else
+            switch (primaryKeyType)
+            {
+                case KeyType.Guid:
+                    saved = await SaveSecondaryTablesAsync(Guid.Empty, masterDataSet);
+                    break;
+                case KeyType.Integer:
+                    saved = await SaveSecondaryTablesAsync(0, masterDataSet);
+                    break;
+                case KeyType.IntegerAutoIncrement:
+                    saved = await SaveSecondaryTablesAsync(0, masterDataSet);
+                    break;
+                case KeyType.String:
+                    saved = await SaveSecondaryTablesAsync(string.Empty, masterDataSet);
+                    break;
+            }
+
+        SaveMode = DataSaveMode.AllChanges;
+        if (!saved)
+        {
+            // We reset the app role if we set a role
+            if (!string.IsNullOrEmpty(AppRole)) DataService.RevertAppRole();
+
+            // The operation failed. We need to roll back our update attempt!
+            if (!AbortTransaction()) throw new TransactionException("Cannot roll back transaction");
+        }
+        else
+        {
+            // We reset the app role if we set a role
+            if (!string.IsNullOrEmpty(AppRole)) DataService.RevertAppRole();
+
+            // Great! We saved the record without problems
+            if (!CommitTransaction()) throw new TransactionException("Failed to commit transaction");
+        }
+
+        return saved;
+    }
+
     /// <summary>Saves a business entity to the back end.</summary>
     /// <param name="entity">Business entity that is to be saved</param>
     /// <returns>True or False</returns>
-    /// <remarks>Retrieves the internal DataSet from the business entity and saves it using another overload of the Save() method.</remarks>
+    /// <remarks>Retrieves the internal DataSet from the business entity and saves it using another overload of the Save() method. Prefer SaveAsync(IBusinessEntity) for new code.</remarks>
     public virtual bool Save(IBusinessEntity entity)
     {
         if (entity == null) throw new NullReferenceException("Parameter 'entity' cannot be null");
         return Save(entity.GetInternalData());
+    }
+
+    /// <summary>Saves a business entity to the back end asynchronously.</summary>
+    /// <param name="entity">Business entity that is to be saved</param>
+    /// <returns>True or False</returns>
+    /// <remarks>Retrieves the internal DataSet from the business entity and saves it using another overload of the SaveAsync() method.</remarks>
+    public virtual async Task<bool> SaveAsync(IBusinessEntity entity)
+    {
+        if (entity == null) throw new NullReferenceException("Parameter 'entity' cannot be null");
+        return await SaveAsync(entity.GetInternalData());
     }
 
     /// <summary>Saves a batch of business entities to the back end</summary>
@@ -360,6 +524,7 @@ public abstract class BusinessObject : IBusinessObject
     /// Before the save operation, all the entities are verified. If any of them fails to verify, no save is attempted.
     /// Note that all entities are verified, no matter whether others had already exposed problems.
     /// All entities will be saved within a transaction. If any of the entities fail to save, the transaction is aborted.
+    /// Prefer SaveAsync(IEnumerable{IBusinessEntity}) for new code.
     /// </remarks>
     public virtual bool Save(IEnumerable<IBusinessEntity> entities)
     {
@@ -369,6 +534,22 @@ public abstract class BusinessObject : IBusinessObject
         return Save(masterDataSets);
     }
 
+    /// <summary>Saves a batch of business entities to the back end asynchronously</summary>
+    /// <param name="entities">Business entity array that is to be saved</param>
+    /// <returns>True or False</returns>
+    /// <remarks>
+    /// Before the save operation, all the entities are verified. If any of them fails to verify, no save is attempted.
+    /// Note that all entities are verified, no matter whether others had already exposed problems.
+    /// All entities will be saved within a transaction. If any of the entities fail to save, the transaction is aborted.
+    /// </remarks>
+    public virtual async Task<bool> SaveAsync(IEnumerable<IBusinessEntity> entities)
+    {
+        var masterDataSets = new List<DataSet>();
+        foreach (var entity in entities)
+            masterDataSets.Add(entity.GetInternalData());
+        return await SaveAsync(masterDataSets);
+    }
+
     /// <summary>Saves a batch of DataSets to the back end.</summary>
     /// <param name="masterDataSets">DataSet array that is to be saved</param>
     /// <returns>True or False</returns>
@@ -376,6 +557,7 @@ public abstract class BusinessObject : IBusinessObject
     /// Before the save operation, all the DataSets are verified. If any of them fails to verify, no save is attempted.
     /// Note that all DataSets are verified, no matter whether others had already exposed problems.
     /// All DataSets will be saved within a transaction. If any of the DataSets fail to save, the transaction is aborted.
+    /// Prefer SaveAsync(IEnumerable{DataSet}) for new code.
     /// </remarks>
     public virtual bool Save(IEnumerable<DataSet> masterDataSets)
     {
@@ -535,9 +717,176 @@ public abstract class BusinessObject : IBusinessObject
         return true;
     }
 
+    /// <summary>Saves a batch of DataSets to the back end asynchronously.</summary>
+    /// <param name="masterDataSets">DataSet array that is to be saved</param>
+    /// <returns>True or False</returns>
+    /// <remarks>
+    /// Before the save operation, all the DataSets are verified. If any of them fails to verify, no save is attempted.
+    /// Note that all DataSets are verified, no matter whether others had already exposed problems.
+    /// All DataSets will be saved within a transaction. If any of the DataSets fail to save, the transaction is aborted.
+    /// </remarks>
+    public virtual async Task<bool> SaveAsync(IEnumerable<DataSet> masterDataSets)
+    {
+        // Before we do anything else, we need to make sure that all the DataSets contain valid data.
+        var dataVerifiedOk = true;
+        var dataSetsToVerify = masterDataSets as DataSet[] ?? masterDataSets.ToArray();
+        foreach (var verifyDataSet in dataSetsToVerify)
+            if (!Verify(verifyDataSet))
+                dataVerifiedOk = false;
+
+        if (!dataVerifiedOk)
+            if (!AllowSaveWithViolations)
+            {
+                // There are violations. The question is: How bad are they?
+                // This object feels that critical violations should not be
+                // allowed (which is the recommended default), so if we have 
+                // critical errors, we must stop the process.
+                var foundViolations = false;
+                foreach (var violationDataSet in dataSetsToVerify)
+                    if (DataSetHasViolations(violationDataSet, RuleViolationType.Violation))
+                        foundViolations = true;
+                if (foundViolations) return false;
+
+                // We did not find critical errors in the data.
+                // Now we need to check whether it is OK to save
+                // with warnings.
+                if (!AllowSaveWithWarnings) return false;
+            }
+
+        // We check for app roles
+        if (!string.IsNullOrEmpty(AppRole)) DataService.ApplyAppRole(AppRole, AppRolePassword);
+
+        // We are good to go. We wrap all saving operations into a transaction
+        if (!BeginTransaction()) throw new TransactionException("Cannot start transaction.");
+        foreach (var masterDataSet in dataSetsToVerify)
+        {
+            // We use this variable to determine whether save operations are executes successfully
+            var saved = false;
+
+            // Before we save the master entity, we process all deletions that may have occured
+            // in secondary entities
+            SaveMode = DataSaveMode.DeletesOnly;
+            var pkType = GetPrimaryKeyType();
+            if (masterDataSet.Tables[MasterEntity].Rows.Count > 0 && masterDataSet.Tables[MasterEntity].Rows[0].RowState != DataRowState.Deleted)
+                switch (pkType)
+                {
+                    case KeyType.Guid:
+                        saved = await SaveSecondaryTablesAsync((Guid) masterDataSet.Tables[MasterEntity].Rows[0][PrimaryKeyField], masterDataSet);
+                        break;
+                    case KeyType.Integer:
+                        saved = await SaveSecondaryTablesAsync((int) masterDataSet.Tables[MasterEntity].Rows[0][PrimaryKeyField], masterDataSet);
+                        break;
+                    case KeyType.IntegerAutoIncrement:
+                        saved = await SaveSecondaryTablesAsync((int) masterDataSet.Tables[MasterEntity].Rows[0][PrimaryKeyField], masterDataSet);
+                        break;
+                    case KeyType.String:
+                        saved = await SaveSecondaryTablesAsync(masterDataSet.Tables[MasterEntity].Rows[0][PrimaryKeyField].ToString(), masterDataSet);
+                        break;
+                }
+            else
+                switch (pkType)
+                {
+                    case KeyType.Guid:
+                        saved = await SaveSecondaryTablesAsync(Guid.Empty, masterDataSet);
+                        break;
+                    case KeyType.Integer:
+                        saved = await SaveSecondaryTablesAsync(0, masterDataSet);
+                        break;
+                    case KeyType.IntegerAutoIncrement:
+                        saved = await SaveSecondaryTablesAsync(0, masterDataSet);
+                        break;
+                    case KeyType.String:
+                        saved = await SaveSecondaryTablesAsync(string.Empty, masterDataSet);
+                        break;
+                }
+
+            SaveMode = DataSaveMode.AllChanges;
+            if (!saved)
+            {
+                // We reset the app role if we set a role
+                if (!string.IsNullOrEmpty(AppRole)) DataService.RevertAppRole();
+
+                // The operation failed. We need to roll back our update attempt!
+                if (!AbortTransaction()) throw new TransactionException("Cannot roll back transaction.");
+                return false;
+            }
+
+            // We save the master entity
+            saved = await SaveMasterEntityAsync(masterDataSet.Tables[MasterEntity]);
+
+            // If we save the master entity and no errors occured, we proceed to saving changes
+            // and additions in the secondary tables. Otherwise, we revert.
+            if (saved != true)
+            {
+                // We reset the app role if we set a role
+                if (!string.IsNullOrEmpty(AppRole)) DataService.RevertAppRole();
+
+                // There already was a problem. We do not even have to go further...
+                if (!AbortTransaction()) throw new TransactionException("Cannot roll back transaction.");
+                return false;
+            }
+
+            // We also provide an opportunity to save secondary tables, without having to override this method
+            // This time, we process inserts and updates, but no deletes.
+            SaveMode = DataSaveMode.AllChangesExceptDeletes;
+            pkType = GetPrimaryKeyType();
+            if (masterDataSet.Tables[MasterEntity].Rows.Count > 0 && masterDataSet.Tables[MasterEntity].Rows[0].RowState != DataRowState.Deleted)
+                switch (pkType)
+                {
+                    case KeyType.Guid:
+                        saved = await SaveSecondaryTablesAsync((Guid) masterDataSet.Tables[MasterEntity].Rows[0][PrimaryKeyField], masterDataSet);
+                        break;
+                    case KeyType.Integer:
+                        saved = await SaveSecondaryTablesAsync((int) masterDataSet.Tables[MasterEntity].Rows[0][PrimaryKeyField], masterDataSet);
+                        break;
+                    case KeyType.IntegerAutoIncrement:
+                        saved = await SaveSecondaryTablesAsync((int) masterDataSet.Tables[MasterEntity].Rows[0][PrimaryKeyField], masterDataSet);
+                        break;
+                    case KeyType.String:
+                        saved = await SaveSecondaryTablesAsync(masterDataSet.Tables[MasterEntity].Rows[0][PrimaryKeyField].ToString(), masterDataSet);
+                        break;
+                }
+            else
+                switch (pkType)
+                {
+                    case KeyType.Guid:
+                        saved = await SaveSecondaryTablesAsync(Guid.Empty, masterDataSet);
+                        break;
+                    case KeyType.Integer:
+                        saved = await SaveSecondaryTablesAsync(0, masterDataSet);
+                        break;
+                    case KeyType.IntegerAutoIncrement:
+                        saved = await SaveSecondaryTablesAsync(0, masterDataSet);
+                        break;
+                    case KeyType.String:
+                        saved = await SaveSecondaryTablesAsync(string.Empty, masterDataSet);
+                        break;
+                }
+
+            SaveMode = DataSaveMode.AllChanges;
+            if (!saved)
+            {
+                // We reset the app role if we set a role
+                if (!string.IsNullOrEmpty(AppRole)) DataService.RevertAppRole();
+
+                // The operation failed. We need to roll back our update attempt!
+                if (!AbortTransaction()) throw new TransactionException("Cannot roll back transaction.");
+            }
+        }
+
+        // We reset the app role if we set a role
+        if (!string.IsNullOrEmpty(AppRole)) DataService.RevertAppRole();
+
+        // Great! We saved the record without problems
+        if (!CommitTransaction()) throw new TransactionException("Failed to commit transaction.");
+
+        return true;
+    }
+
     /// <summary>Deletes a single item from the master entity based on its primary key.</summary>
     /// <param name="entityKey">Item primary key</param>
     /// <returns>True or False</returns>
+    /// <remarks>Prefer DeleteAsync(string) for new code.</remarks>
     public virtual bool Delete(string entityKey)
     {
         var pkType = GetPrimaryKeyType();
@@ -579,6 +928,7 @@ public abstract class BusinessObject : IBusinessObject
     /// <summary>Deletes a single item from the master entity based on its primary key.</summary>
     /// <param name="entityKey">Item primary key</param>
     /// <returns>True or False</returns>
+    /// <remarks>Prefer DeleteAsync(Guid) for new code.</remarks>
     public virtual bool Delete(Guid entityKey)
     {
         // We check if the current business object uses Guid types
@@ -609,6 +959,7 @@ public abstract class BusinessObject : IBusinessObject
     /// <summary>Deletes a single item from the master entity based on its primary key.</summary>
     /// <param name="entityKey">Item primary key</param>
     /// <returns>True or False</returns>
+    /// <remarks>Prefer DeleteAsync(int) for new code.</remarks>
     public virtual bool Delete(int entityKey)
     {
         // We check if the current business object uses Guid types
@@ -637,17 +988,129 @@ public abstract class BusinessObject : IBusinessObject
         return false;
     }
 
+    /// <summary>Deletes a single item from the master entity based on its primary key asynchronously.</summary>
+    /// <param name="entityKey">Item primary key</param>
+    /// <returns>True or False</returns>
+    public virtual async Task<bool> DeleteAsync(string entityKey)
+    {
+        var pkType = GetPrimaryKeyType();
+        switch (pkType)
+        {
+            case KeyType.Guid:
+                return await DeleteAsync(new Guid(entityKey));
+            case KeyType.Integer:
+                return await DeleteAsync(int.Parse(entityKey, NumberFormatInfo.InvariantInfo));
+            case KeyType.IntegerAutoIncrement:
+                return await DeleteAsync(int.Parse(entityKey, NumberFormatInfo.InvariantInfo));
+            case KeyType.String:
+                if (BeginTransaction())
+                    if (await DeleteSecondaryTablesAsync(entityKey))
+                    {
+                        var deleteCommand = DataService.BuildDeleteCommand(MasterEntity, PrimaryKeyField, entityKey, DeleteMethod);
+                        if (await ExecuteNonQueryAsync(deleteCommand) > 0)
+                        {
+                            CommitTransaction();
+                            return true;
+                        }
+                    }
+                    else
+                    {
+                        AbortTransaction();
+                        return false;
+                    }
+                else
+                    throw new TransactionException("Cannot start transaction.");
+
+                break;
+            default:
+                throw new UnsupportedKeyTypeException(GetPrimaryKeyType());
+        }
+
+        return false;
+    }
+
+    /// <summary>Deletes a single item from the master entity based on its primary key asynchronously.</summary>
+    /// <param name="entityKey">Item primary key</param>
+    /// <returns>True or False</returns>
+    public virtual async Task<bool> DeleteAsync(Guid entityKey)
+    {
+        // We check if the current business object uses Guid types
+        if (GetPrimaryKeyType() != KeyType.Guid) throw new UnsupportedKeyTypeException(KeyType.Guid);
+
+        // We are ready to go.
+        if (BeginTransaction())
+            if (await DeleteSecondaryTablesAsync(entityKey))
+            {
+                var deleteCommand = DataService.BuildDeleteCommand(MasterEntity, PrimaryKeyField, entityKey, DeleteMethod);
+                if (await ExecuteNonQueryAsync(deleteCommand) > 0)
+                {
+                    CommitTransaction();
+                    return true;
+                }
+            }
+            else
+            {
+                AbortTransaction();
+                return false;
+            }
+        else
+            throw new TransactionException("Cannot start transaction.");
+
+        return false;
+    }
+
+    /// <summary>Deletes a single item from the master entity based on its primary key asynchronously.</summary>
+    /// <param name="entityKey">Item primary key</param>
+    /// <returns>True or False</returns>
+    public virtual async Task<bool> DeleteAsync(int entityKey)
+    {
+        // We check if the current business object uses Guid types
+        var pkType = GetPrimaryKeyType();
+        if (pkType != KeyType.Integer && pkType != KeyType.IntegerAutoIncrement) throw new UnsupportedKeyTypeException(KeyType.Integer);
+
+        // We are ready to go.
+        if (BeginTransaction())
+            if (await DeleteSecondaryTablesAsync(entityKey))
+            {
+                var deleteCommand = DataService.BuildDeleteCommand(MasterEntity, PrimaryKeyField, entityKey, DeleteMethod);
+                if (await ExecuteNonQueryAsync(deleteCommand) > 0)
+                {
+                    CommitTransaction();
+                    return true;
+                }
+            }
+            else
+            {
+                AbortTransaction();
+                return false;
+            }
+        else
+            throw new TransactionException("Cannot start transaction.");
+
+        return false;
+    }
+
     /// <summary>This method retrieves all records and all fields for the main entity.</summary>
     /// <returns>DataSet</returns>
+    /// <remarks>Prefer GetListAsync() for new code.</remarks>
     public virtual DataSet GetList()
     {
         using (var selectCommand = DataService.BuildAllRecordsQueryCommand(MasterEntity, DefaultFields, DefaultOrder, QueryMethod))
             return ExecuteQuery(selectCommand, MasterEntity);
     }
 
+    /// <summary>This method retrieves all records and all fields for the main entity asynchronously.</summary>
+    /// <returns>DataSet</returns>
+    public virtual async Task<DataSet> GetListAsync()
+    {
+        using (var selectCommand = DataService.BuildAllRecordsQueryCommand(MasterEntity, DefaultFields, DefaultOrder, QueryMethod))
+            return await ExecuteQueryAsync(selectCommand, MasterEntity);
+    }
+
     /// <summary>This method can be used to load a single record DataSet based on an entity primary key.</summary>
     /// <param name="entityKey">Entity primary key</param>
     /// <returns>DataSet</returns>
+    /// <remarks>Prefer LoadEntityAsync(string) for new code.</remarks>
     public virtual DataSet LoadEntity(string entityKey)
     {
         switch (PrimaryKeyType)
@@ -662,6 +1125,9 @@ public abstract class BusinessObject : IBusinessObject
                 // We are ready to go.
                 var comLoad = DataService.BuildSingleRecordQueryCommand(MasterEntity, "*", PrimaryKeyField, entityKey, QueryMethod);
                 var dsInternal = ExecuteQuery(comLoad, MasterEntity);
+                if (dsInternal == null || dsInternal.Tables.Count == 0 || dsInternal.Tables[MasterEntity].Rows.Count == 0)
+                    throw new KeyNotFoundException($"Key: {entityKey}");
+
                 LoadSecondaryTables(entityKey, dsInternal);
                 return dsInternal;
             default:
@@ -672,6 +1138,7 @@ public abstract class BusinessObject : IBusinessObject
     /// <summary>This method can be used to load a single record DataSet based on an entity primary key.</summary>
     /// <param name="entityKey">Entity primary key</param>
     /// <returns>DataSet</returns>
+    /// <remarks>Prefer LoadEntityAsync(Guid) for new code.</remarks>
     public virtual DataSet LoadEntity(Guid entityKey)
     {
         // We check if the current business object uses Guid types
@@ -680,6 +1147,9 @@ public abstract class BusinessObject : IBusinessObject
         // We are ready to go.
         var loadCommand = DataService.BuildSingleRecordQueryCommand(MasterEntity, "*", PrimaryKeyField, entityKey, QueryMethod);
         var dsInternal = ExecuteQuery(loadCommand, MasterEntity);
+        if (dsInternal == null || dsInternal.Tables.Count == 0 || dsInternal.Tables[MasterEntity].Rows.Count == 0)
+            throw new KeyNotFoundException($"Key: {entityKey}"); 
+
         LoadSecondaryTables(entityKey, dsInternal);
         return dsInternal;
     }
@@ -687,6 +1157,7 @@ public abstract class BusinessObject : IBusinessObject
     /// <summary>This method can be used to load a single record DataSet based on an entity primary key.</summary>
     /// <param name="entityKey">Entity primary key</param>
     /// <returns>DataSet</returns>
+    /// <remarks>Prefer LoadEntityAsync(int) for new code.</remarks>
     public virtual DataSet LoadEntity(int entityKey)
     {
         // We check if the current business object uses Guid types
@@ -696,12 +1167,80 @@ public abstract class BusinessObject : IBusinessObject
         // We are ready to go.
         var loadCommand = DataService.BuildSingleRecordQueryCommand(MasterEntity, "*", PrimaryKeyField, entityKey, QueryMethod);
         var dsInternal = ExecuteQuery(loadCommand, MasterEntity);
+        if (dsInternal == null || dsInternal.Tables.Count == 0 || dsInternal.Tables[MasterEntity].Rows.Count == 0)
+            throw new KeyNotFoundException($"Key: {entityKey}");
+
+        LoadSecondaryTables(entityKey, dsInternal);
+        return dsInternal;
+    }
+
+    /// <summary>This method can be used to load a single record DataSet based on an entity primary key asynchronously.</summary>
+    /// <param name="entityKey">Entity primary key</param>
+    /// <returns>DataSet</returns>
+    public virtual async Task<DataSet> LoadEntityAsync(string entityKey)
+    {
+        switch (PrimaryKeyType)
+        {
+            case KeyType.Guid:
+                return await LoadEntityAsync(new Guid(entityKey));
+            case KeyType.Integer:
+                return await LoadEntityAsync(int.Parse(entityKey, NumberFormatInfo.InvariantInfo));
+            case KeyType.IntegerAutoIncrement:
+                return await LoadEntityAsync(int.Parse(entityKey, NumberFormatInfo.InvariantInfo));
+            case KeyType.String:
+                // We are ready to go.
+                var comLoad = DataService.BuildSingleRecordQueryCommand(MasterEntity, "*", PrimaryKeyField, entityKey, QueryMethod);
+                var dsInternal = await ExecuteQueryAsync(comLoad, MasterEntity);
+                if (dsInternal == null || dsInternal.Tables.Count == 0 || dsInternal.Tables[MasterEntity].Rows.Count == 0)
+                    throw new KeyNotFoundException($"Key: {entityKey}");
+
+                LoadSecondaryTables(entityKey, dsInternal);
+                return dsInternal;
+            default:
+                throw new UnsupportedKeyTypeException(GetPrimaryKeyType());
+        }
+    }
+
+    /// <summary>This method can be used to load a single record DataSet based on an entity primary key asynchronously.</summary>
+    /// <param name="entityKey">Entity primary key</param>
+    /// <returns>DataSet</returns>
+    public virtual async Task<DataSet> LoadEntityAsync(Guid entityKey)
+    {
+        // We check if the current business object uses Guid types
+        if (GetPrimaryKeyType() != KeyType.Guid) throw new UnsupportedKeyTypeException(KeyType.Guid);
+
+        // We are ready to go.
+        var loadCommand = DataService.BuildSingleRecordQueryCommand(MasterEntity, "*", PrimaryKeyField, entityKey, QueryMethod);
+        var dsInternal = await ExecuteQueryAsync(loadCommand, MasterEntity);
+        if (dsInternal == null || dsInternal.Tables.Count == 0 || dsInternal.Tables[MasterEntity].Rows.Count == 0)
+            throw new KeyNotFoundException($"Key: {entityKey}");
+
+        LoadSecondaryTables(entityKey, dsInternal);
+        return dsInternal;
+    }
+
+    /// <summary>This method can be used to load a single record DataSet based on an entity primary key asynchronously.</summary>
+    /// <param name="entityKey">Entity primary key</param>
+    /// <returns>DataSet</returns>
+    public virtual async Task<DataSet> LoadEntityAsync(int entityKey)
+    {
+        // We check if the current business object uses Guid types
+        var pkType = GetPrimaryKeyType();
+        if (pkType != KeyType.Integer && pkType != KeyType.IntegerAutoIncrement) throw new UnsupportedKeyTypeException(KeyType.Guid);
+
+        // We are ready to go.
+        var loadCommand = DataService.BuildSingleRecordQueryCommand(MasterEntity, "*", PrimaryKeyField, entityKey, QueryMethod);
+        var dsInternal = await ExecuteQueryAsync(loadCommand, MasterEntity);
+        if (dsInternal == null || dsInternal.Tables.Count == 0 || dsInternal.Tables[MasterEntity].Rows.Count == 0)
+            throw new KeyNotFoundException($"Key: {entityKey}");
+
         LoadSecondaryTables(entityKey, dsInternal);
         return dsInternal;
     }
 
     /// <summary>Creates a new master entity record.</summary>
     /// <returns>DataSet with new master entity record.</returns>
+    /// <remarks>Prefer AddNewAsync() for new code.</remarks>
     public virtual DataSet AddNew()
     {
         var internalDataSet = NewMasterEntity();
@@ -718,6 +1257,30 @@ public abstract class BusinessObject : IBusinessObject
                 break;
             case KeyType.String:
                 AddNewSecondaryTables((string) internalDataSet.Tables[MasterEntity].Rows[0][PrimaryKeyField], internalDataSet);
+                break;
+        }
+
+        return internalDataSet;
+    }
+
+    /// <summary>Creates a new master entity record asynchronously.</summary>
+    /// <returns>DataSet with new master entity record.</returns>
+    public virtual async Task<DataSet> AddNewAsync()
+    {
+        var internalDataSet = await NewMasterEntityAsync();
+        switch (GetPrimaryKeyType())
+        {
+            case KeyType.Guid:
+                await AddNewSecondaryTablesAsync((Guid) internalDataSet.Tables[MasterEntity].Rows[0][PrimaryKeyField], internalDataSet);
+                break;
+            case KeyType.Integer:
+                await AddNewSecondaryTablesAsync((int) internalDataSet.Tables[MasterEntity].Rows[0][PrimaryKeyField], internalDataSet);
+                break;
+            case KeyType.IntegerAutoIncrement:
+                await AddNewSecondaryTablesAsync((int) internalDataSet.Tables[MasterEntity].Rows[0][PrimaryKeyField], internalDataSet);
+                break;
+            case KeyType.String:
+                await AddNewSecondaryTablesAsync((string) internalDataSet.Tables[MasterEntity].Rows[0][PrimaryKeyField], internalDataSet);
                 break;
         }
 
@@ -855,11 +1418,23 @@ public abstract class BusinessObject : IBusinessObject
     /// <returns>True or False depending on the success of the operation</returns>
     protected virtual bool SaveSecondaryTables(Guid parentKey, DataSet existingDataSet) => true;
 
+    /// <summary>This method can be overridden in subclasses to save additional/secondary tables when the main entity saves asynchronously.</summary>
+    /// <param name="parentKey">PK of the parent record</param>
+    /// <param name="existingDataSet">Existing DataSet the new records are to be added to</param>
+    /// <returns>True or False depending on the success of the operation</returns>
+    protected virtual Task<bool> SaveSecondaryTablesAsync(Guid parentKey, DataSet existingDataSet) => Task.FromResult(SaveSecondaryTables(parentKey, existingDataSet));
+
     /// <summary>This method can be overridden in subclasses to save additional/secondary tables when the main entity saves.</summary>
     /// <param name="parentKey">PK of the parent record</param>
     /// <param name="existingDataSet">Existing DataSet the new records are to be added to</param>
     /// <returns>True or False depending on the success of the operation</returns>
     protected virtual bool SaveSecondaryTables(int parentKey, DataSet existingDataSet) => true;
+
+    /// <summary>This method can be overridden in subclasses to save additional/secondary tables when the main entity saves asynchronously.</summary>
+    /// <param name="parentKey">PK of the parent record</param>
+    /// <param name="existingDataSet">Existing DataSet the new records are to be added to</param>
+    /// <returns>True or False depending on the success of the operation</returns>
+    protected virtual Task<bool> SaveSecondaryTablesAsync(int parentKey, DataSet existingDataSet) => Task.FromResult(SaveSecondaryTables(parentKey, existingDataSet));
 
     /// <summary>This method can be overridden in subclasses to save additional/secondary tables when the main entity saves.</summary>
     /// <param name="parentKey">PK of the parent record</param>
@@ -867,35 +1442,83 @@ public abstract class BusinessObject : IBusinessObject
     /// <returns>True or False depending on the success of the operation</returns>
     protected virtual bool SaveSecondaryTables(string parentKey, DataSet existingDataSet) => true;
 
+    /// <summary>This method can be overridden in subclasses to save additional/secondary tables when the main entity saves asynchronously.</summary>
+    /// <param name="parentKey">PK of the parent record</param>
+    /// <param name="existingDataSet">Existing DataSet the new records are to be added to</param>
+    /// <returns>True or False depending on the success of the operation</returns>
+    protected virtual Task<bool> SaveSecondaryTablesAsync(string parentKey, DataSet existingDataSet) => Task.FromResult(SaveSecondaryTables(parentKey, existingDataSet));
+
     /// <summary>This method can be overridden in subclasses to add new additional/secondary tables when the main entity adds a new row.</summary>
     /// <param name="parentKey">PK of the parent record</param>
     /// <param name="existingDataSet">Existing DataSet the new records are to be added to</param>
     protected virtual void AddNewSecondaryTables(Guid parentKey, DataSet existingDataSet) { }
+
+    /// <summary>This method can be overridden in subclasses to add new additional/secondary tables when the main entity adds a new row asynchronously.</summary>
+    /// <param name="parentKey">PK of the parent record</param>
+    /// <param name="existingDataSet">Existing DataSet the new records are to be added to</param>
+    protected virtual Task AddNewSecondaryTablesAsync(Guid parentKey, DataSet existingDataSet)
+    {
+        AddNewSecondaryTables(parentKey, existingDataSet);
+        return Task.CompletedTask;
+    }
 
     /// <summary>This method can be overridden in subclasses to add new additional/secondary tables when the main entity adds a new row.</summary>
     /// <param name="parentKey">PK of the parent record</param>
     /// <param name="existingDataSet">Existing DataSet the new records are to be added to</param>
     protected virtual void AddNewSecondaryTables(int parentKey, DataSet existingDataSet) { }
 
+    /// <summary>This method can be overridden in subclasses to add new additional/secondary tables when the main entity adds a new row asynchronously.</summary>
+    /// <param name="parentKey">PK of the parent record</param>
+    /// <param name="existingDataSet">Existing DataSet the new records are to be added to</param>
+    protected virtual Task AddNewSecondaryTablesAsync(int parentKey, DataSet existingDataSet)
+    {
+        AddNewSecondaryTables(parentKey, existingDataSet);
+        return Task.CompletedTask;
+    }
+
     /// <summary>This method can be overridden in subclasses to add new additional/secondary tables when the main entity adds a new row.</summary>
     /// <param name="parentKey">PK of the parent record</param>
     /// <param name="existingDataSet">Existing DataSet the new records are to be added to</param>
     protected virtual void AddNewSecondaryTables(string parentKey, DataSet existingDataSet) { }
+
+    /// <summary>This method can be overridden in subclasses to add new additional/secondary tables when the main entity adds a new row asynchronously.</summary>
+    /// <param name="parentKey">PK of the parent record</param>
+    /// <param name="existingDataSet">Existing DataSet the new records are to be added to</param>
+    protected virtual Task AddNewSecondaryTablesAsync(string parentKey, DataSet existingDataSet)
+    {
+        AddNewSecondaryTables(parentKey, existingDataSet);
+        return Task.CompletedTask;
+    }
 
     /// <summary>This method can be overridden in subclasses to delete additional/secondary tables when the main entity deletes a row.</summary>
     /// <param name="parentKey">PK of the parent record</param>
     /// <returns>True or False depending on the success of the operation</returns>
     protected virtual bool DeleteSecondaryTables(Guid parentKey) => true;
 
+    /// <summary>This method can be overridden in subclasses to delete additional/secondary tables when the main entity deletes a row asynchronously.</summary>
+    /// <param name="parentKey">PK of the parent record</param>
+    /// <returns>True or False depending on the success of the operation</returns>
+    protected virtual Task<bool> DeleteSecondaryTablesAsync(Guid parentKey) => Task.FromResult(DeleteSecondaryTables(parentKey));
+
     /// <summary>This method can be overridden in subclasses to delete additional/secondary tables when the main entity deletes a row.</summary>
     /// <param name="parentKey">PK of the parent record</param>
     /// <returns>True or False depending on the success of the operation</returns>
     protected virtual bool DeleteSecondaryTables(int parentKey) => true;
 
+    /// <summary>This method can be overridden in subclasses to delete additional/secondary tables when the main entity deletes a row asynchronously.</summary>
+    /// <param name="parentKey">PK of the parent record</param>
+    /// <returns>True or False depending on the success of the operation</returns>
+    protected virtual Task<bool> DeleteSecondaryTablesAsync(int parentKey) => Task.FromResult(DeleteSecondaryTables(parentKey));
+
     /// <summary>This method can be overridden in subclasses to delete additional/secondary tables when the main entity deletes a row.</summary>
     /// <param name="parentKey">PK of the parent record</param>
     /// <returns>True or False depending on the success of the operation</returns>
     protected virtual bool DeleteSecondaryTables(string parentKey) => true;
+
+    /// <summary>This method can be overridden in subclasses to delete additional/secondary tables when the main entity deletes a row asynchronously.</summary>
+    /// <param name="parentKey">PK of the parent record</param>
+    /// <returns>True or False depending on the success of the operation</returns>
+    protected virtual Task<bool> DeleteSecondaryTablesAsync(string parentKey) => Task.FromResult(DeleteSecondaryTables(parentKey));
 
     /// <summary>Sets the primary key type for the master entity as well as the default for secondary tables primary key type.</summary>
     /// <param name="keyType">Primary key type</param>
@@ -982,7 +1605,7 @@ public abstract class BusinessObject : IBusinessObject
         }
 
         // If sharing is possible, we now set the other object's context on this object
-        if (canShare) internalDataContext = primaryDataBusinessObject.SharedDataContext;
+        if (canShare) _internalDataContext = primaryDataBusinessObject.SharedDataContext;
         return canShare;
     }
 
@@ -991,7 +1614,7 @@ public abstract class BusinessObject : IBusinessObject
     /// <returns>True of false depending on success</returns>
     public virtual bool ShareDataContext(SharedDataContext dataContext)
     {
-        internalDataContext = dataContext;
+        _internalDataContext = dataContext;
         return true;
     }
 
@@ -999,7 +1622,7 @@ public abstract class BusinessObject : IBusinessObject
     /// <returns>True or false</returns>
     public virtual bool UnshareDataContext()
     {
-        internalDataContext = null;
+        _internalDataContext = null;
         return true;
     }
 
@@ -1080,77 +1703,12 @@ public abstract class BusinessObject : IBusinessObject
     /// Fires an SQL Command to the back end data server and returns a DataSet.
     /// Note that this method is designed to be called from other methods only (not from the outside).
     /// If you need to access this method from outside this object, add another method that uses this method.
-    /// Note: The name of the newly created entity will default to the master entity name.
-    /// </summary>
-    /// <param name="command">IDbCommand object</param>
-    /// <returns>Result DataSet</returns>
-    protected virtual DataSet ExecuteQuery(IDbCommand command)
-    {
-        // We use the current DataService and execute the specified command.
-        DataSet dsResult;
-        try
-        {
-            var service = DataService;
-
-            // We check for app roles
-            if (!string.IsNullOrEmpty(AppRole)) service.ApplyAppRole(AppRole, AppRolePassword);
-
-            dsResult = service.ExecuteQuery(command, MasterEntity);
-
-            // We reset the app role if we set a role
-            if (!string.IsNullOrEmpty(AppRole)) service.RevertAppRole();
-        }
-        catch (Exception ex)
-        {
-            LastErrorMessage = ex.Message;
-            throw;
-        }
-
-        return dsResult;
-    }
-
-    /// <summary>
-    /// Fires an SQL Command to the back end data server and returns a DataSet.
-    /// Note that this method is designed to be called from other methods only (not from the outside).
-    /// If you need to access this method from outside this object, add another method that uses this method.
-    /// </summary>
-    /// <param name="command">IDbCommand object</param>
-    /// <param name="entityName">Table name of the generated entity (for instance, if you SELECT * From Names, the entity name might be "names").</param>
-    /// <returns>Result DataSet</returns>
-    protected virtual DataSet ExecuteQuery(IDbCommand command, string entityName)
-    {
-        // We use the current DataService and execute the specified command.
-        DataSet dsResult;
-        try
-        {
-            var service = DataService;
-            // We check for app roles
-            if (!string.IsNullOrEmpty(AppRole)) service.ApplyAppRole(AppRole, AppRolePassword);
-
-            dsResult = service.ExecuteQuery(command, entityName);
-
-            // We reset the app role if we set a role
-            if (!string.IsNullOrEmpty(AppRole)) service.RevertAppRole();
-        }
-        catch (Exception ex)
-        {
-            LastErrorMessage = ex.Message;
-            throw;
-        }
-
-        return dsResult;
-    }
-
-    /// <summary>
-    /// Fires an SQL Command to the back end data server and returns a DataSet.
-    /// Note that this method is designed to be called from other methods only (not from the outside).
-    /// If you need to access this method from outside this object, add another method that uses this method.
     /// </summary>
     /// <param name="command">SqlCommand object</param>
     /// <param name="entityName">Table name of the generated entity (for instance, if you SELECT * From Names, the entity name might be "names").</param>
     /// <param name="existingDataSet">Use this parameter if the result is to be added to an existing DataSet</param>
     /// <returns>DataSet</returns>
-    protected virtual DataSet ExecuteQuery(IDbCommand command, string entityName, DataSet existingDataSet)
+    protected virtual DataSet ExecuteQuery(IDbCommand command, string entityName = "", DataSet existingDataSet = null)
     {
         // We use the current DataService and execute the specified command.
         try
@@ -1159,6 +1717,8 @@ public abstract class BusinessObject : IBusinessObject
 
             // We check for app roles
             if (!string.IsNullOrEmpty(AppRole)) service.ApplyAppRole(AppRole, AppRolePassword);
+
+            if (string.IsNullOrEmpty(entityName)) entityName = MasterEntity;
 
             existingDataSet = service.ExecuteQuery(command, entityName, existingDataSet);
 
@@ -1182,7 +1742,7 @@ public abstract class BusinessObject : IBusinessObject
     /// <param name="command">SqlCommand object</param>
     /// <param name="entityName">Table name of the generated entity (for instance, if you SELECT * From Names, the entity name might be "names").</param>
     /// <param name="existingDataSet">Use this parameter if the result is to be added to an existing DataSet</param>
-    protected virtual async Task ExecuteQueryAsync(IDbCommand command, string entityName, DataSet existingDataSet)
+    protected virtual async Task<DataSet> ExecuteQueryAsync(IDbCommand command, string entityName = "", DataSet existingDataSet = null)
     {
         // We use the current DataService and execute the specified command.
         var service = DataService;
@@ -1190,10 +1750,14 @@ public abstract class BusinessObject : IBusinessObject
         // We check for app roles
         if (!string.IsNullOrEmpty(AppRole)) service.ApplyAppRole(AppRole, AppRolePassword);
 
-        await service.ExecuteQueryAsync(command, entityName, existingDataSet);
+        if (string.IsNullOrEmpty(entityName)) entityName = MasterEntity;
+
+        var ds = await service.ExecuteQueryAsync(command, entityName, existingDataSet);
 
         // We reset the app role if we set a role
         if (!string.IsNullOrEmpty(AppRole)) service.RevertAppRole();
+
+        return ds;
     }
 
     /// <summary>This method executes an SQL Command and returns the number of affected records.</summary>
@@ -1209,6 +1773,32 @@ public abstract class BusinessObject : IBusinessObject
             if (!string.IsNullOrEmpty(AppRole)) service.ApplyAppRole(AppRole, AppRolePassword);
 
             var affectedRecords = service.ExecuteNonQuery(command);
+
+            // We reset the app role if we set a role
+            if (!string.IsNullOrEmpty(AppRole)) service.RevertAppRole();
+
+            return affectedRecords;
+        }
+        catch (Exception ex)
+        {
+            LastErrorMessage = ex.Message;
+            throw;
+        }
+    }
+
+    /// <summary>This method executes an SQL Command asynchronously and returns the number of affected records.</summary>
+    /// <param name="command">IDbCommand Object</param>
+    /// <returns>Number of affected records.</returns>
+    protected virtual async Task<int> ExecuteNonQueryAsync(IDbCommand command)
+    {
+        try
+        {
+            var service = DataService;
+
+            // We check for app roles
+            if (!string.IsNullOrEmpty(AppRole)) service.ApplyAppRole(AppRole, AppRolePassword);
+
+            var affectedRecords = await service.ExecuteNonQueryAsync(command);
 
             // We reset the app role if we set a role
             if (!string.IsNullOrEmpty(AppRole)) service.RevertAppRole();
@@ -1248,14 +1838,10 @@ public abstract class BusinessObject : IBusinessObject
         }
     }
 
-    /// <summary>
-    /// Executes a stored procedure using the current data service and returns the result as a DataSet
-    /// The table in the DataSet will be named after the master entity in this BO.
-    /// Note: In and out parameters are passed as part of the parameters collection.
-    /// </summary>
+    /// <summary>Runs a scalar command asynchronously and returns the value.</summary>
     /// <param name="command">IDbCommand object</param>
-    /// <returns>DataSet</returns>
-    public virtual DataSet ExecuteStoredProcedureQuery(IDbCommand command)
+    /// <returns>Value object</returns>
+    protected virtual async Task<object> ExecuteScalarAsync(IDbCommand command)
     {
         try
         {
@@ -1264,40 +1850,12 @@ public abstract class BusinessObject : IBusinessObject
             // We check for app roles
             if (!string.IsNullOrEmpty(AppRole)) service.ApplyAppRole(AppRole, AppRolePassword);
 
-            var dsResult = service.ExecuteStoredProcedureQuery(command, MasterEntity);
+            var result = await service.ExecuteScalarAsync(command);
 
             // We reset the app role if we set a role
             if (!string.IsNullOrEmpty(AppRole)) service.RevertAppRole();
 
-            return dsResult;
-        }
-        catch (Exception ex)
-        {
-            LastErrorMessage = ex.Message;
-            throw;
-        }
-    }
-
-    /// <summary>Executes a stored procedure using the current data service and returns the result as a DataSet.</summary>
-    /// <remarks>In and out parameters are passed as part of the parameters collection.</remarks>
-    /// <param name="command">IDbCommand object</param>
-    /// <param name="entityName">Name of the resulting entity in the DataSet</param>
-    /// <returns>DataSet</returns>
-    public virtual DataSet ExecuteStoredProcedureQuery(IDbCommand command, string entityName)
-    {
-        try
-        {
-            var service = DataService;
-
-            // We check for app roles
-            if (!string.IsNullOrEmpty(AppRole)) service.ApplyAppRole(AppRole, AppRolePassword);
-
-            var dsResult = service.ExecuteStoredProcedureQuery(command, entityName);
-
-            // We reset the app role if we set a role
-            if (!string.IsNullOrEmpty(AppRole)) service.RevertAppRole();
-
-            return dsResult;
+            return result;
         }
         catch (Exception ex)
         {
@@ -1311,7 +1869,8 @@ public abstract class BusinessObject : IBusinessObject
     /// <param name="entityName">Name of the resulting entity in the DataSet</param>
     /// <param name="existingDataSet">Existing DataSet the data is to be added to</param>
     /// <returns>DataSet</returns>
-    public virtual DataSet ExecuteStoredProcedureQuery(IDbCommand command, string entityName, DataSet existingDataSet)
+    /// <remarks>Prefer ExecuteStoredProcedureQueryAsync(IDbCommand, string, DataSet) for new code.</remarks>
+    public virtual DataSet ExecuteStoredProcedureQuery(IDbCommand command, string entityName = "", DataSet existingDataSet = null)
     {
         try
         {
@@ -1319,6 +1878,8 @@ public abstract class BusinessObject : IBusinessObject
 
             // We check for app roles
             if (!string.IsNullOrEmpty(AppRole)) service.ApplyAppRole(AppRole, AppRolePassword);
+
+            if (string.IsNullOrEmpty(entityName)) entityName = MasterEntity;
 
             var dsResult = service.ExecuteStoredProcedureQuery(command, entityName, existingDataSet);
 
@@ -1337,6 +1898,7 @@ public abstract class BusinessObject : IBusinessObject
     /// <summary>Executes a stored procedure</summary>
     /// <param name="command">IDbCommand object</param>
     /// <returns>True or False</returns>
+    /// <remarks>Prefer ExecuteStoredProcedureAsync(IDbCommand) for new code.</remarks>
     public virtual bool ExecuteStoredProcedure(IDbCommand command)
     {
         try
@@ -1347,6 +1909,62 @@ public abstract class BusinessObject : IBusinessObject
             if (!string.IsNullOrEmpty(AppRole)) service.ApplyAppRole(AppRole, AppRolePassword);
 
             var result = service.ExecuteStoredProcedure(command);
+
+            // We reset the app role if we set a role
+            if (!string.IsNullOrEmpty(AppRole)) service.RevertAppRole();
+
+            return result;
+        }
+        catch (Exception ex)
+        {
+            LastErrorMessage = ex.Message;
+            throw;
+        }
+    }
+
+    /// <summary>Executes a stored procedure using the current data service and adds the result to an existing DataSet asynchronously.</summary>
+    /// <param name="command">IDbCommand object</param>
+    /// <param name="entityName">Name of the resulting entity in the DataSet</param>
+    /// <param name="existingDataSet">Existing DataSet the data is to be added to</param>
+    /// <returns>DataSet</returns>
+    public virtual async Task<DataSet> ExecuteStoredProcedureQueryAsync(IDbCommand command, string entityName = "", DataSet existingDataSet = null)
+    {
+        try
+        {
+            var service = DataService;
+
+            // We check for app roles
+            if (!string.IsNullOrEmpty(AppRole)) service.ApplyAppRole(AppRole, AppRolePassword);
+
+            if (string.IsNullOrEmpty(entityName)) entityName = MasterEntity;
+
+            var dsResult = await service.ExecuteStoredProcedureQueryAsync(command, entityName, existingDataSet);
+
+            // We reset the app role if we set a role
+            if (!string.IsNullOrEmpty(AppRole)) service.RevertAppRole();
+
+            return dsResult;
+        }
+        catch (Exception ex)
+        {
+            LastErrorMessage = ex.Message;
+            throw;
+        }
+    }
+
+    /// <summary>Executes a stored procedure asynchronously</summary>
+    /// <param name="command">IDbCommand object</param>
+    /// <returns>True or False</returns>
+    public virtual async Task<bool> ExecuteStoredProcedureAsync(IDbCommand command)
+    {
+        try
+        {
+            var service = DataService;
+
+            // We check for app roles
+            if (!string.IsNullOrEmpty(AppRole)) service.ApplyAppRole(AppRole, AppRolePassword);
+
+            var result = await service.ExecuteStoredProcedureAsync(command);
 
             // We reset the app role if we set a role
             if (!string.IsNullOrEmpty(AppRole)) service.RevertAppRole();
@@ -1464,6 +2082,75 @@ public abstract class BusinessObject : IBusinessObject
         return retVal;
     }
 
+    /// <summary>This method attempts to update an entire DataTable asynchronously, assuming the table name is the same as the table name in the database.</summary>
+    /// <param name="updatedTable">DataTable that contains the updated data</param>
+    /// <param name="primaryKeyField">Primary key field used for this table.</param>
+    /// <returns></returns>
+    protected virtual async Task<bool> SaveTableAsync(DataTable updatedTable, string primaryKeyField)
+    {
+        if (updatedTable == null) return true;
+
+        var retVal = true;
+
+        for (var rowCounter = 0; rowCounter < updatedTable.Rows.Count; rowCounter++)
+            if (updatedTable.Rows[rowCounter].RowState != DataRowState.Unchanged && updatedTable.Rows[rowCounter].RowState != DataRowState.Detached)
+                if (SaveMode == DataSaveMode.AllChanges || SaveMode == DataSaveMode.DeletesOnly && updatedTable.Rows[rowCounter].RowState == DataRowState.Deleted || SaveMode == DataSaveMode.AllChangesExceptDeletes && updatedTable.Rows[rowCounter].RowState != DataRowState.Deleted)
+                {
+                    var updateCommand = BuildSqlUpdateCommand(updatedTable.Rows[rowCounter], primaryKeyField, UpdateMode, UpdateMethod);
+                    if (updateCommand != null)
+                        if (updatedTable.Columns[primaryKeyField].DataType == typeof(int) && GetPrimaryKeyType(updatedTable.TableName) == KeyType.IntegerAutoIncrement && updatedTable.Rows[rowCounter].RowState == DataRowState.Added)
+                        {
+                            // This is a new row for an integer (identity) primary key record. We need to issue a special 
+                            // update command, and replace the current values.
+                            var newKey = (int) await ExecuteScalarAsync(updateCommand);
+                            if (newKey == -1)
+                            {
+                                // The insert failed.
+                                retVal = false;
+                            }
+                            else
+                            {
+                                // Success. We need to make sure we update all the client-side data,
+                                // since the key we had before was only temporary. We start out by
+                                // replacing the current row key with the new one that was generated
+                                // by the database and returned to us.
+                                var intOldKey = (int) updatedTable.Rows[rowCounter][PrimaryKeyField];
+                                // Identity fields are most likely read-only. In order to set the key
+                                // we retrieved from the database, we need to temporarily allow updates.
+                                var wasReadOnly = updatedTable.Columns[PrimaryKeyField].ReadOnly;
+                                if (wasReadOnly) updatedTable.Columns[PrimaryKeyField].ReadOnly = false;
+                                updatedTable.Rows[rowCounter][PrimaryKeyField] = newKey;
+                                // If it was read-only before, then we now need to set that back,
+                                // so we do not end up changing the environment/data.
+                                if (wasReadOnly) updatedTable.Columns[PrimaryKeyField].ReadOnly = false;
+                                // Now, we also need to make sure that all the child tables have a
+                                // chance to update their foreign keys. We can not do this automatically,
+                                // since we have no knowledge of other tables that may be related. 
+                                // However, we will give the programmer a chance to do 
+                                PrimaryKeyValueChanged(updatedTable.DataSet, updatedTable.TableName, intOldKey, newKey);
+                                retVal = true;
+                            }
+                        }
+                        else
+                        {
+                            var rowsAffected = await ExecuteNonQueryAsync(updateCommand);
+                            if (rowsAffected < 1) retVal = false;
+                        }
+                    else
+                        retVal = true;
+                }
+
+        // If the operation was successful, and we are either in "save all" or "save all except deletes"
+        // mode, we accept changes to clear the "dirty" state of the table. 
+        // Note: We do not clear the dirty state if this is a delete-only run, because in that case,
+        // we always expect a second pass in "all except deletes" mode and we do not want to accept
+        // changes before that, as that would flag all records as "not updated", which would effectively
+        // disable the second save pass.
+        if (SaveMode != DataSaveMode.DeletesOnly && retVal) updatedTable.AcceptChanges();
+
+        return retVal;
+    }
+
     /// <summary>This method attempts to update an the specified fields in the provided DataTable. The data table can map to a different internal table name in the data source</summary>
     /// <param name="updatedTable">DataTable that contains the updated data</param>
     /// <param name="primaryKeyField">Primary key field used for this table.</param>
@@ -1558,21 +2245,128 @@ public abstract class BusinessObject : IBusinessObject
         return returnValue;
     }
 
+    /// <summary>This method attempts to update an the specified fields in the provided DataTable asynchronously. The data table can map to a different internal table name in the data source</summary>
+    /// <param name="updatedTable">DataTable that contains the updated data</param>
+    /// <param name="primaryKeyField">Primary key field used for this table.</param>
+    /// <param name="tableName">Name of the table.</param>
+    /// <param name="fieldNames">Names of the fields to be included in the update (all others will be ignored)</param>
+    /// <param name="fieldMaps">List of key value pairs that can be used to map field names. For instance, if a field in the table is called MyId but in the database it is called ID, then one can add a key 'MyId' with a value of 'ID'</param>
+    /// <param name="acceptTableChanges">If set to <c>true</c> the table row will be flagged as not having changes after a successful save.</param>
+    /// <returns></returns>
+    protected virtual async Task<bool> SaveTableAsync(DataTable updatedTable, string primaryKeyField, string tableName, string[] fieldNames, Dictionary<string, string> fieldMaps, bool acceptTableChanges)
+    {
+        if (updatedTable == null) return true;
+
+        var returnValue = true;
+
+        for (var rowCounter = 0; rowCounter < updatedTable.Rows.Count; rowCounter++)
+            if (updatedTable.Rows[rowCounter].RowState != DataRowState.Unchanged && updatedTable.Rows[rowCounter].RowState != DataRowState.Detached)
+                if (SaveMode == DataSaveMode.AllChanges || SaveMode == DataSaveMode.DeletesOnly && updatedTable.Rows[rowCounter].RowState == DataRowState.Deleted || SaveMode == DataSaveMode.AllChangesExceptDeletes && updatedTable.Rows[rowCounter].RowState != DataRowState.Deleted)
+                {
+                    var updateCommand = BuildSqlUpdateCommand(updatedTable.Rows[rowCounter], primaryKeyField, UpdateMode, UpdateMethod, tableName, fieldNames, fieldMaps);
+                    if (updateCommand != null)
+                    {
+                        // If this is a business object that uses auto-increment integer keys, and we have new records,
+                        // we have to replace the current temporary key with a new key and propagate that change down 
+                        // through child tables.
+                        var primaryKeyFieldInMemory = primaryKeyField;
+                        foreach (var key in fieldMaps.Keys)
+                        {
+                            var value = fieldMaps[key];
+                            if (StringHelper.Compare(value, primaryKeyFieldInMemory))
+                            {
+                                primaryKeyFieldInMemory = key;
+                                break;
+                            }
+                        }
+
+                        if (updatedTable.Columns[primaryKeyFieldInMemory].DataType == typeof(int) && GetPrimaryKeyType(tableName) == KeyType.IntegerAutoIncrement && updatedTable.Rows[rowCounter].RowState == DataRowState.Added)
+                        {
+                            // This is a new row for an integer (identity) primary key record. We need to issue a special 
+                            // update command, and replace the current values.
+                            var newKey = (int) await ExecuteScalarAsync(updateCommand);
+                            if (newKey == -1)
+                                // The insert failed.
+                            {
+                                returnValue = false;
+                            }
+                            else
+                            {
+                                // Success. We need to make sure we update all the client-side data,
+                                // since the key we had before was only temporary. We start out by
+                                // replacing the current row key with the new one that was generated
+                                // by the database and returned to us.
+                                var oldKey = (int) updatedTable.Rows[rowCounter][primaryKeyFieldInMemory];
+                                // Identity fields are most likely read-only. In order to set the key
+                                // we retrieved from the database, we need to temporarily allow updates.
+                                var wasReadOnly = updatedTable.Columns[primaryKeyFieldInMemory].ReadOnly;
+                                if (wasReadOnly) updatedTable.Columns[primaryKeyFieldInMemory].ReadOnly = false;
+                                updatedTable.Rows[rowCounter][primaryKeyFieldInMemory] = newKey;
+                                // If it was read-only before, then we now need to set that back,
+                                // so we do not end up changing the environment/data.
+                                if (wasReadOnly) updatedTable.Columns[primaryKeyFieldInMemory].ReadOnly = false;
+                                // Now, we also need to make sure that all the child tables have a
+                                // chance to update their foreign keys. We can not do this automatically,
+                                // since we have no knowledge of other tables that may be related. 
+                                // However, we will give the programmer a chance to do 
+                                PrimaryKeyValueChanged(updatedTable.DataSet, tableName, oldKey, newKey);
+                                returnValue = true;
+                            }
+                        }
+                        else
+                        {
+                            var rowsAffected = await ExecuteNonQueryAsync(updateCommand);
+                            if (rowsAffected < 1) returnValue = false;
+                        }
+                    }
+                    else
+                        // Nothing to update here...
+                    {
+                        returnValue = true;
+                    }
+                }
+
+        // If the operation was successful, and we are either in "save all" or "save all except deletes"
+        // mode, we accept changes to clear the "dirty" state of the table. 
+        // Note: We do not clear the dirty state if this is a delete-only run, because in that case,
+        // we always expect a second pass in "all except deletes" mode and we do not want to accept
+        // changes before that, as that would flag all records as "not updated", which would effectively
+        // disable the second save pass.
+        if (SaveMode != DataSaveMode.DeletesOnly && returnValue)
+            if (acceptTableChanges)
+                updatedTable.AcceptChanges();
+
+        return returnValue;
+    }
+
     /// <summary>Saves the primary entity table to the database.</summary>
     /// <param name="updatedTable">Primary entity data table.</param>
     /// <returns>True or false depending on the success of the save operation</returns>
     protected virtual bool SaveMasterEntity(DataTable updatedTable) => SaveTable(updatedTable, PrimaryKeyField);
+
+    /// <summary>Saves the primary entity table to the database asynchronously.</summary>
+    /// <param name="updatedTable">Primary entity data table.</param>
+    /// <returns>True or false depending on the success of the save operation</returns>
+    protected virtual Task<bool> SaveMasterEntityAsync(DataTable updatedTable) => SaveTableAsync(updatedTable, PrimaryKeyField);
 
     /// <summary>This method generates a new DataSet and adds a new row to the master table.</summary>
     /// <remarks>This only works if the DataSet contains a 1:1 mapping to the back end table.</remarks>
     /// <returns>DataSet containing the new row</returns>
     protected virtual DataSet NewMasterEntity()
     {
-        using (var command = DataService.BuildEmptyRecordQueryCommand(MasterEntity, "*", QueryMethod))
-        {
-            var masterDataSet = ExecuteQuery(command, MasterEntity);
-            return NewMasterEntity(masterDataSet);
-        }
+        using var command = DataService.BuildEmptyRecordQueryCommand(MasterEntity, "*", QueryMethod);
+        var masterDataSet = ExecuteQuery(command, MasterEntity);
+        return NewMasterEntity(masterDataSet);
+    }
+
+    /// <summary>This method generates a new DataSet and adds a new row to the master table asynchronously.</summary>
+    /// <remarks>This only works if the DataSet contains a 1:1 mapping to the back end table.</remarks>
+    /// <returns>DataSet containing the new row</returns>
+    protected virtual async Task<DataSet> NewMasterEntityAsync()
+    {
+        using var command = DataService.BuildEmptyRecordQueryCommand(MasterEntity, "*", QueryMethod);
+        var masterDataSet = await ExecuteQueryAsync(command, MasterEntity);
+        return NewMasterEntity(masterDataSet);
     }
 
     /// <summary>This method adds a new data row to the main entity contained in the passed DataSet</summary>
@@ -1628,6 +2422,18 @@ public abstract class BusinessObject : IBusinessObject
         return existingDataSet;
     }
 
+    /// <summary>Adds a blank secondary table to an existing DataSet asynchronously.</summary>
+    /// <remarks>This does NOT add a new record to the table. Use the overload with the two additional string parameters to add a new record.</remarks>
+    /// <param name="tableName">Table Name</param>
+    /// <param name="existingDataSet">Existing DataSet</param>
+    /// <returns>DataSet</returns>
+    protected virtual async Task<DataSet> NewSecondaryEntityAsync(string tableName, DataSet existingDataSet)
+    {
+        using var command = DataService.BuildEmptyRecordQueryCommand(tableName, "*", QueryMethod);
+        await ExecuteQueryAsync(command, tableName, existingDataSet);
+        return existingDataSet;
+    }
+
     /// <summary>Adds a blank secondary table to an existing DataSet.</summary>
     /// <remarks>This version of this method DOES add a blank record and immediately links the record to the master entity.</remarks>
     /// <param name="tableName">Table Name</param>
@@ -1640,6 +2446,47 @@ public abstract class BusinessObject : IBusinessObject
         // We only add a new table if it isn't there at all
         // This allows for this method to be called multiple times on the same table to create multiple rows.
         if (existingDataSet.Tables[tableName] == null) NewSecondaryEntity(tableName, existingDataSet);
+        var rowGen = existingDataSet.Tables[tableName].NewRow();
+        // We check whether we need to generate a new PK
+        if (primaryKeyField.Length > 0)
+        {
+            var pkType = GetPrimaryKeyType(tableName);
+            switch (pkType)
+            {
+                case KeyType.Guid:
+                    rowGen[primaryKeyField] = Guid.NewGuid();
+                    break;
+                case KeyType.Integer:
+                    rowGen[primaryKeyField] = GetNewIntegerKey(tableName, existingDataSet);
+                    break;
+                case KeyType.IntegerAutoIncrement:
+                    rowGen[primaryKeyField] = GetNewIntegerKey(tableName, existingDataSet);
+                    break;
+                case KeyType.String:
+                    rowGen[primaryKeyField] = GetNewStringKey(tableName, existingDataSet);
+                    break;
+            }
+        }
+
+        // We check whether we have a foreign key we can fill in
+        if (foreignKeyField.Length > 0) rowGen[foreignKeyField] = existingDataSet.Tables[MasterEntity].Rows[0][PrimaryKeyField];
+        CallPopulateNewRecord(rowGen, rowGen.Table.TableName, existingDataSet);
+        existingDataSet.Tables[tableName].Rows.Add(rowGen);
+        return existingDataSet;
+    }
+
+    /// <summary>Adds a blank secondary table to an existing DataSet asynchronously.</summary>
+    /// <remarks>This version of this method DOES add a blank record and immediately links the record to the master entity.</remarks>
+    /// <param name="tableName">Table Name</param>
+    /// <param name="existingDataSet">Existing DataSet</param>
+    /// <param name="primaryKeyField">Primary key field of the secondary table (pass blank if no new PK is to be generated)</param>
+    /// <param name="foreignKeyField">Foreign key field that links to the master entity (pass blank if no link is to be created)</param>
+    /// <returns>DataSet</returns>
+    protected virtual async Task<DataSet> NewSecondaryEntityAsync(string tableName, DataSet existingDataSet, string primaryKeyField, string foreignKeyField)
+    {
+        // We only add a new table if it isn't there at all
+        // This allows for this method to be called multiple times on the same table to create multiple rows.
+        if (existingDataSet.Tables[tableName] == null) await NewSecondaryEntityAsync(tableName, existingDataSet);
         var rowGen = existingDataSet.Tables[tableName].NewRow();
         // We check whether we need to generate a new PK
         if (primaryKeyField.Length > 0)
@@ -1755,47 +2602,14 @@ public abstract class BusinessObject : IBusinessObject
     /// "Pronger". However, it is possible to pass "Pron%", in which case "Pronger" is included, assuming the
     /// database back end understands the % character.
     /// </remarks>
-    protected virtual IDbCommand GetQueryCommand(string tableName, string fieldList, string[] fieldNames, object[] filterParameters, DataRowProcessMethod selectMethod) => DataService.BuildQueryCommand(tableName, fieldList, fieldNames, filterParameters, selectMethod);
-
-    /// <summary>Builds a command that returns a set of records based on the provided field names and filter parameters.</summary>
-    /// <param name="tableName">Name of the table.</param>
-    /// <param name="fieldList">The list of fields returned by the query (ignored for stored procedure execution)</param>
-    /// <param name="fieldNames">The list of fields by which to filter</param>
-    /// <param name="filterParameters">Parameters used for filtering. The parameters need to match the list of filter fields (name and types).</param>
-    /// <returns>IDbCommand object representing the query</returns>
-    /// <example>
-    /// string[] fieldNames = new string[] { "FirstName", "LastName", "IsActive" };
-    /// object[] parameters = new object[] { "Chris", "Pronger", true };
-    /// IDbCommand command = GetQueryCommand("Customers", "*", fieldNames, parameters);
-    /// DataSet data = ExecuteQuery(command, "Customers");
-    /// </example>
-    /// <remarks>
-    /// This overload uses the default setting of the system to determine whether the query is executed as
-    /// individual commands or through stored procedures.
-    /// All provided parameters are added using "and" logical operators.
-    /// The fields are used as exact matches. Therefore passing "Pron" as a filter parameter will NOT include
-    /// "Pronger". However, it is possible to pass "Pron%", in which case "Pronger" is included, assuming the
-    /// database back end understands the % character.
-    /// </remarks>
-    protected virtual IDbCommand GetQueryCommand(string tableName, string fieldList, string[] fieldNames, object[] filterParameters) => GetQueryCommand(tableName, fieldList, fieldNames, filterParameters, DataRowProcessMethod.Default);
-
-    /// <summary>Creates a command object that returns all records from a table.</summary>
-    /// <param name="tableName">Table to query from</param>
-    /// <returns>IDbCommand object</returns>
-    protected virtual IDbCommand GetAllRecordsCommand(string tableName) => DataService.BuildAllRecordsQueryCommand(tableName, "*", "", QueryMethod);
-
-    /// <summary>Creates a command object that returns all records from a table (for a specified list of fields).</summary>
-    /// <param name="tableName">Table to query from</param>
-    /// <param name="fieldList">Fields to be included in the return set</param>
-    /// <returns>IDbCommand object</returns>
-    protected virtual IDbCommand GetAllRecordsCommand(string tableName, string fieldList) => DataService.BuildAllRecordsQueryCommand(tableName, fieldList, "", QueryMethod);
+    protected virtual IDbCommand GetQueryCommand(string tableName, string fieldList, string[] fieldNames, object[] filterParameters, DataRowProcessMethod selectMethod = DataRowProcessMethod.Default) => DataService.BuildQueryCommand(tableName, fieldList, fieldNames, filterParameters, selectMethod);
 
     /// <summary>Creates a command object that returns all records from a table (in a certain order and for a specified list of fields).</summary>
     /// <param name="tableName">Table to query from</param>
     /// <param name="fieldList">Fields to be included in the return set</param>
     /// <param name="orderBy">Sort order</param>
     /// <returns>IDbCommand object</returns>
-    protected virtual IDbCommand GetAllRecordsCommand(string tableName, string fieldList, string orderBy) => DataService.BuildAllRecordsQueryCommand(tableName, fieldList, orderBy, QueryMethod);
+    protected virtual IDbCommand GetAllRecordsCommand(string tableName, string fieldList = "*", string orderBy = "") => DataService.BuildAllRecordsQueryCommand(tableName, fieldList, orderBy, QueryMethod);
 
     /// <summary>Creates a command that deletes records by key</summary>
     /// <param name="tableName">Name of the table.</param>
@@ -1821,14 +2635,17 @@ public abstract class BusinessObject : IBusinessObject
     /// </remarks>
     protected virtual int DeleteRecordsByKey(string tableName, string primaryKeyFieldName, object primaryKeyValue) => ExecuteNonQuery(GetDeleteRecordsByKeyCommand(tableName, primaryKeyFieldName, primaryKeyValue));
 
-    /// <summary>Queries a single record based on a key/value pair.</summary>
-    /// <param name="tableName">Table to query record from.</param>
-    /// <param name="fieldList">Fields to be included in the return set.</param>
-    /// <param name="keyFieldName">Field name used as the key (often primary or foreign key field)</param>
-    /// <param name="keyValue">Key value</param>
-    /// <returns>DataSet</returns>
-    /// <remarks>The queried result is stored in a new DataSet in a table of the same names as the provided table name.</remarks>
-    protected virtual DataSet QuerySingleRecord(string tableName, string fieldList, string keyFieldName, object keyValue) => ExecuteQuery(DataService.BuildSingleRecordQueryCommand(tableName, fieldList, keyFieldName, keyValue, QueryMethod), tableName);
+    /// <summary>Deletes records by key value asynchronously.</summary>
+    /// <param name="tableName">Name of the table.</param>
+    /// <param name="primaryKeyFieldName">Name of the primary key field.</param>
+    /// <param name="primaryKeyValue">The primary key value.</param>
+    /// <returns>Number of deleted records</returns>
+    /// <remarks>
+    /// Only use this method to delete records by their primary key.
+    /// Do NOT use this method and pass a field name as the key field name that is not the primary key,
+    /// as that will lead to naming conflicts for stored procedures.
+    /// </remarks>
+    protected virtual Task<int> DeleteRecordsByKeyAsync(string tableName, string primaryKeyFieldName, object primaryKeyValue) => ExecuteNonQueryAsync(GetDeleteRecordsByKeyCommand(tableName, primaryKeyFieldName, primaryKeyValue));
 
     /// <summary>Queries a single record based on a key/value pair.</summary>
     /// <param name="tableName">Table to query record from.</param>
@@ -1838,16 +2655,17 @@ public abstract class BusinessObject : IBusinessObject
     /// <param name="existingDataSet">Existing DataSet the returned value is to be queried into.</param>
     /// <returns>DataSet</returns>
     /// <remarks>The queried result is stored in the existing (passed) DataSet in a table of the same names as the provided table name.</remarks>
-    protected virtual DataSet QuerySingleRecord(string tableName, string fieldList, string keyFieldName, object keyValue, DataSet existingDataSet) => ExecuteQuery(DataService.BuildSingleRecordQueryCommand(tableName, fieldList, keyFieldName, keyValue, QueryMethod), tableName, existingDataSet);
+    protected virtual DataSet QuerySingleRecord(string tableName, string fieldList, string keyFieldName, object keyValue, DataSet existingDataSet = null) => ExecuteQuery(DataService.BuildSingleRecordQueryCommand(tableName, fieldList, keyFieldName, keyValue, QueryMethod), tableName, existingDataSet);
 
-    /// <summary>Queries multiple records based on a key/value pair.</summary>
+    /// <summary>Queries a single record based on a key/value pair asynchronously.</summary>
     /// <param name="tableName">Table to query record from.</param>
     /// <param name="fieldList">Fields to be included in the return set.</param>
     /// <param name="keyFieldName">Field name used as the key (often primary or foreign key field)</param>
     /// <param name="keyValue">Key value</param>
+    /// <param name="existingDataSet">Existing DataSet the returned value is to be queried into.</param>
     /// <returns>DataSet</returns>
-    /// <remarks>The query result is stored in a new DataSet in a table of the same name as the table name passed as a parameter.</remarks>
-    protected virtual DataSet QueryMultipleRecordsByKey(string tableName, string fieldList, string keyFieldName, object keyValue) => QuerySingleRecord(tableName, fieldList, keyFieldName, keyValue);
+    /// <remarks>The queried result is stored in the existing (passed) DataSet in a table of the same names as the provided table name.</remarks>
+    protected virtual Task<DataSet> QuerySingleRecordAsync(string tableName, string fieldList, string keyFieldName, object keyValue, DataSet existingDataSet = null) => ExecuteQueryAsync(DataService.BuildSingleRecordQueryCommand(tableName, fieldList, keyFieldName, keyValue, QueryMethod), tableName, existingDataSet);
 
     /// <summary>Queries multiple records based on a key/value pair.</summary>
     /// <param name="tableName">Table to query record from.</param>
@@ -1857,7 +2675,17 @@ public abstract class BusinessObject : IBusinessObject
     /// <param name="existingDataSet">Existing DataSet the returns set is to be filled into</param>
     /// <returns>DataSet</returns>
     /// <remarks>The query result is stored in the existing (passed) DataSet in a table of the same name as the table name passed as a parameter.</remarks>
-    protected virtual DataSet QueryMultipleRecordsByKey(string tableName, string fieldList, string keyFieldName, object keyValue, DataSet existingDataSet) => QuerySingleRecord(tableName, fieldList, keyFieldName, keyValue, existingDataSet);
+    protected virtual DataSet QueryMultipleRecordsByKey(string tableName, string fieldList, string keyFieldName, object keyValue, DataSet existingDataSet = null) => QuerySingleRecord(tableName, fieldList, keyFieldName, keyValue, existingDataSet);
+
+    /// <summary>Queries multiple records based on a key/value pair asynchronously.</summary>
+    /// <param name="tableName">Table to query record from.</param>
+    /// <param name="fieldList">Fields to be included in the return set.</param>
+    /// <param name="keyFieldName">Field name used as the key (often primary or foreign key field)</param>
+    /// <param name="keyValue">Key value</param>
+    /// <param name="existingDataSet">Existing DataSet the returns set is to be filled into</param>
+    /// <returns>DataSet</returns>
+    /// <remarks>The query result is stored in the existing (passed) DataSet in a table of the same name as the table name passed as a parameter.</remarks>
+    protected virtual Task<DataSet> QueryMultipleRecordsByKeyAsync(string tableName, string fieldList, string keyFieldName, object keyValue, DataSet existingDataSet = null) => QuerySingleRecordAsync(tableName, fieldList, keyFieldName, keyValue, existingDataSet);
 
     /// <summary>Queries the specified table name.</summary>
     /// <param name="tableName">Name of the table.</param>
@@ -1880,6 +2708,8 @@ public abstract class BusinessObject : IBusinessObject
     /// </remarks>
     protected virtual DataSet Query(string tableName, string fieldList, string[] fieldNames, object[] filterParameters, DataRowProcessMethod selectMethod) => ExecuteQuery(GetQueryCommand(tableName, fieldList, fieldNames, filterParameters, selectMethod));
 
+    protected virtual Task<DataSet> QueryAsync(string tableName, string fieldList, string[] fieldNames, object[] filterParameters, DataRowProcessMethod selectMethod) => ExecuteQueryAsync(GetQueryCommand(tableName, fieldList, fieldNames, filterParameters, selectMethod));
+
     /// <summary>Queries the specified table name.</summary>
     /// <param name="tableName">Name of the table.</param>
     /// <param name="fieldList">The list of fields returned by the query (ignored for stored procedure execution)</param>
@@ -1899,6 +2729,8 @@ public abstract class BusinessObject : IBusinessObject
     /// database back end understands the % character.
     /// </remarks>
     protected virtual DataSet Query(string tableName, string fieldList, string[] fieldNames, object[] filterParameters) => ExecuteQuery(GetQueryCommand(tableName, fieldList, fieldNames, filterParameters));
+
+    protected virtual Task<DataSet> QueryAsync(string tableName, string fieldList, string[] fieldNames, object[] filterParameters) => ExecuteQueryAsync(GetQueryCommand(tableName, fieldList, fieldNames, filterParameters));
 
     /// <summary>Queries the specified table name.</summary>
     /// <param name="tableName">Name of the table.</param>
@@ -1922,6 +2754,8 @@ public abstract class BusinessObject : IBusinessObject
     /// </remarks>
     protected virtual DataSet Query(string tableName, string fieldList, string[] fieldNames, object[] filterParameters, DataRowProcessMethod selectMethod, string entityName) => ExecuteQuery(GetQueryCommand(tableName, fieldList, fieldNames, filterParameters, selectMethod), entityName);
 
+    protected virtual Task<DataSet> QueryAsync(string tableName, string fieldList, string[] fieldNames, object[] filterParameters, DataRowProcessMethod selectMethod, string entityName) => ExecuteQueryAsync(GetQueryCommand(tableName, fieldList, fieldNames, filterParameters, selectMethod), entityName);
+
     /// <summary>Queries the specified table name.</summary>
     /// <param name="tableName">Name of the table.</param>
     /// <param name="fieldList">The list of fields returned by the query (ignored for stored procedure execution)</param>
@@ -1942,6 +2776,8 @@ public abstract class BusinessObject : IBusinessObject
     /// database back end understands the % character.
     /// </remarks>
     protected virtual DataSet Query(string tableName, string fieldList, string[] fieldNames, object[] filterParameters, string entityName) => ExecuteQuery(GetQueryCommand(tableName, fieldList, fieldNames, filterParameters), entityName);
+
+    protected virtual Task<DataSet> QueryAsync(string tableName, string fieldList, string[] fieldNames, object[] filterParameters, string entityName) => ExecuteQueryAsync(GetQueryCommand(tableName, fieldList, fieldNames, filterParameters), entityName);
 
     /// <summary>Queries the specified table name.</summary>
     /// <param name="tableName">Name of the table.</param>
@@ -1966,6 +2802,8 @@ public abstract class BusinessObject : IBusinessObject
     /// </remarks>
     protected virtual DataSet Query(string tableName, string fieldList, string[] fieldNames, object[] filterParameters, DataRowProcessMethod selectMethod, string entityName, DataSet existingDataSet) => ExecuteQuery(GetQueryCommand(tableName, fieldList, fieldNames, filterParameters, selectMethod), entityName, existingDataSet);
 
+    protected virtual Task<DataSet> QueryAsync(string tableName, string fieldList, string[] fieldNames, object[] filterParameters, DataRowProcessMethod selectMethod, string entityName, DataSet existingDataSet) => ExecuteQueryAsync(GetQueryCommand(tableName, fieldList, fieldNames, filterParameters, selectMethod), entityName, existingDataSet);
+
     /// <summary>Queries the specified table name.</summary>
     /// <param name="tableName">Name of the table.</param>
     /// <param name="fieldList">The list of fields returned by the query (ignored for stored procedure execution)</param>
@@ -1987,6 +2825,8 @@ public abstract class BusinessObject : IBusinessObject
     /// database back end understands the % character.
     /// </remarks>
     protected virtual DataSet Query(string tableName, string fieldList, string[] fieldNames, object[] filterParameters, string entityName, DataSet existingDataSet) => ExecuteQuery(GetQueryCommand(tableName, fieldList, fieldNames, filterParameters), entityName, existingDataSet);
+
+    protected virtual Task<DataSet> QueryAsync(string tableName, string fieldList, string[] fieldNames, object[] filterParameters, string entityName, DataSet existingDataSet) => ExecuteQueryAsync(GetQueryCommand(tableName, fieldList, fieldNames, filterParameters), entityName, existingDataSet);
 
     /// <summary>Queries all records from a certain table.</summary>
     /// <param name="tableName">Table to query from</param>
@@ -2037,16 +2877,16 @@ public abstract class BusinessObject : IBusinessObject
     /// <returns>True or false depending on the success of the operation</returns>
     protected virtual bool BeginTransaction()
     {
-        startedTransaction = DataService.BeginTransaction();
-        return startedTransaction;
+        _startedTransaction = DataService.BeginTransaction();
+        return _startedTransaction;
     }
 
     /// <summary>Aborts the current transaction (rollback).</summary>
     /// <returns>True or false depending on the success of the operation</returns>
     protected virtual bool AbortTransaction()
     {
-        if (internalDataContext != null)
-            if (startedTransaction)
+        if (_internalDataContext != null)
+            if (_startedTransaction)
                 return DataService.AbortTransaction();
             else
                 throw new AbortedSharedTransactionException();
@@ -2057,11 +2897,11 @@ public abstract class BusinessObject : IBusinessObject
     /// <returns>True or false depending on the success of the operation</returns>
     protected virtual bool CommitTransaction()
     {
-        if (internalDataContext != null)
+        if (_internalDataContext != null)
         {
             // We have a shared data context and thus need to verify whether
             // this was our own transaction or not
-            if (startedTransaction) return DataService.CommitTransaction();
+            if (_startedTransaction) return DataService.CommitTransaction();
             // If it was not our transaction, we can not commit it, 
             // instead, we simply give no indication that there is any further concern.
             // Which should cause an external system to commit the transaction.
@@ -2088,7 +2928,7 @@ public abstract class BusinessObject : IBusinessObject
 
     /// <summary>Dispose designed to be overridden in subclasses.</summary>
     /// <param name="disposing">True is called from Dispose()</param>
-    protected virtual void Dispose(bool disposing) => dataService?.Dispose(); // We give the data service the opportunity to finalize
+    protected virtual void Dispose(bool disposing) => _dataService?.Dispose(); // We give the data service the opportunity to finalize
 
     /// <summary>Destructor</summary>
     ~BusinessObject() => Dispose(false);
@@ -2096,6 +2936,7 @@ public abstract class BusinessObject : IBusinessObject
     /// <summary>Deletes rows after passing verification. If verification fails on any of the rows, the whole delete is canceled, and the DataSet gets a BrokenRules table listing the violations.</summary>
     /// <param name="masterDataSet">The master DataSet.</param>
     /// <returns></returns>
+    /// <remarks>Prefer DeleteWithVerificationAsync(DataSet) for new code.</remarks>
     public bool DeleteWithVerification(DataSet masterDataSet)
     {
         // Allow the delete if there are no records to verify.
@@ -2113,6 +2954,39 @@ public abstract class BusinessObject : IBusinessObject
             {
                 // Call into Milos for the delete.
                 deleteSucceededForAll = Delete((Guid) row[PrimaryKeyField]);
+
+                if (!deleteSucceededForAll) break;
+            }
+
+            //if (deleteSucceededForAll)
+            //{
+            //    CommitTransaction();
+            //}
+        }
+
+        return deleteSucceededForAll;
+    }
+
+    /// <summary>Deletes rows after passing verification asynchronously. If verification fails on any of the rows, the whole delete is canceled, and the DataSet gets a BrokenRules table listing the violations.</summary>
+    /// <param name="masterDataSet">The master DataSet.</param>
+    /// <returns></returns>
+    public virtual async Task<bool> DeleteWithVerificationAsync(DataSet masterDataSet)
+    {
+        // Allow the delete if there are no records to verify.
+        var deleteSucceededForAll = masterDataSet.Tables[0].Rows.Count == 0;
+
+        var deletionResults = VerifyForDeletion(masterDataSet);
+        var canDelete = !deletionResults.HasViolations;
+
+        if (canDelete || AllowDeleteWithViolations)
+        {
+            // TODO: Why did we disable the transaction here?
+            //BeginTransaction();
+
+            foreach (DataRow row in masterDataSet.Tables[0].Rows)
+            {
+                // Call into Milos for the delete.
+                deleteSucceededForAll = await DeleteAsync((Guid) row[PrimaryKeyField]);
 
                 if (!deleteSucceededForAll) break;
             }

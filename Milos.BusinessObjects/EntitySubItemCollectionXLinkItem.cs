@@ -134,8 +134,8 @@ public class EntitySubItemCollectionXLinkItem : EntitySubItemCollectionItem, IEn
     /// <param name="value">New value</param>
     /// <param name="mode">Specifies whether we want to access the current (link) table ("Current") or the target table.</param>
     /// <param name="forceUpdate">
-    ///     Should the value be set, even if it is the same as before (and therefore set the dirty flag
-    ///     despite that there were no changes)?
+    /// Should the value be set, even if it is the same as before (and therefore set the dirty flag
+    /// despite that there were no changes)?
     /// </param>
     /// <returns>True or False</returns>
     protected virtual bool SetFieldValue(string fieldName, object value, XLinkItemAccessMode mode, bool forceUpdate = false)
@@ -153,8 +153,8 @@ public class EntitySubItemCollectionXLinkItem : EntitySubItemCollectionItem, IEn
     /// <param name="value">New value</param>
     /// <param name="mode">Specifies whether we want to access the current (link) table ("Current") or the target table.</param>
     /// <param name="forceUpdate">
-    ///     Should the value be set, even if it is the same as before (and therefore set the dirty flag
-    ///     despite that there were no changes)?
+    /// Should the value be set, even if it is the same as before (and therefore set the dirty flag
+    /// despite that there were no changes)?
     /// </param>
     /// <returns>True or False</returns>
     protected virtual bool WriteFieldValue<TField>(string fieldName, TField value, XLinkItemAccessMode mode, bool forceUpdate = false)
@@ -167,13 +167,13 @@ public class EntitySubItemCollectionXLinkItem : EntitySubItemCollectionItem, IEn
     }
 
     /// <summary>
-    ///     Returns the value of the specified field in the database
+    /// Returns the value of the specified field in the database
     /// </summary>
     /// <param name="fieldName">Field name</param>
     /// <param name="mode">Accessing a field in the parent (link) or target (child/foreign) table?</param>
     /// <param name="ignoreNulls">
-    ///     Should nulls be ignored and returned as such (true) or should the be turned into default
-    ///     values (false)?
+    /// Should nulls be ignored and returned as such (true) or should the be turned into default
+    /// values (false)?
     /// </param>
     /// <returns>Value object</returns>
     protected virtual object GetFieldValue(string fieldName, XLinkItemAccessMode mode, bool ignoreNulls = false)
@@ -185,14 +185,14 @@ public class EntitySubItemCollectionXLinkItem : EntitySubItemCollectionItem, IEn
     }
 
     /// <summary>
-    ///     Returns the value of the specified field in the database
+    /// Returns the value of the specified field in the database
     /// </summary>
     /// <typeparam name="TField">The type of the field.</typeparam>
     /// <param name="fieldName">Field name</param>
     /// <param name="mode">Accessing a field in the parent (link) or target (child/foreign) table?</param>
     /// <param name="ignoreNulls">
-    ///     Should nulls be ignored and returned as such (true) or should the be turned into default
-    ///     values (false)?
+    /// Should nulls be ignored and returned as such (true) or should the be turned into default
+    /// values (false)?
     /// </param>
     /// <returns>Value object</returns>
     protected virtual TField ReadFieldValue<TField>(string fieldName, XLinkItemAccessMode mode, bool ignoreNulls = false)
@@ -204,7 +204,7 @@ public class EntitySubItemCollectionXLinkItem : EntitySubItemCollectionItem, IEn
     }
 
     /// <summary>
-    ///     Returns whether or not that field's value is currently null/nothing
+    /// Returns whether or not that field's value is currently null/nothing
     /// </summary>
     /// <param name="fieldName">Field name as it appears in the data set</param>
     /// <param name="mode">Link table or target table?</param>
@@ -219,8 +219,8 @@ public class EntitySubItemCollectionXLinkItem : EntitySubItemCollectionItem, IEn
     }
 
     /// <summary>
-    ///     Method used to check whether the current data row has a certain field
-    ///     This overload allows passing a table object.
+    /// Method used to check whether the current data row has a certain field
+    /// This overload allows passing a table object.
     /// </summary>
     /// <param name="fieldName">Field Name</param>
     /// <param name="tableRow">DataRow the field is a member of</param>
@@ -228,7 +228,7 @@ public class EntitySubItemCollectionXLinkItem : EntitySubItemCollectionItem, IEn
     protected virtual bool CheckColumn(string fieldName, DataRow tableRow) => BusinessEntityHelper.CheckColumn(tableRow.Table, fieldName);
 
     /// <summary>
-    ///     Finds the new target row within the DataSet
+    /// Finds the new target row within the DataSet
     /// </summary>
     /// <param name="foreignKey">Key the cross-link links to</param>
     /// <returns>True if the row was found. False otherwise.</returns>
@@ -249,7 +249,7 @@ public class EntitySubItemCollectionXLinkItem : EntitySubItemCollectionItem, IEn
     }
 
     /// <summary>
-    ///     Finds the new target row within the DataSet
+    /// Finds the new target row within the DataSet
     /// </summary>
     /// <param name="foreignKey">Key the cross-link links to</param>
     /// <returns>True if the row was found. False otherwise.</returns>
@@ -267,7 +267,7 @@ public class EntitySubItemCollectionXLinkItem : EntitySubItemCollectionItem, IEn
     }
 
     /// <summary>
-    ///     Finds the new target row within the DataSet
+    /// Finds the new target row within the DataSet
     /// </summary>
     /// <param name="foreignKey">Key the cross-link links to</param>
     /// <returns>True if the row was found. False otherwise.</returns>
@@ -285,7 +285,7 @@ public class EntitySubItemCollectionXLinkItem : EntitySubItemCollectionItem, IEn
     }
 
     /// <summary>
-    ///     This overload memorizes the current target row, as well as the current actual row (default behavior)
+    /// This overload memorizes the current target row, as well as the current actual row (default behavior)
     /// </summary>
     /// <param name="currentRow">Current X-Link table row</param>
     /// <param name="targetRow">Current row in the target table</param>
@@ -298,7 +298,7 @@ public class EntitySubItemCollectionXLinkItem : EntitySubItemCollectionItem, IEn
     }
 
     /// <summary>
-    ///     We provide a more meaningful "ToString" value.
+    /// We provide a more meaningful "ToString" value.
     /// </summary>
     /// <returns>Text</returns>
     public override string ToString() => Text;

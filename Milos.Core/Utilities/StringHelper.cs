@@ -398,9 +398,8 @@ namespace Milos.Core.Utilities
         /// <pre>
         /// Example:
         /// StringHelper.IsAlpha("Joe Doe");		//returns true
-        /// 
-        /// Tip: This method uses Char.IsAlpha(char) to check if it is an alphabet or not. 
-        ///      In order to check if the first character is a digit use Char.IsDigit(char)
+        /// /// Tip: This method uses Char.IsAlpha(char) to check if it is an alphabet or not. 
+        /// In order to check if the first character is a digit use Char.IsDigit(char)
         /// </pre>
         /// </summary>
         /// <param name="expression">Expression</param>
@@ -412,8 +411,7 @@ namespace Milos.Core.Utilities
         /// <pre>
         /// Example:
         /// StringHelper.Occurs('o', "Joe Doe");		//returns 2
-        /// 
-        /// Tip: If we have a string say lcString, then lcString[3] gives us the 3rd character in the string
+        /// /// Tip: If we have a string say lcString, then lcString[3] gives us the 3rd character in the string
         /// </pre>
         /// </summary>
         /// <param name="character">Search Character</param>
@@ -436,8 +434,7 @@ namespace Milos.Core.Utilities
         /// Example:
         /// StringHelper.Occurs("oe", "Joe Doe");		//returns 2
         /// StringHelper.Occurs("Joe", "Joe Doe");		//returns 1
-        /// 
-        /// Tip: String.IndexOf() searches the string (starting from left) for another character or string expression
+        /// /// Tip: String.IndexOf() searches the string (starting from left) for another character or string expression
         /// </pre>
         /// </summary>
         /// <param name="searchString">Search String</param>
@@ -471,8 +468,7 @@ namespace Milos.Core.Utilities
         /// <pre>
         /// Example:
         /// StringHelper.Replicate("Joe", 5);		//returns JoeJoeJoeJoeJoe
-        /// 
-        /// Tip: Use a StringBuilder when lengthy string manipulations are required.
+        /// /// Tip: Use a StringBuilder when lengthy string manipulations are required.
         /// </pre>
         /// </summary>
         /// <param name="expression">Expression</param>

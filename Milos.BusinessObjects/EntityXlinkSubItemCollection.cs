@@ -3,74 +3,74 @@
 namespace Milos.BusinessObjects;
 
 /// <summary>
-///     Summary description for EntityXlinkSubItemCollection.
+/// Summary description for EntityXlinkSubItemCollection.
 /// </summary>
 public class EntityXlinkSubItemCollection : EntitySubItemCollection, IEntityXlinkSubItemCollection
 {
     /// <summary>
-    ///     Internal field used as a temporary buffer.
-    ///     This field is not to be used for anything other than what it already is used for.
-    ///     In other words: Do not access this field at any point in time in new methods, as
-    ///     the field content may vary and you may see unexpected results!
+    /// Internal field used as a temporary buffer.
+    /// This field is not to be used for anything other than what it already is used for.
+    /// In other words: Do not access this field at any point in time in new methods, as
+    /// the field content may vary and you may see unexpected results!
     /// </summary>
     private Guid guidCurrentTargetFk;
 
     /// <summary>
-    ///     Internal field used as a temporary buffer.
-    ///     This field is not to be used for anything other than what it already is used for.
-    ///     In other words: Do not access this field at any point in time in new methods, as
-    ///     the field content may vary and you may see unexpected results!
+    /// Internal field used as a temporary buffer.
+    /// This field is not to be used for anything other than what it already is used for.
+    /// In other words: Do not access this field at any point in time in new methods, as
+    /// the field content may vary and you may see unexpected results!
     /// </summary>
     private int integerCurrentTargetFk;
 
     /// <summary>
-    ///     Internal field used as a temporary buffer.
-    ///     This field is not to be used for anything other than what it already is used for.
-    ///     In other words: Do not access this field at any point in time in new methods, as
-    ///     the field content may vary and you may see unexpected results!
+    /// Internal field used as a temporary buffer.
+    /// This field is not to be used for anything other than what it already is used for.
+    /// In other words: Do not access this field at any point in time in new methods, as
+    /// the field content may vary and you may see unexpected results!
     /// </summary>
     private string stringCurrentTargetFk;
 
     /// <summary>
-    ///     Constructor
+    /// Constructor
     /// </summary>
     /// <param name="parentEntity">Parent entity</param>
     public EntityXlinkSubItemCollection(IBusinessEntity parentEntity) : base(parentEntity) { }
 
     /// <summary>
-    ///     Internal reference to a cross-link table
+    /// Internal reference to a cross-link table
     /// </summary>
     public DataTable InternalTargetDataTable { get; private set; }
 
     /// <summary>
-    ///     This is the foreign key field that links to the target table.
-    ///     Example: If this collection links names to categories, this field
-    ///     is the name of the field that links to the primary key of the category.
+    /// This is the foreign key field that links to the target table.
+    /// Example: If this collection links names to categories, this field
+    /// is the name of the field that links to the primary key of the category.
     /// </summary>
     public string TargetForeignKeyField { get; set; } = string.Empty;
 
     /// <summary>
-    ///     This is the primary key field used by the target table.
-    ///     Example: If this collection links names to categories, this field
-    ///     is the name of the primary key field of the category table.
+    /// This is the primary key field used by the target table.
+    /// Example: If this collection links names to categories, this field
+    /// is the name of the primary key field of the category table.
     /// </summary>
     public string TargetPrimaryKeyField { get; set; } = string.Empty;
 
     /// <summary>
-    ///     This is the field that identifies the table field used for text comparison
-    ///     in the target table. For instance, if the user specifies to add a new record
-    ///     that links to the "Enterprise Customer" category, then this setting will
-    ///     identify the field that would hold that text value in the target table.
+    /// This is the field that identifies the table field used for text comparison
+    /// in the target table. For instance, if the user specifies to add a new record
+    /// that links to the "Enterprise Customer" category, then this setting will
+    /// identify the field that would hold that text value in the target table.
     /// </summary>
     public string TargetTextField { get; set; } = string.Empty;
 
     /// <summary>
-    ///     Defines whether or not a new record gets added to the target table automatically
+    /// Defines whether or not a new record gets added to the target table automatically
     /// </summary>
     public bool AutoAddTarget { get; set; }
 
     /// <summary>
-    ///     This method adds a new record to the x-link DataSet and links to the specified foreign key record
+    /// This method adds a new record to the x-link DataSet and links to the specified foreign key record
     /// </summary>
     /// <param name="targetItemId">Target item ID (such as the primary of a group when linking to a group record)</param>
     /// <returns>New item</returns>
@@ -108,7 +108,7 @@ public class EntityXlinkSubItemCollection : EntitySubItemCollection, IEntityXlin
     }
 
     /// <summary>
-    ///     Sets internally used data tables. This is usually done on or immediately after instantiation.
+    /// Sets internally used data tables. This is usually done on or immediately after instantiation.
     /// </summary>
     /// <param name="table">Cross-Link Table between the main entity and the related table.</param>
     /// <param name="xlinkTargetTable">Table that holds the actual data.</param>
@@ -119,13 +119,13 @@ public class EntityXlinkSubItemCollection : EntitySubItemCollection, IEntityXlin
     }
 
     /// <summary>
-    ///     This method adds a new record to the x-link DataSet and links to the record
-    ///     identified by it's descriptive text.
-    ///     The field used for this operation is defined in the strTargetTextField field.
+    /// This method adds a new record to the x-link DataSet and links to the record
+    /// identified by it's descriptive text.
+    /// The field used for this operation is defined in the strTargetTextField field.
     /// </summary>
     /// <param name="targetItemText">
-    ///     text used by the target table. For instance, if you want to link to a "People" category,
-    ///     "People" would be the text passed along here.
+    /// text used by the target table. For instance, if you want to link to a "People" category,
+    /// "People" would be the text passed along here.
     /// </param>
     /// <returns>New item</returns>
     public virtual IEntitySubItemCollectionItem Add(string targetItemText)
@@ -210,8 +210,8 @@ public class EntityXlinkSubItemCollection : EntitySubItemCollection, IEntityXlin
     }
 
     /// <summary>
-    ///     Retrieves an item from the collection by its index
-    ///     and adds the appropriate data to the new object.
+    /// Retrieves an item from the collection by its index
+    /// and adds the appropriate data to the new object.
     /// </summary>
     /// <param name="index">Numeric index</param>
     /// <returns>Item</returns>
@@ -230,13 +230,13 @@ public class EntityXlinkSubItemCollection : EntitySubItemCollection, IEntityXlin
     }
 
     /// <summary>
-    ///     This method is not supported here, as we need to know what to link to...
+    /// This method is not supported here, as we need to know what to link to...
     /// </summary>
     /// <returns>New item</returns>
     public override IEntitySubItemCollectionItem Add() => AutoAddTarget ? Add(string.Empty) : null;
 
     /// <summary>
-    ///     This method adds a new record to the x-link DataSet and links to the specified foreign key record
+    /// This method adds a new record to the x-link DataSet and links to the specified foreign key record
     /// </summary>
     /// <param name="targetItemId">Target item ID (such as the primary of a group when linking to a group record)</param>
     /// <returns>New item</returns>
@@ -273,8 +273,8 @@ public class EntityXlinkSubItemCollection : EntitySubItemCollection, IEntityXlin
     }
 
     /// <summary>
-    ///     Determines whether or not the collection contains
-    ///     the specified category (a link to the category)
+    /// Determines whether or not the collection contains
+    /// the specified category (a link to the category)
     /// </summary>
     /// <param name="category">Category (plain text)</param>
     /// <returns>True of linked, false otherwise.</returns>
@@ -292,8 +292,8 @@ public class EntityXlinkSubItemCollection : EntitySubItemCollection, IEntityXlin
     }
 
     /// <summary>
-    ///     Determines whether or not the collection contains
-    ///     the specified category (a link to the category)
+    /// Determines whether or not the collection contains
+    /// the specified category (a link to the category)
     /// </summary>
     /// <param name="category">Category (plain text)</param>
     /// <param name="ignoreCase">Should the search be done case insensitive?</param>
@@ -314,8 +314,8 @@ public class EntityXlinkSubItemCollection : EntitySubItemCollection, IEntityXlin
     }
 
     /// <summary>
-    ///     This method can be used to make sure the default table in the internal DataSet has all the required fields.
-    ///     If the field (column) doesn't exist, it will be added.
+    /// This method can be used to make sure the default table in the internal DataSet has all the required fields.
+    /// If the field (column) doesn't exist, it will be added.
     /// </summary>
     /// <param name="fieldName">Field name to check for.</param>
     /// <param name="tableToCheck">Table that is supposed to have this column.</param>
@@ -323,7 +323,7 @@ public class EntityXlinkSubItemCollection : EntitySubItemCollection, IEntityXlin
     protected virtual bool CheckColumn(string fieldName, DataTable tableToCheck) => BusinessEntityHelper.CheckColumn(tableToCheck, fieldName);
 
     /// <summary>
-    ///     We use this method to add the foreign key of the target table, to complete the link
+    /// We use this method to add the foreign key of the target table, to complete the link
     /// </summary>
     /// <param name="newRow">New row that is being added to the internal table.</param>
     protected override void AddNewRowInformation(DataRow newRow)
@@ -357,8 +357,8 @@ public class EntityXlinkSubItemCollection : EntitySubItemCollection, IEntityXlin
     }
 
     /// <summary>
-    ///     Retrieves an item from the collection by its index
-    ///     and adds the appropriate data to the new object.
+    /// Retrieves an item from the collection by its index
+    /// and adds the appropriate data to the new object.
     /// </summary>
     /// <param name="index">Numeric index</param>
     /// <param name="absoluteTableIndex">If true, the index is based on the data table, not the (potentially) sorted view</param>
@@ -474,8 +474,8 @@ public class EntityXlinkSubItemCollection : EntitySubItemCollection, IEntityXlin
     }
 
     /// <summary>
-    ///     Object configuration
-    ///     We have to implement this here, as it is marked as abstract in the parent class.
+    /// Object configuration
+    /// We have to implement this here, as it is marked as abstract in the parent class.
     /// </summary>
     protected override void Configure() { }
 }

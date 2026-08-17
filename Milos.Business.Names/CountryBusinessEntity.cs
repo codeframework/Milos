@@ -10,7 +10,7 @@ namespace Milos.Business.Names
     public class CountryBusinessEntity : BusinessEntity
     {
         /// <summary>
-        ///  Constructor
+        /// Constructor
         /// </summary>
         public CountryBusinessEntity() { }
 
@@ -86,7 +86,7 @@ namespace Milos.Business.Names
     public class CountryEntity : CountryBusinessEntity
     {
         /// <summary>
-        ///  Constructor
+        /// Constructor
         /// </summary>
         public CountryEntity() { }
 

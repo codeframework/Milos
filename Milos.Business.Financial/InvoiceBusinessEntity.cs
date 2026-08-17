@@ -42,7 +42,7 @@ public class InvoiceEntity : BusinessEntity, IInvoice
     }
 
     /// <summary>
-    ///  Line items collection
+    /// Line items collection
     /// </summary>
     public ILineItemCollection LineItems { get; protected set; }
 

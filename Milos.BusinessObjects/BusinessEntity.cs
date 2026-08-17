@@ -1,94 +1,142 @@
 ﻿using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
+using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Milos.Data;
 
 namespace Milos.BusinessObjects;
 
 /// <summary>
-///     A BusinessEntity is an individual instance of a data entity served up by
-///     BusinessObjects. For instance, a name BusinessObject may generate a PersonEntity.
-///     Note that all business objects can operate without the use of an entity object.
-///     However, Entity objects make using business objects much more straightforward.
+/// A BusinessEntity is an individual instance of a data entity served up by
+/// BusinessObjects. For instance, a name BusinessObject may generate a PersonEntity.
+/// Note that all business objects can operate without the use of an entity object.
+/// However, Entity objects make using business objects much more straightforward.
 /// </summary>
 [Serializable]
 public abstract class BusinessEntity : IBusinessEntity, IDataBindingRefresher, INotifyPropertyChanged, IDirty
 {
     /// <summary>
-    ///     Delegate used for all event handlers that can be canceled
+    /// Delegate used for all event handlers that can be canceled
     /// </summary>
     public delegate void CancelableEventHandler(object sender, CancelableEventArgs e);
 
     /// <summary>
-    ///     Delegate used for the DataSourceChangedWithDetails event
+    /// Delegate used for the DataSourceChangedWithDetails event
     /// </summary>
     public delegate void DataSourceChangedEventHandler(object sender, DataSourceChangedEventArgs e);
 
     /// <summary>
-    ///     Internal string dictionary of field maps
+    /// Internal string dictionary of field maps
     /// </summary>
-    private readonly Dictionary<string, string> fieldMaps = new Dictionary<string, string>();
+    private readonly Dictionary<string, string> fieldMaps = [];
 
     /// <summary>
-    ///     Internal string dictionary of table maps
+    /// Internal string dictionary of table maps
     /// </summary>
-    private readonly Dictionary<string, string> tableMaps = new Dictionary<string, string>();
+    private readonly Dictionary<string, string> tableMaps = [];
 
     /// <summary>
-    ///     Internal reference to the broken rules collection
+    /// Internal reference to the broken rules collection
     /// </summary>
     [NonSerialized] private BrokenRulesCollection brokenRulesCollection;
 
     /// <summary>
-    ///     Internal reference to a business object
+    /// Internal reference to a business object
     /// </summary>
     private IBusinessObject internalBusinessObject;
 
     /// <summary>
-    ///     If this property is set to true, the entity will show as
-    ///     NOT dirty.
+    /// If this property is set to true, the entity will show as
+    /// NOT dirty.
     /// </summary>
     /// <remarks>This will be reset to false, every time the SetFieldValue() method is called.</remarks>
     private bool isDirtyOverride;
 
     /// <summary>
-    ///     Constructor intended to be used when a new entity is meant to be created
+    /// Constructor intended to be used when a new entity is meant to be created
     /// </summary>
-    protected BusinessEntity() => ConfigureObject(EntityLaunchMode.New, null);
+    /// <param name="configureImmediately">If set to true (default), the entity will be configured immediately.</param>
+    /// <remarks>For new code, it is preferrable to use the asynchronous ConfigureObjectAsync method (and defer congiguration to a manual call to that method)</remarks>
+    protected BusinessEntity(bool configureImmediately = true)
+    {
+        if (configureImmediately)
+            ConfigureObject(EntityLaunchMode.New, null);
+    }
 
     /// <summary>
-    ///     Constructor used for custom entity launch modes
+    /// For scenarios with delayed configuration, use this method to configure the entity for new data
+    /// </summary>
+    public virtual async Task ConfigureForNew() => await ConfigureObjectAsync(EntityLaunchMode.New, null);
+
+    /// <summary>
+    /// Constructor used for custom entity launch modes
     /// </summary>
     /// <param name="mode">The mode.</param>
     /// <param name="parameters">The parameters.</param>
-    protected BusinessEntity(EntityLaunchMode mode, object parameters) => ConfigureObject(mode, parameters);
+    protected BusinessEntity(EntityLaunchMode mode, object parameters, bool configureImmediately = true)
+    {
+        if (configureImmediately)
+            ConfigureObject(mode, parameters);
+    }
 
     /// <summary>
-    ///     Constructor
+    /// Constructor
     /// </summary>
     /// <param name="internalDataSet">Internal data used by this entity (DataSet)</param>
-    protected BusinessEntity(DataSet internalDataSet) => ConfigureObject(EntityLaunchMode.PassData, internalDataSet);
+    protected BusinessEntity(DataSet internalDataSet, bool configureImmediately = true)
+    {
+        if (configureImmediately)
+            ConfigureObject(EntityLaunchMode.PassData, internalDataSet);
+    }
 
     /// <summary>
-    ///     This constructor is used to load existing data based on an ID
+    /// This constructor is used to load existing data based on an ID
     /// </summary>
     /// <param name="entityId">Entity ID (PK)</param>
-    protected BusinessEntity(Guid entityId) => ConfigureObject(EntityLaunchMode.Load, entityId);
+    protected BusinessEntity(Guid entityId, bool configureImmediately = true)
+    {
+        if (configureImmediately)
+            ConfigureObject(EntityLaunchMode.Load, entityId);
+    }
 
     /// <summary>
-    ///     This constructor is used to load existing data based on an ID
+    /// For scenarios with delayed configuration, use this method to configure the entity for data loading
+    /// </summary>
+    public virtual async Task ConfigureForLoad(Guid entityId) => await ConfigureObjectAsync(EntityLaunchMode.Load, entityId);
+
+    /// <summary>
+    /// This constructor is used to load existing data based on an ID
     /// </summary>
     /// <param name="entityId">Entity ID (PK)</param>
-    protected BusinessEntity(int entityId) => ConfigureObject(EntityLaunchMode.Load, entityId);
+    protected BusinessEntity(int entityId, bool configureImmediately = true)
+    {
+        if (configureImmediately)
+            ConfigureObject(EntityLaunchMode.Load, entityId);
+    }
 
     /// <summary>
-    ///     This constructor is used to load existing data based on an ID
+    /// For scenarios with delayed configuration, use this method to configure the entity for data loading
+    /// </summary>
+    public virtual async Task ConfigureForLoad(int entityId) => await ConfigureObjectAsync(EntityLaunchMode.Load, entityId);
+
+    /// <summary>
+    /// This constructor is used to load existing data based on an ID
     /// </summary>
     /// <param name="entityId">Entity ID (PK)</param>
-    protected BusinessEntity(string entityId) => ConfigureObject(EntityLaunchMode.Load, entityId);
+    protected BusinessEntity(string entityId, bool configureImmediately = true)
+    {
+        if (configureImmediately)
+            ConfigureObject(EntityLaunchMode.Load, entityId);
+    }
 
     /// <summary>
-    ///     Initializes a new instance of the <see cref="BusinessEntity" /> class.
+    /// For scenarios with delayed configuration, use this method to configure the entity for data loading
+    /// </summary>
+    public virtual async Task ConfigureForLoad(string entityId) => await ConfigureObjectAsync(EntityLaunchMode.Load, entityId);
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="BusinessEntity" /> class.
     /// </summary>
     /// <param name="info">The info.</param>
     /// <param name="context">The context.</param>
@@ -105,7 +153,7 @@ public abstract class BusinessEntity : IBusinessEntity, IDataBindingRefresher, I
             if (parameters.Length != 2) continue;
             if (parameters[0].ParameterType == typeof(SerializationInfo) && parameters[1].ParameterType == typeof(StreamingContext))
                 // This is the right one!
-                internalDataSet = (DataSet) constructor.Invoke(new object[] {info, context});
+                internalDataSet = (DataSet) constructor.Invoke([info, context]);
         }
 
         if (internalDataSet != null)
@@ -115,50 +163,50 @@ public abstract class BusinessEntity : IBusinessEntity, IDataBindingRefresher, I
     }
 
     /// <summary>
-    ///     Reference to the DataSet that holds the data utilized by this BusinessEntity
+    /// Reference to the DataSet that holds the data utilized by this BusinessEntity
     /// </summary>
     protected virtual DataSet InternalDataSet { get; set; }
 
     /// <summary>
-    ///     Name of the master entity in the internal DataSet
+    /// Name of the master entity in the internal DataSet
     /// </summary>
     protected virtual string MasterEntity { get; set; }
 
     /// <summary>
-    ///     Name of the PK column of the master entity in the internal DataSet
+    /// Name of the PK column of the master entity in the internal DataSet
     /// </summary>
     protected virtual string PrimaryKeyField { get; set; }
 
     /// <summary>
-    ///     Contains the name of the broken rules table that is embedded in the dataset when broken rules are encountered.
-    ///     Note: This is mostly intended for internal use, although some classes may want to override this name,
-    ///     in scenarios where the table name could cause a conflict.
+    /// Contains the name of the broken rules table that is embedded in the dataset when broken rules are encountered.
+    /// Note: This is mostly intended for internal use, although some classes may want to override this name,
+    /// in scenarios where the table name could cause a conflict.
     /// </summary>
     protected internal virtual string BrokenRulesTableName { get; set; } = "__BrokenRules";
 
     /// <summary>
-    ///     Broken business rules collection
+    /// Broken business rules collection
     /// </summary>
     [NotReportSerializable]
     [NotClonable]
     [XmlIgnore]
-    public BrokenRulesCollection BrokenRules => brokenRulesCollection ?? (brokenRulesCollection = new BrokenRulesCollection(this));
+    public BrokenRulesCollection BrokenRules => brokenRulesCollection ??= new BrokenRulesCollection(this);
 
     /// <summary>
-    ///     Defines how the object treats attempts to set invalid values in fields,
-    ///     such as trying to assign a string that is too long.
+    /// Defines how the object treats attempts to set invalid values in fields,
+    /// such as trying to assign a string that is too long.
     /// </summary>
     protected internal virtual InvalidFieldBehavior InvalidFieldUpdateMode { get; set; } = InvalidFieldBehavior.FixInvalidValues;
 
     /// <summary>
-    ///     Data load state of the entity
+    /// Data load state of the entity
     /// </summary>
     [NotReportSerializable]
     [NotClonable]
     public EntityLoadState LoadState { get; private set; } = EntityLoadState.Loading;
 
     /// <summary>
-    ///     Primary key of the current entity (Guid)
+    /// Primary key of the current entity (Guid)
     /// </summary>
     [NotReportSerializable]
     [NotClonable]
@@ -172,14 +220,14 @@ public abstract class BusinessEntity : IBusinessEntity, IDataBindingRefresher, I
     }
 
     /// <summary>
-    ///     Primary Key Type used by this entity
+    /// Primary Key Type used by this entity
     /// </summary>
     [NotReportSerializable]
     [NotClonable]
     public KeyType PrimaryKeyType { get; set; } = KeyType.Guid;
 
     /// <summary>
-    ///     Primary key of the current entity (int)
+    /// Primary key of the current entity (int)
     /// </summary>
     [NotReportSerializable]
     [NotClonable]
@@ -193,83 +241,84 @@ public abstract class BusinessEntity : IBusinessEntity, IDataBindingRefresher, I
     }
 
     /// <summary>
-    ///     Primary key of the current entity (string)
+    /// Primary key of the current entity (string)
     /// </summary>
     [NotReportSerializable]
     [NotClonable]
     public string PKString => PrimaryKeyType != KeyType.String ? string.Empty : InternalDataSet.Tables[GetInternalTableName(MasterEntity)].Rows[0][GetInternalFieldName(PrimaryKeyField, MasterEntity)].ToString();
 
     /// <summary>
-    ///     Primary key of the current entity (string)
+    /// Primary key of the current entity (string)
     /// </summary>
     [NotClonable]
     public string Id => InternalDataSet.Tables[GetInternalTableName(MasterEntity)].Rows[0][GetInternalFieldName(PrimaryKeyField, MasterEntity)].ToString();
 
     /// <summary>
-    ///     Internal reference to the business object associated with this entity
+    /// Internal reference to the business object associated with this entity
     /// </summary>
     /// <remarks>This property uses the GetBusinessObject() method to create an instance of the business object if needed.</remarks>
     [NotReportSerializable]
     [NotClonable]
-    public IBusinessObject AssociatedBusinessObject => internalBusinessObject ?? (internalBusinessObject = GetBusinessObject());
+    public IBusinessObject AssociatedBusinessObject => internalBusinessObject ??= GetBusinessObject();
 
     /// <summary>
-    ///     Indicates whether the objects data contains any chances, such as
-    ///     modifications, deletes, or additions.
+    /// Indicates whether the objects data contains any chances, such as
+    /// modifications, deletes, or additions.
     /// </summary>
     [NotReportSerializable]
     [NotClonable]
     public bool IsDirty => !isDirtyOverride && InternalDataSet.HasChanges();
 
     /// <summary>
-    ///     Sets the entity to appear not dirty, even if there are changes in the data.
+    /// Sets the entity to appear not dirty, even if there are changes in the data.
     /// </summary>
     /// <remarks>
-    ///     This does NOT accept changes. It only provides a manual override for IsDirty.
-    ///     This can sometimes be useful for new entities and also for entities that should
-    ///     not appear dirty until further changes are made (such as when the user just
-    ///     has been asked whether they want to save changes).
+    /// This does NOT accept changes. It only provides a manual override for IsDirty.
+    /// This can sometimes be useful for new entities and also for entities that should
+    /// not appear dirty until further changes are made (such as when the user just
+    /// has been asked whether they want to save changes).
     /// </remarks>
     public void IgnoreIsDirty() => isDirtyOverride = true;
 
     /// <summary>
-    ///     State of the current entity (unchanged, added, deleted, modified,...)
+    /// State of the current entity (unchanged, added, deleted, modified,...)
     /// </summary>
     [NotReportSerializable]
     [NotClonable]
     public DataRowState EntityState => InternalDataSet.Tables[GetInternalTableName(MasterEntity)].Rows[0].RowState;
 
     /// <summary>
-    ///     Returns the data set used internally.
+    /// Returns the data set used internally.
     /// </summary>
     /// <returns>DataSet</returns>
     /// <remarks>
-    ///     This type of business entity uses a DataSet internally to keep track
-    ///     of the state of the entity. Using this method, it is possible to gain access
-    ///     to that DataSet. Note however, that not all business entity types use
-    ///     DataSets. If you use the internal data set as an architectural cornerstone
-    ///     of your application, it will not be possible to switch to other business
-    ///     entity types. Avoid using the internal DataSet if possible.
+    /// This type of business entity uses a DataSet internally to keep track
+    /// of the state of the entity. Using this method, it is possible to gain access
+    /// to that DataSet. Note however, that not all business entity types use
+    /// DataSets. If you use the internal data set as an architectural cornerstone
+    /// of your application, it will not be possible to switch to other business
+    /// entity types. Avoid using the internal DataSet if possible.
     /// </remarks>
     public DataSet GetInternalData() => InternalDataSet;
 
     /// <summary>
-    ///     Returns whether or not that field's value is currently null/nothing
+    /// Returns whether or not that field's value is currently null/nothing
     /// </summary>
     /// <param name="fieldName">Field name as it appears in the data set</param>
     /// <returns>True or false</returns>
     public bool IsFieldNull(string fieldName) => InternalDataSet.Tables[GetInternalTableName(MasterEntity)].Rows[0][GetInternalFieldName(fieldName, MasterEntity)] == DBNull.Value;
 
     /// <summary>
-    ///     Returns all the internal data as an XML string.
+    /// Returns all the internal data as an XML string.
     /// </summary>
     /// <returns>Xml String</returns>
     public string GetRawData() => InternalDataSet.GetXml();
 
     /// <summary>
-    ///     Saves the current data
+    /// Saves the current data
     /// </summary>
     /// <returns>True or false, depending on whether or not the operation is successful.</returns>
+    /// <remarks>Prefer SaveAsync() for new code.</remarks>
     public virtual bool Save()
     {
         // If the entity is considered deleted, then we raise an exception,
@@ -290,10 +339,11 @@ public abstract class BusinessEntity : IBusinessEntity, IDataBindingRefresher, I
     }
 
     /// <summary>
-    ///     Saves the current data.
+    /// Saves the current data.
     /// </summary>
     /// <param name="businessObject">BusinessObject used to save the current information.</param>
     /// <returns></returns>
+    /// <remarks>Prefer SaveAsync(IBusinessObject) for new code.</remarks>
     public virtual bool Save(IBusinessObject businessObject)
     {
         // If the entity is considered deleted, then we raise an exception,
@@ -316,7 +366,56 @@ public abstract class BusinessEntity : IBusinessEntity, IDataBindingRefresher, I
     }
 
     /// <summary>
-    ///     Verifies the current data and returns true or false depending on the result
+    /// Saves the current data asynchronously.
+    /// </summary>
+    /// <returns>True or false, depending on whether or not the operation is successful.</returns>
+    public virtual async Task<bool> SaveAsync()
+    {
+        // If the entity is considered deleted, then we raise an exception,
+        // since it is not possible anymore to save the entity to the database
+        if (LoadState == EntityLoadState.Deleted) ThrowDeletedEntityException("Cannot save deleted entities.", this);
+
+        if (BeforeSave != null)
+        {
+            var args = new CancelableEventArgs();
+            BeforeSave(this, args);
+            if (args.Cancel) return false;
+        }
+
+        var saved = await SaveAsync(AssociatedBusinessObject);
+        if (saved)
+            Saved?.Invoke(this, new EventArgs());
+        return saved;
+    }
+
+    /// <summary>
+    /// Saves the current data asynchronously.
+    /// </summary>
+    /// <param name="businessObject">BusinessObject used to save the current information.</param>
+    /// <returns>True or false</returns>
+    public virtual async Task<bool> SaveAsync(IBusinessObject businessObject)
+    {
+        // If the entity is considered deleted, then we raise an exception,
+        // since it is not possible anymore to save the entity to the database
+        if (LoadState == EntityLoadState.Deleted) ThrowDeletedEntityException("Cannot save deleted entities.", this);
+
+        if (businessObject == null) throw new NullReferenceException("Parameter 'businessObject' cannot be null.");
+
+        if (BeforeSave != null)
+        {
+            var args = new CancelableEventArgs();
+            BeforeSave(this, args);
+            if (args.Cancel) return false;
+        }
+
+        var saved = await businessObject.SaveAsync(GetInternalData());
+        if (saved)
+            Saved?.Invoke(this, new EventArgs());
+        return saved;
+    }
+
+    /// <summary>
+    /// Verifies the current data and returns true or false depending on the result
     /// </summary>
     /// <returns>True or false</returns>
     bool IVerifyable.Verify()
@@ -326,17 +425,18 @@ public abstract class BusinessEntity : IBusinessEntity, IDataBindingRefresher, I
     }
 
     /// <summary>
-    ///     Removes (deletes) the current entity
+    /// Removes (deletes) the current entity
     /// </summary>
     /// <returns>True or False</returns>
     /// <example>
-    ///     CustomerEntity customer = CustomerEntity.LoadEntity(key);
-    ///     customer.Remove();
-    ///     // The customer is now removed from the database. The in-memory data
-    ///     // is therefore invalid and cannot be used anymore.
-    ///     // The following would now raise an exception:
-    ///     Console.WriteLine(customer.LastName); // BusinessEntityDeletedException!
+    /// CustomerEntity customer = CustomerEntity.LoadEntity(key);
+    /// customer.Remove();
+    /// // The customer is now removed from the database. The in-memory data
+    /// // is therefore invalid and cannot be used anymore.
+    /// // The following would now raise an exception:
+    /// Console.WriteLine(customer.LastName); // BusinessEntityDeletedException!
     /// </example>
+    /// <remarks>Prefer RemoveAsync() for new code.</remarks>
     public virtual bool Remove()
     {
         // If the entity is already considered deleted, then we raise an exception,
@@ -372,24 +472,79 @@ public abstract class BusinessEntity : IBusinessEntity, IDataBindingRefresher, I
     }
 
     /// <summary>
-    ///     Performs a delete operation by calling Remove() internally
+    /// Removes (deletes) the current entity asynchronously
+    /// </summary>
+    /// <returns>True or False</returns>
+    /// <example>
+    /// CustomerEntity customer = CustomerEntity.LoadEntity(key);
+    /// customer.Remove();
+    /// // The customer is now removed from the database. The in-memory data
+    /// // is therefore invalid and cannot be used anymore.
+    /// // The following would now raise an exception:
+    /// Console.WriteLine(customer.LastName); // BusinessEntityDeletedException!
+    /// </example>
+    public async virtual Task<bool> RemoveAsync()
+    {
+        // If the entity is already considered deleted, then we raise an exception,
+        // since it is not possible to delete an entity that has already been deleted
+        if (LoadState == EntityLoadState.Deleted) ThrowDeletedEntityException("Cannot delete entities that have already been deleted.", this);
+
+        if (BeforeRemove != null)
+        {
+            var args = new CancelableEventArgs();
+            BeforeRemove(this, args);
+            if (args.Cancel) return false;
+        }
+
+        var retVal = false;
+        switch (PrimaryKeyType)
+        {
+            case KeyType.Guid:
+                retVal = await AssociatedBusinessObject.DeleteAsync(PK);
+                break;
+            case KeyType.Integer:
+            case KeyType.IntegerAutoIncrement:
+                retVal = await AssociatedBusinessObject.DeleteAsync(PKInteger);
+                break;
+            case KeyType.String:
+                retVal = await AssociatedBusinessObject.DeleteAsync(PKString);
+                break;
+        }
+
+        if (retVal) LoadState = EntityLoadState.Deleted;
+
+        if (retVal) Removed?.Invoke(this, new EventArgs());
+        return retVal;
+    }
+
+    /// <summary>
+    /// Performs a delete operation by calling Remove() internally
     /// </summary>
     /// <returns>True or false</returns>
     /// <remarks>
-    ///     Note: This method is not overridable. Override the Remove() method instead, which is called by this method.
+    /// Note: This method is not overridable. Override the Remove() method instead, which is called by this method.
     /// </remarks>
     public bool Delete() => Remove();
 
     /// <summary>
-    ///     This method generates the appropriate business object for the current entity.
-    ///     It serves as a factory.
-    ///     This method has to be overridden in subclasses if used by the entity.
+    /// Performs a delete operation by calling RemoveAsync() internally
+    /// </summary>
+    /// <returns>True or false</returns>
+    /// <remarks>
+    /// Note: This method is not overridable. Override the RemoveAsync() method instead, which is called by this method.
+    /// </remarks>
+    public Task<bool> DeleteAsync() => RemoveAsync();
+
+    /// <summary>
+    /// This method generates the appropriate business object for the current entity.
+    /// It serves as a factory.
+    /// This method has to be overridden in subclasses if used by the entity.
     /// </summary>
     /// <returns>BusinessObject</returns>
     public abstract IBusinessObject GetBusinessObject();
 
     /// <summary>
-    ///     Implementation of IDisposable, in particular the Dispose() method.
+    /// Implementation of IDisposable, in particular the Dispose() method.
     /// </summary>
     public void Dispose()
     {
@@ -398,65 +553,65 @@ public abstract class BusinessEntity : IBusinessEntity, IDataBindingRefresher, I
     }
 
     /// <summary>
-    ///     Event that indicates that data within the object has been updated
+    /// Event that indicates that data within the object has been updated
     /// </summary>
     /// <remarks>
-    ///     This is a useful generic event that fires every time any of the
-    ///     data in the business entity is updated. This can be useful for
-    ///     things such as data binding.
+    /// This is a useful generic event that fires every time any of the
+    /// data in the business entity is updated. This can be useful for
+    /// things such as data binding.
     /// </remarks>
     public event EventHandler DataSourceChanged;
 
     /// <summary>
-    ///     This event fires whenever a property on this control changes
+    /// This event fires whenever a property on this control changes
     /// </summary>
     public event PropertyChangedEventHandler PropertyChanged;
 
     /// <summary>
-    ///     This event fires every time an entity is saved
+    /// This event fires every time an entity is saved
     /// </summary>
     public event EventHandler Saved;
 
     /// <summary>
-    ///     This event fires before the entity is saved
+    /// This event fires before the entity is saved
     /// </summary>
     public event CancelableEventHandler BeforeSave;
 
     /// <summary>
-    ///     This event fires after the entity is verified
+    /// This event fires after the entity is verified
     /// </summary>
     public event EventHandler Verified;
 
     /// <summary>
-    ///     This event fires before the entity is verified
+    /// This event fires before the entity is verified
     /// </summary>
     public event CancelableEventHandler BeforeVerify;
 
     /// <summary>
-    ///     This event fires after the entity is verified
+    /// This event fires after the entity is verified
     /// </summary>
     public event EventHandler Removed;
 
     /// <summary>
-    ///     This event fires before the entity is verified
+    /// This event fires before the entity is verified
     /// </summary>
     public event CancelableEventHandler BeforeRemove;
 
     /// <summary>
-    ///     Event that indicates that data within the object has been updated
+    /// Event that indicates that data within the object has been updated
     /// </summary>
     /// <remarks>
-    ///     This event also provides specific information about the field and
-    ///     table names that updated.
-    ///     This is a useful generic event that fires every time any of the
-    ///     data in the business entity is updated. This can be useful for
-    ///     things such as data binding.
+    /// This event also provides specific information about the field and
+    /// table names that updated.
+    /// This is a useful generic event that fires every time any of the
+    /// data in the business entity is updated. This can be useful for
+    /// things such as data binding.
     /// </remarks>
     public event DataSourceChangedEventHandler DataSourceChangedWithDetails;
 
     /// <summary>
-    ///     This method is called internally by the object's constructors.
-    ///     This method calls out to other methods to load its data or create new data.
+    /// This method is called internally by the object's constructors.
+    /// This method calls out to other methods to load its data or create new data.
     /// </summary>
     /// <param name="mode">Launch mode enum</param>
     /// <param name="parameter1">Pass-through parameter</param>
@@ -525,38 +680,105 @@ public abstract class BusinessEntity : IBusinessEntity, IDataBindingRefresher, I
         LoadState = EntityLoadState.LoadComplete;
     }
 
+    protected virtual async Task ConfigureObjectAsync(EntityLaunchMode mode, object parameter1)
+    {
+        var associatedBusinessObject = AssociatedBusinessObject;
+        // We always need to configure these settings
+        MasterEntity = associatedBusinessObject.MasterEntity;
+        PrimaryKeyField = associatedBusinessObject.PrimaryKeyField;
+        PrimaryKeyType = associatedBusinessObject is BusinessObject concreteBusinessObject ? concreteBusinessObject.GetPrimaryKeyType() : associatedBusinessObject.PrimaryKeyType;
+        Configure();
+
+        var loadedFromXmlSerialization = false;
+
+        switch (mode)
+        {
+            case EntityLaunchMode.New:
+                try
+                {
+                    await NewEntityAsync(associatedBusinessObject);
+                }
+                catch
+                {
+                    // This could potentially be a serialization problem
+                    if (LaunchedFormXmlDeserialization())
+                        loadedFromXmlSerialization = true;
+                    else
+                        throw;
+                }
+
+                break;
+            case EntityLaunchMode.Load:
+                switch (PrimaryKeyType)
+                {
+                    case KeyType.Guid:
+                        await LoadEntityAsync((Guid) parameter1, associatedBusinessObject);
+                        break;
+                    case KeyType.Integer:
+                        await LoadEntityAsync((int) parameter1, associatedBusinessObject);
+                        break;
+                    case KeyType.IntegerAutoIncrement:
+                        await LoadEntityAsync((int) parameter1, associatedBusinessObject);
+                        break;
+                    case KeyType.String:
+                        await LoadEntityAsync((string) parameter1, associatedBusinessObject);
+                        break;
+                }
+
+                break;
+            case EntityLaunchMode.PassData:
+                // We simply store the provided dataset for later use.
+                InternalDataSet = (DataSet) parameter1;
+                break;
+            case EntityLaunchMode.Custom:
+                await LoadCustomAsync(parameter1, associatedBusinessObject);
+                break;
+        }
+
+        // We also load additional collections (potentially)
+        if (!loadedFromXmlSerialization) await LoadSubItemCollectionsAsync();
+
+        // This entity is considered "loaded"
+        LoadState = EntityLoadState.LoadComplete;
+    }
+
     /// <summary>
-    ///     Returns true if the entity is created by the XML deserialization mechanism.
+    /// Returns true if the entity is created by the XML deserialization mechanism.
     /// </summary>
     /// <returns></returns>
     [Obsolete]
     private bool LaunchedFormXmlDeserialization() => false; // Was never implemented and is really obsolete
 
     /// <summary>
-    ///     This method is called when the object initializes.
-    ///     Use this method to set configuration options.
+    /// This method is called when the object initializes.
+    /// Use this method to set configuration options.
     /// </summary>
-    protected virtual void Configure()
-    {
-    }
+    protected virtual void Configure() { }
 
     /// <summary>
-    ///     This method can be overridden in subclasses to implement custom load behavior
-    ///     For instance, if the entity is not loaded by GUID, this method could be used.
-    ///     Typically, this method would assign a dataset to dsInternal.
+    /// This method can be overridden in subclasses to implement custom load behavior
+    /// For instance, if the entity is not loaded by GUID, this method could be used.
+    /// Typically, this method would assign a dataset to dsInternal.
     /// </summary>
     /// <param name="parameter1">Pass through parameter from constructor</param>
     /// <param name="businessObject">Business Object</param>
-    protected virtual void LoadCustom(object parameter1, IBusinessObject businessObject)
-    {
-    }
+    protected virtual void LoadCustom(object parameter1, IBusinessObject businessObject) { }
 
     /// <summary>
-    ///     This method can be overridden in subclasses to load additional member objects
+    /// This method can be overridden in subclasses to implement custom load behavior
+    /// For instance, if the entity is not loaded by GUID, this method could be used.
+    /// Typically, this method would assign a dataset to dsInternal.
     /// </summary>
-    protected virtual void LoadSubItemCollections()
-    {
-    }
+    /// <param name="parameter1">Pass through parameter from constructor</param>
+    /// <param name="businessObject">Business Object</param>
+    protected virtual Task LoadCustomAsync(object parameter1, IBusinessObject businessObject) => Task.CompletedTask;
+
+    /// <summary>
+    /// This method can be overridden in subclasses to load additional member objects
+    /// </summary>
+    protected virtual void LoadSubItemCollections() { }
+
+    protected virtual Task LoadSubItemCollectionsAsync() => Task.CompletedTask;
 
     protected virtual void LoadEntity(Guid entityId, IBusinessObject businessObject)
     {
@@ -564,9 +786,15 @@ public abstract class BusinessEntity : IBusinessEntity, IDataBindingRefresher, I
         InternalDataSet = businessObject.LoadEntity(entityId);
     }
 
+    protected virtual async Task LoadEntityAsync(Guid entityId, IBusinessObject businessObject)
+    {
+        if (PrimaryKeyType != KeyType.Guid) throw new UnsupportedKeyTypeException(KeyType.Guid);
+        InternalDataSet = await businessObject.LoadEntityAsync(entityId);
+    }
+
     /// <summary>
-    ///     This method is used to load existing data into the current entity.
-    ///     This method is designed to be overridden in subclasses if needed.
+    /// This method is used to load existing data into the current entity.
+    /// This method is designed to be overridden in subclasses if needed.
     /// </summary>
     /// <param name="entityId"></param>
     /// <param name="businessObject">Business Object</param>
@@ -576,36 +804,52 @@ public abstract class BusinessEntity : IBusinessEntity, IDataBindingRefresher, I
         InternalDataSet = businessObject.LoadEntity(entityId);
     }
 
-    /// <summary>
-    ///     This method is used to load existing data into the current entity.
-    ///     This method is designed to be overridden in subclasses if needed.
-    /// </summary>
-    /// <param name="entityId"></param>
-    /// <param name="businessObject">Business Object</param>
-    protected virtual void LoadEntity(string entityId, IBusinessObject businessObject)
+    protected virtual async Task LoadEntityAsync(int entityId, IBusinessObject businessObject)
     {
-        switch (PrimaryKeyType) {
-            case KeyType.Integer:
-                InternalDataSet = businessObject.LoadEntity(new Guid(entityId));
-                break;
-            case KeyType.String:
-                InternalDataSet = businessObject.LoadEntity(entityId);
-                break;
-            default:
-                throw new UnsupportedKeyTypeException(PrimaryKeyType);
-        }
+        if (PrimaryKeyType != KeyType.Integer && PrimaryKeyType != KeyType.IntegerAutoIncrement) throw new UnsupportedKeyTypeException(KeyType.Integer);
+        InternalDataSet = await businessObject.LoadEntityAsync(entityId);
     }
 
     /// <summary>
-    ///     This method is used to add a new record to the internal data source.
-    ///     This method can be overridden if adding a new entity is not according
-    ///     to the default behavior
+    /// This method is used to load existing data into the current entity.
+    /// This method is designed to be overridden in subclasses if needed.
+    /// </summary>
+    /// <param name="entityId"></param>
+    /// <param name="businessObject">Business Object</param>
+    protected virtual void LoadEntity(string entityId, IBusinessObject businessObject) =>
+        InternalDataSet = PrimaryKeyType switch
+        {
+            KeyType.Integer => businessObject.LoadEntity(new Guid(entityId)),
+            KeyType.String => businessObject.LoadEntity(entityId),
+            _ => throw new UnsupportedKeyTypeException(PrimaryKeyType),
+        };
+
+    /// <summary>
+    /// This method is used to load existing data into the current entity.
+    /// This method is designed to be overridden in subclasses if needed.
+    /// </summary>
+    /// <param name="entityId"></param>
+    /// <param name="businessObject">Business Object</param>
+    protected async virtual Task LoadEntityAsync(string entityId, IBusinessObject businessObject) =>
+        InternalDataSet = PrimaryKeyType switch
+        {
+            KeyType.Integer => await businessObject.LoadEntityAsync(new Guid(entityId)),
+            KeyType.String => await businessObject.LoadEntityAsync(entityId),
+            _ => throw new UnsupportedKeyTypeException(PrimaryKeyType),
+        };
+
+    /// <summary>
+    /// This method is used to add a new record to the internal data source.
+    /// This method can be overridden if adding a new entity is not according
+    /// to the default behavior
     /// </summary>
     /// <param name="businessObject">Business object</param>
     protected virtual void NewEntity(IBusinessObject businessObject) => InternalDataSet = businessObject.AddNew();
 
+    protected virtual async Task NewEntityAsync(IBusinessObject businessObject) => InternalDataSet = await businessObject.AddNewAsync();
+
     /// <summary>
-    ///     Verifies the current data
+    /// Verifies the current data
     /// </summary>
     public virtual void Verify()
     {
@@ -622,7 +866,7 @@ public abstract class BusinessEntity : IBusinessEntity, IDataBindingRefresher, I
     }
 
     /// <summary>
-    ///     Verifies the current data
+    /// Verifies the current data
     /// </summary>
     /// <param name="ruleType">Type of rule the verification is to be limited to</param>
     public virtual void Verify(Type ruleType)
@@ -643,44 +887,37 @@ public abstract class BusinessEntity : IBusinessEntity, IDataBindingRefresher, I
     }
 
     /// <summary>
-    ///     Raises the deleted entity exception.
+    /// Raises the deleted entity exception.
     /// </summary>
     /// <param name="message">The message the exception is populated with</param>
     /// <param name="source">The entity that caused the exception</param>
     protected static void ThrowDeletedEntityException(string message, BusinessEntity source) => throw new DeletedEntityException(message) {Source = source.GetType().Name};
 
     /// <summary>
-    ///     Finalize
+    /// Finalize
     /// </summary>
     ~BusinessEntity() => Dispose(false);
 
     /// <summary>
-    ///     Dispose method designed to be overridden in subclasses
+    /// Dispose method designed to be overridden in subclasses
     /// </summary>
     /// <param name="disposing">True is called from Dispose()</param>
     protected virtual void Dispose(bool disposing)
     {
-        if (InternalDataSet != null)
-        {
-            InternalDataSet.Dispose();
-            InternalDataSet = null;
-        }
-
-        if (internalBusinessObject != null)
-        {
-            internalBusinessObject.Dispose();
-            internalBusinessObject = null;
-        }
+        InternalDataSet?.Dispose();
+        InternalDataSet = null;
+        internalBusinessObject?.Dispose();
+        internalBusinessObject = null;
     }
 
     /// <summary>
-    ///     Creates a copy of the current business entity
+    /// Creates a copy of the current business entity
     /// </summary>
     /// <returns>New instance of a business entity with identical data.</returns>
     /// <remarks>
-    ///     Note that the returned object is NOT an exact copy of the original entity.
-    ///     Instead, it will be a new object with identical values. Many internals however,
-    ///     such as primary keys, will be new and independent from the current object.
+    /// Note that the returned object is NOT an exact copy of the original entity.
+    /// Instead, it will be a new object with identical values. Many internals however,
+    /// such as primary keys, will be new and independent from the current object.
     /// </remarks>
     public IBusinessEntity Clone()
     {
@@ -697,7 +934,7 @@ public abstract class BusinessEntity : IBusinessEntity, IDataBindingRefresher, I
     }
 
     /// <summary>
-    ///     Explores an individual object and clones all clonable properties
+    /// Explores an individual object and clones all clonable properties
     /// </summary>
     /// <param name="originalObject">Original object</param>
     /// <param name="newObject">New object</param>
@@ -755,7 +992,7 @@ public abstract class BusinessEntity : IBusinessEntity, IDataBindingRefresher, I
     }
 
     /// <summary>
-    ///     Clones an individual collection within a business entity
+    /// Clones an individual collection within a business entity
     /// </summary>
     /// <param name="originalEntity">Original (clone origin) entity</param>
     /// <param name="newEntity">New (clone result) entity</param>
@@ -773,18 +1010,12 @@ public abstract class BusinessEntity : IBusinessEntity, IDataBindingRefresher, I
             IEntitySubItemCollectionItem newItem;
             if (newCollection.Count < itemCount)
                 if (newCollection is EntityXlinkSubItemCollection newCollection2 && originalItem is EntitySubItemCollectionXLinkItem originalItem2)
-                    switch (newCollection.ParentEntity.PrimaryKeyType)
+                    newItem = newCollection.ParentEntity.PrimaryKeyType switch
                     {
-                        case KeyType.Guid:
-                            newItem = newCollection2.Add(originalItem2.TargetFK);
-                            break;
-                        case KeyType.String:
-                            newItem = newCollection2.Add(originalItem2.TargetFKString);
-                            break;
-                        default:
-                            newItem = newCollection2.Add(originalItem2.TargetFKInteger);
-                            break;
-                    }
+                        KeyType.Guid => newCollection2.Add(originalItem2.TargetFK),
+                        KeyType.String => newCollection2.Add(originalItem2.TargetFKString),
+                        _ => newCollection2.Add(originalItem2.TargetFKInteger),
+                    };
                 else
                     newItem = newCollection.Add();
             else
@@ -798,12 +1029,13 @@ public abstract class BusinessEntity : IBusinessEntity, IDataBindingRefresher, I
     }
 
     /// <summary>
-    ///     Saves all the specified business entities within an atomic operation
-    ///     (within the same transaction)
+    /// Saves all the specified business entities within an atomic operation
+    /// (within the same transaction)
     /// </summary>
     /// <param name="entities">Collection of entities that is to be saved.</param>
     /// <param name="verifyBeforeSave">Defines whether a verify should be run on the business entities before they are saved.</param>
     /// <returns>True if saved successfully</returns>
+    /// <remarks>Prefer AtomicSaveAsync(IList{BusinessEntity}, bool) for new code.</remarks>
     public static bool AtomicSave(IList<BusinessEntity> entities, bool verifyBeforeSave = true)
     {
         var entityCount = entities.Count;
@@ -815,12 +1047,13 @@ public abstract class BusinessEntity : IBusinessEntity, IDataBindingRefresher, I
     }
 
     /// <summary>
-    ///     Saves all the specified business entities within an atomic operation
-    ///     (within the same transaction)
+    /// Saves all the specified business entities within an atomic operation
+    /// (within the same transaction)
     /// </summary>
     /// <param name="entities">Array of entities that is to be saved.</param>
     /// <param name="verifyBeforeSave">Defines whether a verify should be run on the business entities before they are saved.</param>
     /// <returns>True if saved successfully</returns>
+    /// <remarks>Prefer AtomicSaveAsync(BusinessEntity[], bool) for new code.</remarks>
     public static bool AtomicSave(BusinessEntity[] entities, bool verifyBeforeSave = true)
     {
         foreach (var entity in entities)
@@ -847,11 +1080,11 @@ public abstract class BusinessEntity : IBusinessEntity, IDataBindingRefresher, I
             // First, we need to make sure all these entities can share a data context
             // To do so, we share every entity's business object's data context with
             // the very first entity
-            if (!(entities[0].AssociatedBusinessObject is BusinessObject)) throw new IncompatibleBusinessObjectException();
+            if (entities[0].AssociatedBusinessObject is not BusinessObject) throw new IncompatibleBusinessObjectException();
             var firstBusinessObject = (BusinessObject) entities[0].AssociatedBusinessObject;
             for (var entityCounter = 1; entityCounter < entities.Length; entityCounter++)
             {
-                if (!(entities[entityCounter].AssociatedBusinessObject is BusinessObject)) throw new IncompatibleBusinessObjectException();
+                if (entities[entityCounter].AssociatedBusinessObject is not BusinessObject) throw new IncompatibleBusinessObjectException();
                 var currentBusinessObject = (BusinessObject) entities[entityCounter].AssociatedBusinessObject;
                 if (!currentBusinessObject.ShareDataContext(firstBusinessObject)) throw new ContextSharingRestrictionViolatedException();
             }
@@ -886,8 +1119,97 @@ public abstract class BusinessEntity : IBusinessEntity, IDataBindingRefresher, I
     }
 
     /// <summary>
-    ///     Returns the internal (mapped) field name and table name
-    ///     that is used under the hood to store the actual data in the data set.
+    /// Saves all the specified business entities within an atomic operation asynchronously
+    /// (within the same transaction)
+    /// </summary>
+    /// <param name="entities">Collection of entities that is to be saved.</param>
+    /// <param name="verifyBeforeSave">Defines whether a verify should be run on the business entities before they are saved.</param>
+    /// <returns>True if saved successfully</returns>
+    public static async Task<bool> AtomicSaveAsync(IList<BusinessEntity> entities, bool verifyBeforeSave = true)
+    {
+        var entityCount = entities.Count;
+        var entities2 = new BusinessEntity[entityCount];
+        var entityCounter = 0;
+        foreach (var entity in entities)
+            entities2[entityCounter++] = entity;
+
+        return await AtomicSaveAsync(entities2, verifyBeforeSave);
+    }
+
+    /// <summary>
+    /// Saves all the specified business entities within an atomic operation asynchronously
+    /// (within the same transaction)
+    /// </summary>
+    /// <param name="entities">Array of entities that is to be saved.</param>
+    /// <param name="verifyBeforeSave">Defines whether a verify should be run on the business entities before they are saved.</param>
+    /// <returns>True if saved successfully</returns>
+    public static async Task<bool> AtomicSaveAsync(BusinessEntity[] entities, bool verifyBeforeSave = true)
+    {
+        foreach (var entity in entities)
+            if (entity.LoadState == EntityLoadState.Deleted)
+                ThrowDeletedEntityException("Deleted entity found in atomic save.", entity);
+
+        // We only attempt to save if all entities can be verified properly
+        var verified = true;
+        if (verifyBeforeSave)
+            foreach (var ent in entities)
+            {
+                ent.Verify();
+                if (ent.BrokenRules.Count > 0) verified = false;
+            }
+
+        if (!verified) return false;
+
+        // We now proceed saving the entities
+        if (entities.Length > 1)
+        {
+            // There are multiple entities, so we have to span transactions around them
+            // (this is what this method is for, after all)
+
+            // First, we need to make sure all these entities can share a data context
+            // To do so, we share every entity's business object's data context with
+            // the very first entity
+            if (entities[0].AssociatedBusinessObject is not BusinessObject) throw new IncompatibleBusinessObjectException();
+            var firstBusinessObject = (BusinessObject) entities[0].AssociatedBusinessObject;
+            for (var entityCounter = 1; entityCounter < entities.Length; entityCounter++)
+            {
+                if (entities[entityCounter].AssociatedBusinessObject is not BusinessObject) throw new IncompatibleBusinessObjectException();
+                var currentBusinessObject = (BusinessObject) entities[entityCounter].AssociatedBusinessObject;
+                if (!currentBusinessObject.ShareDataContext(firstBusinessObject)) throw new ContextSharingRestrictionViolatedException();
+            }
+
+            // Now that all the entities share a data context, we can start a transaction
+            firstBusinessObject.SharedDataContext.BeginTransaction();
+            try
+            {
+                foreach (var ent in entities)
+                    if (!await ent.SaveAsync())
+                    {
+                        firstBusinessObject.SharedDataContext.AbortTransaction();
+                        return false;
+                    }
+
+                firstBusinessObject.SharedDataContext.CommitTransaction();
+            }
+            catch //(Exception oEx)
+            {
+                firstBusinessObject.SharedDataContext.AbortTransaction();
+                throw new AtomicSaveFailedException();
+            }
+        }
+        else if (entities.Length == 1)
+            // There is only one entity, which is odd, but OK
+            return await entities[0].SaveAsync();
+        else
+            // No entities were passed. We consider that to be OK
+            return true;
+
+        return true;
+    }
+
+    /// <summary>
+    /// Returns the internal (mapped) field name and table name
+    /// that is used under the hood to store the actual data in the data set.
     /// </summary>
     /// <param name="exposedFieldName">External field name</param>
     /// <param name="exposedTableName">Table the field belongs to (external name)</param>
@@ -904,14 +1226,15 @@ public abstract class BusinessEntity : IBusinessEntity, IDataBindingRefresher, I
     }
 
     /// <summary>
-    ///     Returns the internal (mapped) table name
+    /// Returns the internal (mapped) table name
     /// </summary>
     /// <param name="exposedTableName">External table name</param>
     /// <returns>Internal table name (as it appears in the database)</returns>
-    public virtual string GetInternalTableName(string exposedTableName) => tableMaps.ContainsKey(exposedTableName) ? tableMaps[exposedTableName] : exposedTableName;
+    public virtual string GetInternalTableName(string exposedTableName) => 
+        tableMaps.ContainsKey(exposedTableName) ? tableMaps[exposedTableName] : exposedTableName;
 
     /// <summary>
-    ///     Maps an externally visible table name to an internal name
+    /// Maps an externally visible table name to an internal name
     /// </summary>
     /// <param name="exposedTableName">Table name used by the entity</param>
     /// <param name="internalTableName">Table name as it appears in the database</param>
@@ -924,7 +1247,7 @@ public abstract class BusinessEntity : IBusinessEntity, IDataBindingRefresher, I
     }
 
     /// <summary>
-    ///     Maps an externally visible table name to an internal name
+    /// Maps an externally visible table name to an internal name
     /// </summary>
     /// <param name="exposedFieldName">Field name used by the entity</param>
     /// <param name="internalFieldName">Field name as it appears in the database</param>
@@ -939,7 +1262,7 @@ public abstract class BusinessEntity : IBusinessEntity, IDataBindingRefresher, I
     }
 
     /// <summary>
-    ///     Maps an externally visible table name to an internal name
+    /// Maps an externally visible table name to an internal name
     /// </summary>
     /// <param name="exposedFieldName">Field name used by the entity</param>
     /// <param name="internalFieldName">Field name as it appears in the database</param>
@@ -954,166 +1277,188 @@ public abstract class BusinessEntity : IBusinessEntity, IDataBindingRefresher, I
     }
 
     /// <summary>
-    ///     Use this method to retrieve a value from the internal data store
+    /// Use this method to retrieve a value from the internal data store
     /// </summary>
     /// <param name="fieldName">Name of the field that is to be returned</param>
     /// <param name="tableName">Name of the table the field is in</param>
     /// <param name="ignoreNulls">
-    ///     Should null values be ignored and returned as null (true) or should they be turned into
-    ///     default values (false)?
+    /// Should null values be ignored and returned as null (true) or should they be turned into
+    /// default values (false)?
     /// </param>
     /// <returns>Value object</returns>
     [Obsolete("Use ReadFieldValue<T>() instead.")]
-    protected virtual object GetFieldValue(string fieldName, string tableName = null, bool ignoreNulls = false)
-    {
-        tableName ??= MasterEntity;
-        return BusinessEntityHelper.GetFieldValue<object>(this, InternalDataSet, tableName, fieldName, 0, ignoreNulls);
-    }
+    protected virtual object GetFieldValue(string fieldName, string tableName = null, bool ignoreNulls = false) => 
+        BusinessEntityHelper.GetFieldValue<object>(this, InternalDataSet, tableName ?? MasterEntity, fieldName, 0, ignoreNulls);
 
     /// <summary>
-    ///     Use this method to retrieve a value from the internal data store
+    /// Use this method to retrieve a value from the internal data store
     /// </summary>
     /// <typeparam name="TField">The expected return type for the field.</typeparam>
-    /// <param name="fieldName">Name of the field that is to be returned</param>
+    /// <param name="fieldName">Name of the field that is to be returned. If omitted, the caller member name is used.</param>
     /// <param name="tableName">Name of the table the field is in</param>
     /// <param name="ignoreNulls">
-    ///     Should null values be ignored and returned as null (true) or should they be turned into
-    ///     default values (false)?
+    /// Should null values be ignored and returned as null (true) or should they be turned into
+    /// default values (false)?
     /// </param>
     /// <returns>Value</returns>
-    protected virtual TField ReadFieldValue<TField>(string fieldName, string tableName = null, bool ignoreNulls = false)
-    {
-        tableName ??= MasterEntity;
-        return BusinessEntityHelper.GetFieldValue<TField>(this, InternalDataSet, tableName, fieldName, 0, ignoreNulls);
-    }
+    protected virtual TField ReadFieldValue<TField>(string fieldName = null, string tableName = null, bool ignoreNulls = false) => 
+        BusinessEntityHelper.GetFieldValue<TField>(this, InternalDataSet, tableName ?? MasterEntity, fieldName, 0, ignoreNulls);
 
     /// <summary>
-    ///     Use this method to assign any value to the internal data source
+    /// Use this method to retrieve a value from the internal data store.
+    /// This method is a shortcut to ReadFieldValue<typeparamref name="TField"/>()
+    /// </summary>
+    /// <typeparam name="TField">The expected return type for the field.</typeparam>
+    /// <param name="fieldName">Name of the field that is to be returned. If omitted, the caller member name is used.</param>
+    /// <param name="tableName">Name of the table the field is in</param>
+    /// <param name="ignoreNulls">
+    /// Should null values be ignored and returned as null (true) or should they be turned into
+    /// default values (false)?
+    /// </param>
+    /// <returns>Value</returns>
+    protected TField Get<TField>([CallerMemberName] string fieldName = null, string tableName = null, bool ignoreNulls = false) =>
+        ReadFieldValue<TField>(fieldName, tableName, ignoreNulls);
+
+    /// <summary>
+    /// Use this method to assign any value to the internal data source
     /// </summary>
     /// <param name="fieldName">Name of the field that is to be assigned</param>
     /// <param name="value">Value that is to be assigned</param>
     /// <param name="tableName">Name of the table the field is in</param>
     /// <param name="forceSet">
-    ///     Should the value be set, even if it is the same as before? (Causes the object to be dirty,
-    ///     possibly without changes)
+    /// Should the value be set, even if it is the same as before? (Causes the object to be dirty,
+    /// possibly without changes)
     /// </param>
     /// <returns>True if update succeeded</returns>
     [Obsolete("Use WriteFieldValue<T>() instead.")]
-    protected virtual bool SetFieldValue(string fieldName, object value, string tableName = null, bool forceSet = false)
-    {
-        tableName ??= MasterEntity;
-        return BusinessEntityHelper.SetFieldValue(this, fieldName, value, tableName, InternalDataSet, 0, forceSet);
-    }
+    protected virtual bool SetFieldValue(string fieldName, object value, string tableName = null, bool forceSet = false) => 
+        BusinessEntityHelper.SetFieldValue(this, fieldName, value, tableName ?? MasterEntity, InternalDataSet, 0, forceSet);
 
     /// <summary>
-    ///     Use this method to assign any value to the internal data source
+    /// Use this method to assign any value to the internal data source
     /// </summary>
     /// <typeparam name="TField">The type of the field.</typeparam>
     /// <param name="fieldName">Name of the field that is to be assigned</param>
     /// <param name="value">Value that is to be assigned</param>
     /// <param name="tableName">Name of the table the field is in</param>
     /// <param name="forceSet">
-    ///     Should the value be set, even if it is the same as before? (Causes the object to be dirty,
-    ///     possibly without changes)
+    /// Should the value be set, even if it is the same as before? (Causes the object to be dirty,
+    /// possibly without changes)
     /// </param>
     /// <returns>True if update succeeded</returns>
-    protected virtual bool WriteFieldValue<TField>(string fieldName, TField value, string tableName = null, bool forceSet = false)
-    {
-        tableName ??= MasterEntity;
-        return BusinessEntityHelper.SetFieldValue(this, fieldName, value, tableName, InternalDataSet, 0, forceSet);
-    }
+    protected virtual bool WriteFieldValue<TField>(string fieldName, TField value, string tableName = null, bool forceSet = false) =>
+        BusinessEntityHelper.SetFieldValue(this, fieldName, value, tableName ?? MasterEntity, InternalDataSet, 0, forceSet);
 
     /// <summary>
-    ///     This method can be used to make sure the default table in the internal DataSet has all the required fields.
-    ///     If the field (column) doesn't exist, it will be added.
+    /// Use this method to assign any value to the internal data source. 
+    /// This method is a shortcut version of WriteFieldValue<typeparamref name="TField"/>()
+    /// </summary>
+    /// <typeparam name="TField">The type of the field.</typeparam>
+    /// <param name="value">Value that is to be assigned</param>
+    /// <param name="forceSet">
+    /// Should the value be set, even if it is the same as before? (Causes the object to be dirty,
+    /// possibly without changes)
+    /// </param>
+    /// <param name="fieldName">Name of the field that is to be assigned. If omitted, the caller member name is used.</param>
+    /// <returns>True if update succeeded</returns>
+    protected bool Set<TField>(TField value, [CallerMemberName] string fieldName = null, string tableName = null, bool forceSet = false) =>
+        WriteFieldValue(fieldName, value, tableName, forceSet);
+
+    /// <summary>
+    /// This method can be used to make sure the default table in the internal DataSet has all the required fields.
+    /// If the field (column) doesn't exist, it will be added.
     /// </summary>
     /// <param name="fieldName">Field name to check for.</param>
     /// <param name="tableName">Name of the table the field is in</param>
     /// <param name="value">
-    ///     The value that will go on the column. This will determine what type the column must be
-    ///     in case it has to be created on-the-fly.
+    /// The value that will go on the column. This will determine what type the column must be
+    /// in case it has to be created on-the-fly.
     /// </param>
     /// <returns></returns>
-    protected virtual bool CheckColumn(string fieldName, string tableName = null, object value = null)
-    {
-        tableName ??= MasterEntity;
-        return BusinessEntityHelper.CheckColumn(InternalDataSet, fieldName, tableName, value);
-    }
+    protected virtual bool CheckColumn(string fieldName, string tableName = null, object value = null) => 
+        BusinessEntityHelper.CheckColumn(InternalDataSet, fieldName, tableName ?? MasterEntity, value);
 
     /// <summary>
-    ///     Checks whether a certain column exists in a table of a data set
+    /// Checks whether a certain column exists in a table of a data set
     /// </summary>
     /// <param name="fieldName">Field Name</param>
     /// <param name="table">Table object</param>
     /// <remarks>Field and table names used here must be INTERNAL names, not mapped names.</remarks>
     /// <returns>True (if field exist or has been added) or False </returns>
-    protected virtual bool CheckColumn(string fieldName, DataTable table) => BusinessEntityHelper.CheckColumn(table, fieldName);
+    protected virtual bool CheckColumn(string fieldName, DataTable table) => 
+        BusinessEntityHelper.CheckColumn(table, fieldName);
 
     /// <summary>
-    ///     Checks whether a certain table has the specified minimum number of rows.
-    ///     If the table doesn't have the specified minimum number of rows (and
-    ///     autoAddRows is passed as true), the rows are automatically created.
+    /// Checks whether a certain table has the specified minimum number of rows.
+    /// If the table doesn't have the specified minimum number of rows (and
+    /// autoAddRows is passed as true), the rows are automatically created.
     /// </summary>
     /// <param name="tableName">Name of the table.</param>
     /// <param name="primaryKeyField">The primary key field.</param>
     /// <param name="minimumRowCount">The minimum row count.</param>
     /// <param name="autoAddRows">If set to <c>true</c>, adds missing rows automatically.</param>
     /// <returns>
-    ///     True if the table has the appropriate number of rows (or the appropriate number of rows has been added)
+    /// True if the table has the appropriate number of rows (or the appropriate number of rows has been added)
     /// </returns>
-    protected virtual bool CheckRows(string tableName, string primaryKeyField, int minimumRowCount, bool autoAddRows) => BusinessEntityHelper.CheckRows(tableName, primaryKeyField, minimumRowCount, autoAddRows, InternalDataSet, this);
+    protected virtual bool CheckRows(string tableName, string primaryKeyField, int minimumRowCount, bool autoAddRows) => 
+        BusinessEntityHelper.CheckRows(tableName, primaryKeyField, minimumRowCount, autoAddRows, InternalDataSet, this);
 
     /// <summary>
-    ///     Checks the number of rows in the specified table.
-    ///     Removes all data if the table has any.
+    /// Checks the number of rows in the specified table.
+    /// Removes all data if the table has any.
     /// </summary>
     /// <param name="tableName">Name of the table.</param>
     /// <returns>True if successful</returns>
-    public virtual bool ClearRows(string tableName) => BusinessEntityHelper.ClearRows(InternalDataSet, tableName);
+    public virtual bool ClearRows(string tableName) => 
+        BusinessEntityHelper.ClearRows(InternalDataSet, tableName);
 
     /// <summary>
-    ///     Checks whether a certain table has at least 1 data row.
-    ///     If the table doesn't have the specified minimum number of rows (and
-    ///     autoAddRows is passed as true), a new row is automatically added.
+    /// Checks whether a certain table has at least 1 data row.
+    /// If the table doesn't have the specified minimum number of rows (and
+    /// autoAddRows is passed as true), a new row is automatically added.
     /// </summary>
     /// <param name="tableName">Name of the table.</param>
     /// <param name="primaryKeyField">The primary key field.</param>
     /// <param name="autoAddRows">If set to <c>true</c>, a missing row is added automatically.</param>
     /// <returns>
-    ///     True if the table has at least 1 row (or the rows has been added successfully)
+    /// True if the table has at least 1 row (or the rows has been added successfully)
     /// </returns>
-    protected virtual bool CheckRows(string tableName, string primaryKeyField, bool autoAddRows = true) => CheckRows(tableName, primaryKeyField, 1, autoAddRows);
+    protected virtual bool CheckRows(string tableName, string primaryKeyField, bool autoAddRows = true) => 
+        CheckRows(tableName, primaryKeyField, 1, autoAddRows);
 
     /// <summary>
-    ///     Checks whether the value is valid based on the definition of the field in the provided data table.
+    /// Checks whether the value is valid based on the definition of the field in the provided data table.
     /// </summary>
     /// <param name="table">Data table</param>
     /// <param name="fieldName">Field name within the data table</param>
     /// <param name="value">Value</param>
     /// <remarks>Field and table names used here must be INTERNAL names, not mapped names.</remarks>
     /// <returns>True if invalid, false otherwise</returns>
-    protected internal virtual bool IsValueInvalid(DataTable table, string fieldName, object value) => BusinessEntityHelper.IsValueInvalid(table, fieldName, value, this);
+    protected internal virtual bool IsValueInvalid(DataTable table, string fieldName, object value) => 
+        BusinessEntityHelper.IsValueInvalid(table, fieldName, value, this);
 
     /// <summary>
-    ///     Fixes the value to be valid based on the current field type
+    /// Fixes the value to be valid based on the current field type
     /// </summary>
     /// <param name="table">Data table</param>
     /// <param name="fieldName">Field name within the data table</param>
     /// <param name="value">Value</param>
     /// <remarks>Field and table names used here must be INTERNAL names, not mapped names.</remarks>
     /// <returns>Valid value</returns>
-    protected internal virtual object GetValidValue(DataTable table, string fieldName, object value) => BusinessEntityHelper.GetValidValue(table, fieldName, value, this);
+    protected internal virtual object GetValidValue(DataTable table, string fieldName, object value) => 
+        BusinessEntityHelper.GetValidValue(table, fieldName, value, this);
 
     /// <summary>
-    ///     Checks whether two field values are the same or not
+    /// Checks whether two field values are the same or not
     /// </summary>
     /// <param name="value1">First value</param>
     /// <param name="value2">Second value</param>
     /// <returns>True of they are different, false if they are the same</returns>
-    protected internal virtual bool ValuesDiffer(object value1, object value2) => ObjectHelper.ValuesDiffer(value1, value2);
+    protected internal virtual bool ValuesDiffer(object value1, object value2) => 
+        ObjectHelper.ValuesDiffer(value1, value2);
 
     /// <summary>
-    ///     Resets the last update tick
+    /// Resets the last update tick
     /// </summary>
     /// <param name="fieldName">Updated field name</param>
     /// <param name="tableName">Updated table name</param>

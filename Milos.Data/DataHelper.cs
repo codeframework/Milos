@@ -6,12 +6,12 @@ using System.Xml;
 namespace Milos.Data;
 
 /// <summary>
-///     This static class provides methods that may be useful for data related tasks
+/// This static class provides methods that may be useful for data related tasks
 /// </summary>
 public static class DataHelper
 {
     /// <summary>
-    ///     This method builds delete commands based on individual Sql statements
+    /// This method builds delete commands based on individual Sql statements
     /// </summary>
     /// <param name="tableName">Name of the table that contains the record that is to be deleted.</param>
     /// <param name="primaryKeyFieldName">Primary key field name</param>
@@ -27,8 +27,8 @@ public static class DataHelper
     }
 
     /// <summary>
-    ///     This method takes an empty command object as well as a data row, and builds
-    ///     an SQL compliant update command, depending on the row state and update mode.
+    /// This method takes an empty command object as well as a data row, and builds
+    /// an SQL compliant update command, depending on the row state and update mode.
     /// </summary>
     /// <param name="changedRow">Updated data row</param>
     /// <param name="primaryKeyType">Primary key type (guid, integer,...)</param>
@@ -38,11 +38,11 @@ public static class DataHelper
     /// <param name="tableName">Name of the table.</param>
     /// <param name="fieldNames">Names of the fields to be included in the update (all others will be ignored)</param>
     /// <param name="fieldMaps">
-    ///     List of key value pairs that can be used to map field names. For instance, if a field in the
-    ///     table is called MyId but in the database it is called ID, then one can add a key 'MyId' with a value of 'ID'
+    /// List of key value pairs that can be used to map field names. For instance, if a field in the
+    /// table is called MyId but in the database it is called ID, then one can add a key 'MyId' with a value of 'ID'
     /// </param>
     /// <returns>
-    ///     Fully configured command object that is ready to be executed.
+    /// Fully configured command object that is ready to be executed.
     /// </returns>
     public static IDbCommand BuildSqlUpdateCommand(DataRow changedRow, KeyType primaryKeyType, string primaryKeyField, IDataService dataService, DataRowUpdateMode updateMode, string tableName, IList<string> fieldNames = null, IDictionary<string, string> fieldMaps = null)
     {
@@ -177,10 +177,10 @@ public static class DataHelper
     }
 
     /// <summary>
-    ///     This method takes an empty command object as well as a data row, and builds
-    ///     an SQL compliant update command, depending on the row state and update mode.
-    ///     The command assumes that a certain Stored Procedure is available to perform
-    ///     the desired update.
+    /// This method takes an empty command object as well as a data row, and builds
+    /// an SQL compliant update command, depending on the row state and update mode.
+    /// The command assumes that a certain Stored Procedure is available to perform
+    /// the desired update.
     /// </summary>
     /// <param name="changedRow">Updated data row</param>
     /// <param name="primaryKeyField">Name of the primary key field</param>
@@ -191,23 +191,23 @@ public static class DataHelper
     /// <param name="tableName">Name of the table.</param>
     /// <param name="fieldNames">Names of the fields to be included in the update (all others will be ignored)</param>
     /// <param name="fieldMaps">
-    ///     List of key value pairs that can be used to map field names. For instance, if a field in the
-    ///     table is called MyId but in the database it is called ID, then one can add a key 'MyId' with a value of 'ID'
+    /// List of key value pairs that can be used to map field names. For instance, if a field in the
+    /// table is called MyId but in the database it is called ID, then one can add a key 'MyId' with a value of 'ID'
     /// </param>
     /// <returns>Fully configured command object that is ready to be executed.</returns>
     /// <remarks>
-    ///     Stored Procedure update commands rely on a stored procedure of a certain name to be present. The name of the stored
-    ///     procedure follows the following pattern:
-    ///     [Prefix]upd[TableName]
-    ///     So in a scenario where the default prefix is used, and the table name is Customer, the following Stored Procedure
-    ///     would be required:
-    ///     milos_updCustomer
-    ///     The SP needs to accept one parameter for each field (named the same as the fields - the cName field requires a
-    ///     corresponding @cName parameter) as well as an additional
-    ///     parameter called @__cChangedFields, which contains a comma-separated list of all changed fields (with a trailing
-    ///     comma, and no spaces).
-    ///     The Stored Procedure also needs to know (without any outside parameters) what the name of the primary key field is
-    ///     that is used to identify the updated row. This value is simply passed to this SP as one of the parameters.
+    /// Stored Procedure update commands rely on a stored procedure of a certain name to be present. The name of the stored
+    /// procedure follows the following pattern:
+    /// [Prefix]upd[TableName]
+    /// So in a scenario where the default prefix is used, and the table name is Customer, the following Stored Procedure
+    /// would be required:
+    /// milos_updCustomer
+    /// The SP needs to accept one parameter for each field (named the same as the fields - the cName field requires a
+    /// corresponding @cName parameter) as well as an additional
+    /// parameter called @__cChangedFields, which contains a comma-separated list of all changed fields (with a trailing
+    /// comma, and no spaces).
+    /// The Stored Procedure also needs to know (without any outside parameters) what the name of the primary key field is
+    /// that is used to identify the updated row. This value is simply passed to this SP as one of the parameters.
     /// </remarks>
     public static IDbCommand BuildStoredProcedureUpdateCommand(DataRow changedRow, KeyType primaryKeyType, string primaryKeyField, IDataService dataService, DataRowUpdateMode updateMode, string storedProcedurePrefix, string tableName, IList<string> fieldNames, IDictionary<string, string> fieldMaps)
     {
@@ -341,9 +341,9 @@ public static class DataHelper
     }
 
     /// <summary>
-    ///     This method takes an IDbCommand object and serializes it to XML.
-    ///     Note that this is a custom serialization.
-    ///     We only respect the actual command and the parameters.
+    /// This method takes an IDbCommand object and serializes it to XML.
+    /// Note that this is a custom serialization.
+    /// We only respect the actual command and the parameters.
     /// </summary>
     /// <param name="command">IDbCommand object</param>
     /// <param name="entityName">Query result table name (if applicable... pass "" otherwise)</param>

@@ -4,34 +4,34 @@ using System.Xml;
 namespace Milos.BusinessObjects;
 
 /// <summary>
-///     This is to be used to serialize a business entity into an XML document with schema.
+/// This is to be used to serialize a business entity into an XML document with schema.
 /// </summary>
 public class BusinessEntityReportSerializer
 {
     /// <summary>
-    ///     For internal use only
+    /// For internal use only
     /// </summary>
     private readonly Type businessEntityType = typeof(IBusinessEntity);
 
     /// <summary>
-    ///     For internal use only
+    /// For internal use only
     /// </summary>
     private readonly Type crossLinkType = typeof(IEntitySubItemCollectionXLinkItem);
 
     /// <summary>
-    ///     For internal use only
+    /// For internal use only
     /// </summary>
     private readonly Type subItemCollectionType = typeof(IEntitySubItemCollection);
 
     /// <summary>
-    ///     This method is used to detect if the custom attribute
-    ///     NotSerializable() has been applied to the property.
+    /// This method is used to detect if the custom attribute
+    /// NotSerializable() has been applied to the property.
     /// </summary>
     /// <param name="propertyInfoType">
-    ///     PropertyInfo for the property to be checked
+    /// PropertyInfo for the property to be checked
     /// </param>
     /// <returns>
-    ///     Boolean stating if the property is serializable
+    /// Boolean stating if the property is serializable
     /// </returns>
     public bool IsSerializable(MemberInfo propertyInfoType)
     {
@@ -43,13 +43,13 @@ public class BusinessEntityReportSerializer
     }
 
     /// <summary>
-    ///     This is the method to be called to kick off the process.
+    /// This is the method to be called to kick off the process.
     /// </summary>
     /// <param name="businessEntity">
-    ///     The business entity to be processed
+    /// The business entity to be processed
     /// </param>
     /// <returns>
-    ///     A string containing the XML document for the Business Entity data.
+    /// A string containing the XML document for the Business Entity data.
     /// </returns>
     public string Serialize(object businessEntity)
     {
@@ -77,15 +77,15 @@ public class BusinessEntityReportSerializer
     }
 
     /// <summary>
-    ///     This is an override for the method that gets called to kick
-    ///     off the process.  This override takes an additional parameter
-    ///     for a file name.  It will write the XML to the specified file
-    ///     before it returns
+    /// This is an override for the method that gets called to kick
+    /// off the process.  This override takes an additional parameter
+    /// for a file name.  It will write the XML to the specified file
+    /// before it returns
     /// </summary>
     /// <param name="businessEntity">The business entity to be processed</param>
     /// <param name="fileName">The name of the file where the XML will be written.</param>
     /// <returns>
-    ///     A string containing the XML document for the Business Entity data.
+    /// A string containing the XML document for the Business Entity data.
     /// </returns>
     public string Serialize(object businessEntity, string fileName)
     {
@@ -97,13 +97,13 @@ public class BusinessEntityReportSerializer
     }
 
     /// <summary>
-    ///     This method uses reflection to get the name of the entity
+    /// This method uses reflection to get the name of the entity
     /// </summary>
     /// <param name="businessEntity">
-    ///     The entity
+    /// The entity
     /// </param>
     /// <returns>
-    ///     A string containing the name of the entity
+    /// A string containing the name of the entity
     /// </returns>
     private string GetEntityName(object businessEntity)
     {
@@ -135,14 +135,14 @@ public class BusinessEntityReportSerializer
     }
 
     /// <summary>
-    ///     This method scans the entity writing a new node to the XML
-    ///     document for each property not marked "NotSerializable"
+    /// This method scans the entity writing a new node to the XML
+    /// document for each property not marked "NotSerializable"
     /// </summary>
     /// <param name="sourceObject">
-    ///     The Business Entity to be scanned
+    /// The Business Entity to be scanned
     /// </param>
     /// <param name="xmlTextWriter ">
-    ///     A reference to the XmlTextWriter being used to record the XML
+    /// A reference to the XmlTextWriter being used to record the XML
     private void ScanObject(object sourceObject, XmlTextWriter xmlTextWriter)
     {
         var sourceType = sourceObject.GetType();
@@ -287,16 +287,16 @@ public class BusinessEntityReportSerializer
     }
 
     /// <summary>
-    ///     This writes the schema for the properties of the entity
+    /// This writes the schema for the properties of the entity
     /// </summary>
     /// <param name="entityObject">
-    ///     The Business Entity to be scanned
+    /// The Business Entity to be scanned
     /// </param>
     /// <param name="xmlTextWriter">
-    ///     A reference to the XmlText writer being used to record the XML
+    /// A reference to the XmlText writer being used to record the XML
     /// </param>
     /// <param name="entityName">
-    ///     The name of the entity being processed
+    /// The name of the entity being processed
     /// </param>
     private void WriteSchema(object entityObject, XmlTextWriter xmlTextWriter, string entityName)
     {
@@ -324,14 +324,14 @@ public class BusinessEntityReportSerializer
     }
 
     /// <summary>
-    ///     This method scans the entity writing information to the schema
-    ///     for each property.
+    /// This method scans the entity writing information to the schema
+    /// for each property.
     /// </summary>
     /// <param name="typeObject">
-    ///     The Type of the object being processed
+    /// The Type of the object being processed
     /// </param>
     /// <param name="xmlTextWriter">
-    ///     A reference to the XmlTextWriter being used to record the XML
+    /// A reference to the XmlTextWriter being used to record the XML
     /// </param>
     private void ScanObjectSchema(Type typeObject, XmlTextWriter xmlTextWriter)
     {
@@ -434,14 +434,14 @@ public class BusinessEntityReportSerializer
     }
 
     /// <summary>
-    ///     This method is used to write an complex schema element to the xml document.
-    ///     It is used to process properties that are Business Entities
+    /// This method is used to write an complex schema element to the xml document.
+    /// It is used to process properties that are Business Entities
     /// </summary>
     /// <param name="propertyTypeObject">
-    ///     The Type object of the property
+    /// The Type object of the property
     /// </param>
     /// <param name="xmlTextWriter">
-    ///     A reference to the XmlTextWriter object being used to record the XML
+    /// A reference to the XmlTextWriter object being used to record the XML
     /// </param>
     private void WriteComplexSchemaElement(Type propertyTypeObject, XmlTextWriter xmlTextWriter)
     {
@@ -466,16 +466,16 @@ public class BusinessEntityReportSerializer
     }
 
     /// <summary>
-    ///     This method is used to write the schema for a property that is an ENUM
+    /// This method is used to write the schema for a property that is an ENUM
     /// </summary>
     /// <param name="propertyInfoObject">
-    ///     A reference to the PropertyInfo object for the property
+    /// A reference to the PropertyInfo object for the property
     /// </param>
     /// <param name="propertyTypeObject">
-    ///     The Type object of the property
+    /// The Type object of the property
     /// </param>
     /// <param name="xmlTextWriter">
-    ///     A reference to the XmlTextWriter object being used to record the XML
+    /// A reference to the XmlTextWriter object being used to record the XML
     /// </param>
     private void WriteEnumSchemaElement(PropertyInfo propertyInfoObject, Type propertyTypeObject, XmlTextWriter xmlTextWriter)
     {
@@ -537,8 +537,8 @@ public class BusinessEntityReportSerializer
 }
 
 /// <summary>
-///     This defines a custom attribute to be used on Business Entity
-///     properties that should not be serialized.
+/// This defines a custom attribute to be used on Business Entity
+/// properties that should not be serialized.
 /// </summary>
 [AttributeUsage(AttributeTargets.Property)]
 public sealed class NotReportSerializableAttribute : Attribute { }

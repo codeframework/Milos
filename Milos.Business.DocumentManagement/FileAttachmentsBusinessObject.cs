@@ -345,8 +345,7 @@ public class DuplicateAttachmentRule : BusinessRule
     public DuplicateAttachmentRule() : base("products") { }
 
     /// <summary>
-    /// 
-    /// </summary>
+    /// /// </summary>
     /// <param name="currentRow"></param>
     /// <param name="rowIndex"></param>
     public override void VerifyRow(DataRow currentRow, int rowIndex)

@@ -17,7 +17,7 @@ public class PaymentBusinessObject : BusinessObject
     }
 
     /// <summary>
-    ///  This method is overridden in order to add default values
+    /// This method is overridden in order to add default values
     /// </summary>
     /// <returns>DataSet</returns>
     public override DataSet AddNew()

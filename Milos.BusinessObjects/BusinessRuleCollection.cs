@@ -1,7 +1,7 @@
 ﻿namespace Milos.BusinessObjects;
 
 /// <summary>
-///     This method encapsulates a collection of business rules
+/// This method encapsulates a collection of business rules
 /// </summary>
 /// <remarks>Constructor</remarks>
 /// <param name="parentBusinessObject">Business object this collection lives in.</param>
@@ -12,7 +12,7 @@ public class BusinessRuleCollection(IBusinessObject parentBusinessObject) : List
     protected IBusinessObject BusinessObject { get; } = parentBusinessObject;
 
     /// <summary>
-    ///     Adds a new rule to the rules collection
+    /// Adds a new rule to the rules collection
     /// </summary>
     /// <param name="newRule">Rule that's to be added</param>
     public new void Add(IBusinessRule newRule)

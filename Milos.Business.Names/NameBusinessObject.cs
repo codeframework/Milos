@@ -344,38 +344,33 @@ public class NameBusinessObject : BusinessObject
     /// <returns>Result DataSet</returns>
     /// <remarks>
     /// The result set of this operation contains 3 tables: Names, CommInfo, and Addresses
-    /// 
-    /// The tables have the following structures:
-    /// 
-    ///    Names
-    ///       Contains all the fields defined in the DefaultNameField property of this business object
-    ///       Default: Names.*
-    ///    
-    ///    CommInfo
-    ///       FK_Name (Guid)     = Foreign key that links to names
-    ///       cType (String)     = CommInfo link type, such as "home phone"
-    ///       cValue (String)    = Value, such as the actual phone number or email address
-    ///       iCommType (Int)    = Maps to the CommInfoType enum and defines the type of information (phone, email,...)
-    ///       PK_CommInfo (Guid) = Primary key of the particular comm info
-    /// 
-    ///    Addresses
-    ///       FK_Name (Guid)           = Foreign key that links to names
-    ///       cType (String)           = Address link type, such as "home" or "office"
-    ///       PK_Address (Guid)        = Address primary key
-    ///       FK_Country (Guid)        = Foreign key of the associated country
-    ///       cStreet (String)         = Street address
-    ///       cStreet2 (String)        = Street address 2
-    ///       cStreet3 (String)        = Street address 3
-    ///       cCity (String)           = City
-    ///       cState (String)          = State/Province
-    ///       cZip (String)            = Zip Code/ Postal Code
-    ///       cAddressName (String)    = Address name (name that may be unique to this address)
-    ///       cAddressCompany (String) = Address company (company name that may be unique to this address)
-    ///       cCountryName (String)    = Country name
-    ///       iAddrFormat (Int)        = Address format type. Maps to the AddressFormat enum.
-    ///       FullAddress (String)     = Complete, properly formatted address string
-    /// 
-    /// Note: Field names may differ when properties on the business objects relating to field names are set to non-default values.
+    /// /// The tables have the following structures:
+    /// ///    Names
+    /// Contains all the fields defined in the DefaultNameField property of this business object
+    /// Default: Names.*
+    /// ///    CommInfo
+    /// FK_Name (Guid)     = Foreign key that links to names
+    /// cType (String)     = CommInfo link type, such as "home phone"
+    /// cValue (String)    = Value, such as the actual phone number or email address
+    /// iCommType (Int)    = Maps to the CommInfoType enum and defines the type of information (phone, email,...)
+    /// PK_CommInfo (Guid) = Primary key of the particular comm info
+    /// ///    Addresses
+    /// FK_Name (Guid)           = Foreign key that links to names
+    /// cType (String)           = Address link type, such as "home" or "office"
+    /// PK_Address (Guid)        = Address primary key
+    /// FK_Country (Guid)        = Foreign key of the associated country
+    /// cStreet (String)         = Street address
+    /// cStreet2 (String)        = Street address 2
+    /// cStreet3 (String)        = Street address 3
+    /// cCity (String)           = City
+    /// cState (String)          = State/Province
+    /// cZip (String)            = Zip Code/ Postal Code
+    /// cAddressName (String)    = Address name (name that may be unique to this address)
+    /// cAddressCompany (String) = Address company (company name that may be unique to this address)
+    /// cCountryName (String)    = Country name
+    /// iAddrFormat (Int)        = Address format type. Maps to the AddressFormat enum.
+    /// FullAddress (String)     = Complete, properly formatted address string
+    /// /// Note: Field names may differ when properties on the business objects relating to field names are set to non-default values.
     /// </remarks>
     public virtual DataSet GetList(string lastName, string firstName) => GetList(lastName, firstName, string.Empty);
 
@@ -389,38 +384,33 @@ public class NameBusinessObject : BusinessObject
     /// <returns>Result DataSet</returns>
     /// <remarks>
     /// The result set of this operation contains 3 tables: Names, CommInfo, and Addresses
-    /// 
-    /// The tables have the following structures:
-    /// 
-    ///    Names
-    ///       Contains all the fields defined in the DefaultNameField property of this business object
-    ///       Default: Names.*
-    ///    
-    ///    CommInfo
-    ///       FK_Name (Guid)     = Foreign key that links to names
-    ///       cType (String)     = CommInfo link type, such as "home phone"
-    ///       cValue (String)    = Value, such as the actual phone number or email address
-    ///       iCommType (Int)    = Maps to the CommInfoType enum and defines the type of information (phone, email,...)
-    ///       PK_CommInfo (Guid) = Primary key of the particular comm info
-    /// 
-    ///    Addresses
-    ///       FK_Name (Guid)           = Foreign key that links to names
-    ///       cType (String)           = Address link type, such as "home" or "office"
-    ///       PK_Address (Guid)        = Address primary key
-    ///       FK_Country (Guid)        = Foreign key of the associated country
-    ///       cStreet (String)         = Street address
-    ///       cStreet2 (String)        = Street address 2
-    ///       cStreet3 (String)        = Street address 3
-    ///       cCity (String)           = City
-    ///       cState (String)          = State/Province
-    ///       cZip (String)            = Zip Code/ Postal Code
-    ///       cAddressName (String)    = Address name (name that may be unique to this address)
-    ///       cAddressCompany (String) = Address company (company name that may be unique to this address)
-    ///       cCountryName (String)    = Country name
-    ///       iAddrFormat (Int)        = Address format type. Maps to the AddressFormat enum.
-    ///       FullAddress (String)     = Complete, properly formatted address string
-    /// 
-    /// Note: Field names may differ when properties on the business objects relating to field names are set to non-default values.
+    /// /// The tables have the following structures:
+    /// ///    Names
+    /// Contains all the fields defined in the DefaultNameField property of this business object
+    /// Default: Names.*
+    /// ///    CommInfo
+    /// FK_Name (Guid)     = Foreign key that links to names
+    /// cType (String)     = CommInfo link type, such as "home phone"
+    /// cValue (String)    = Value, such as the actual phone number or email address
+    /// iCommType (Int)    = Maps to the CommInfoType enum and defines the type of information (phone, email,...)
+    /// PK_CommInfo (Guid) = Primary key of the particular comm info
+    /// ///    Addresses
+    /// FK_Name (Guid)           = Foreign key that links to names
+    /// cType (String)           = Address link type, such as "home" or "office"
+    /// PK_Address (Guid)        = Address primary key
+    /// FK_Country (Guid)        = Foreign key of the associated country
+    /// cStreet (String)         = Street address
+    /// cStreet2 (String)        = Street address 2
+    /// cStreet3 (String)        = Street address 3
+    /// cCity (String)           = City
+    /// cState (String)          = State/Province
+    /// cZip (String)            = Zip Code/ Postal Code
+    /// cAddressName (String)    = Address name (name that may be unique to this address)
+    /// cAddressCompany (String) = Address company (company name that may be unique to this address)
+    /// cCountryName (String)    = Country name
+    /// iAddrFormat (Int)        = Address format type. Maps to the AddressFormat enum.
+    /// FullAddress (String)     = Complete, properly formatted address string
+    /// /// Note: Field names may differ when properties on the business objects relating to field names are set to non-default values.
     /// </remarks>
     public virtual DataSet GetList(string lastName, string firstName, string companyName)
     {
@@ -501,38 +491,33 @@ public class NameBusinessObject : BusinessObject
     /// <returns>Result DataSet</returns>
     /// <remarks>
     /// The result set of this operation contains 3 tables: Names, CommInfo, and Addresses
-    /// 
-    /// The tables have the following structures:
-    /// 
-    ///    Names
-    ///       Contains all the fields defined in the DefaultNameField property of this business object
-    ///       Default: Names.*
-    ///    
-    ///    CommInfo
-    ///       FK_Name (Guid)     = Foreign key that links to names
-    ///       cType (String)     = CommInfo link type, such as "home phone"
-    ///       cValue (String)    = Value, such as the actual phone number or email address
-    ///       iCommType (Int)    = Maps to the CommInfoType enum and defines the type of information (phone, email,...)
-    ///       PK_CommInfo (Guid) = Primary key of the particular comm info
-    /// 
-    ///    Addresses
-    ///       FK_Name (Guid)           = Foreign key that links to names
-    ///       cType (String)           = Address link type, such as "home" or "office"
-    ///       PK_Address (Guid)        = Address primary key
-    ///       FK_Country (Guid)        = Foreign key of the associated country
-    ///       cStreet (String)         = Street address
-    ///       cStreet2 (String)        = Street address 2
-    ///       cStreet3 (String)        = Street address 3
-    ///       cCity (String)           = City
-    ///       cState (String)          = State/Province
-    ///       cZip (String)            = Zip Code/ Postal Code
-    ///       cAddressName (String)    = Address name (name that may be unique to this address)
-    ///       cAddressCompany (String) = Address company (company name that may be unique to this address)
-    ///       cCountryName (String)    = Country name
-    ///       iAddrFormat (Int)        = Address format type. Maps to the AddressFormat enum.
-    ///       FullAddress (String)     = Complete, properly formatted address string
-    /// 
-    /// Note: Field names may differ when properties on the business objects relating to field names are set to non-default values.
+    /// /// The tables have the following structures:
+    /// ///    Names
+    /// Contains all the fields defined in the DefaultNameField property of this business object
+    /// Default: Names.*
+    /// ///    CommInfo
+    /// FK_Name (Guid)     = Foreign key that links to names
+    /// cType (String)     = CommInfo link type, such as "home phone"
+    /// cValue (String)    = Value, such as the actual phone number or email address
+    /// iCommType (Int)    = Maps to the CommInfoType enum and defines the type of information (phone, email,...)
+    /// PK_CommInfo (Guid) = Primary key of the particular comm info
+    /// ///    Addresses
+    /// FK_Name (Guid)           = Foreign key that links to names
+    /// cType (String)           = Address link type, such as "home" or "office"
+    /// PK_Address (Guid)        = Address primary key
+    /// FK_Country (Guid)        = Foreign key of the associated country
+    /// cStreet (String)         = Street address
+    /// cStreet2 (String)        = Street address 2
+    /// cStreet3 (String)        = Street address 3
+    /// cCity (String)           = City
+    /// cState (String)          = State/Province
+    /// cZip (String)            = Zip Code/ Postal Code
+    /// cAddressName (String)    = Address name (name that may be unique to this address)
+    /// cAddressCompany (String) = Address company (company name that may be unique to this address)
+    /// cCountryName (String)    = Country name
+    /// iAddrFormat (Int)        = Address format type. Maps to the AddressFormat enum.
+    /// FullAddress (String)     = Complete, properly formatted address string
+    /// /// Note: Field names may differ when properties on the business objects relating to field names are set to non-default values.
     /// </remarks>
     public virtual DataSet GetList(string lastName, string firstName, string companyName, string commInfo)
     {

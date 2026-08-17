@@ -96,10 +96,8 @@ namespace Milos.Core.Utilities
         /// </remarks>
         /// <example>
         /// using EPS.Utilities;
-        /// 
-        /// // more code here
-        /// 
-        /// Guid myGuid = dataSet.Tables[0].Rows[0]["id"].ToGuidSave();
+        /// /// // more code here
+        /// /// Guid myGuid = dataSet.Tables[0].Rows[0]["id"].ToGuidSave();
         /// </example>
         public static Guid ToGuidSafe(this object value)
         {
@@ -123,10 +121,8 @@ namespace Milos.Core.Utilities
         /// </remarks>
         /// <example>
         /// using EPS.Utilities;
-        /// 
-        /// // more code here
-        /// 
-        /// string myString = dataSet.Tables[0].Rows[0]["name"].ToStringSave();
+        /// /// // more code here
+        /// /// string myString = dataSet.Tables[0].Rows[0]["name"].ToStringSave();
         /// </example>
         public static string ToStringSafe(this object value)
         {
@@ -150,10 +146,8 @@ namespace Milos.Core.Utilities
         /// </remarks>
         /// <example>
         /// using EPS.Utilities;
-        /// 
-        /// // more code here
-        /// 
-        /// bool myBool = dataSet.Tables[0].Rows[0]["active"].ToBooleanSave();
+        /// /// // more code here
+        /// /// bool myBool = dataSet.Tables[0].Rows[0]["active"].ToBooleanSave();
         /// </example>
         public static bool ToBooleanSafe(this object value)
         {
@@ -177,10 +171,8 @@ namespace Milos.Core.Utilities
         /// </remarks>
         /// <example>
         /// using EPS.Utilities;
-        /// 
-        /// // more code here
-        /// 
-        /// DateTime myDate = dataSet.Tables[0].Rows[0]["timeStamp"].ToDateTimeSave();
+        /// /// // more code here
+        /// /// DateTime myDate = dataSet.Tables[0].Rows[0]["timeStamp"].ToDateTimeSave();
         /// </example>
         public static DateTime ToDateTimeSafe(this object value)
         {
@@ -204,10 +196,8 @@ namespace Milos.Core.Utilities
         /// </remarks>
         /// <example>
         /// using EPS.Utilities;
-        /// 
-        /// // more code here
-        /// 
-        /// int myInt = dataSet.Tables[0].Rows[0]["number"].ToIntegerSave();
+        /// /// // more code here
+        /// /// int myInt = dataSet.Tables[0].Rows[0]["number"].ToIntegerSave();
         /// </example>
         public static int ToIntegerSafe(this object value)
         {
@@ -231,10 +221,8 @@ namespace Milos.Core.Utilities
         /// </remarks>
         /// <example>
         /// using EPS.Utilities;
-        /// 
-        /// // more code here
-        /// 
-        /// int myDouble = dataSet.Tables[0].Rows[0]["number"].ToDoubleSave();
+        /// /// // more code here
+        /// /// int myDouble = dataSet.Tables[0].Rows[0]["number"].ToDoubleSave();
         /// </example>
         public static double ToDoubleSafe(this object value)
         {
@@ -258,10 +246,8 @@ namespace Milos.Core.Utilities
         /// </remarks>
         /// <example>
         /// using EPS.Utilities;
-        /// 
-        /// // more code here
-        /// 
-        /// decimal myDec = dataSet.Tables[0].Rows[0]["price"].ToDecimalSave();
+        /// /// // more code here
+        /// /// decimal myDec = dataSet.Tables[0].Rows[0]["price"].ToDecimalSave();
         /// </example>
         public static decimal ToDecimalSafe(this object value)
         {
@@ -285,10 +271,8 @@ namespace Milos.Core.Utilities
         /// </remarks>
         /// <example>
         /// using EPS.Utilities;
-        /// 
-        /// // more code here
-        /// 
-        /// char myChar = dataSet.Tables[0].Rows[0]["character"].ToCharSave();
+        /// /// // more code here
+        /// /// char myChar = dataSet.Tables[0].Rows[0]["character"].ToCharSave();
         /// </example>
         public static char ToCharSafe(this object value)
         {
@@ -312,10 +296,8 @@ namespace Milos.Core.Utilities
         /// </remarks>
         /// <example>
         /// using EPS.Utilities;
-        /// 
-        /// // more code here
-        /// 
-        /// byte[] myBytes = dataSet.Tables[0].Rows[0]["image"].ToByteArraySave();
+        /// /// // more code here
+        /// /// byte[] myBytes = dataSet.Tables[0].Rows[0]["image"].ToByteArraySave();
         /// </example>
         public static byte[] ToByteArraySafe(this object value)
         {

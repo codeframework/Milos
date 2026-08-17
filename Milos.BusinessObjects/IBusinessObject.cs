@@ -1,9 +1,10 @@
-﻿using Milos.Data;
+﻿using System.Threading.Tasks;
+using Milos.Data;
 
 namespace Milos.BusinessObjects;
 
 /// <summary>
-///     This interface defines the very basic interface supported by all business objects
+/// This interface defines the very basic interface supported by all business objects
 /// </summary>
 public interface IBusinessObject : IDisposable
 {
@@ -36,62 +37,149 @@ public interface IBusinessObject : IDisposable
     /// <summary>This method deletes a single row in the master entity based on its primary key.</summary>
     /// <param name="entityKey">Entity PK</param>
     /// <returns>True or False</returns>
+    /// <remarks>Prefer DeleteAsync(string) for new code.</remarks>
     bool Delete(string entityKey);
 
     /// <summary>This method deletes a single row in the master entity based on its primary key.</summary>
     /// <param name="entityKey">Entity PK</param>
     /// <returns>True or False</returns>
+    /// <remarks>Prefer DeleteAsync(Guid) for new code.</remarks>
     bool Delete(Guid entityKey);
 
     /// <summary>This method deletes a single row in the master entity based on its primary key.</summary>
     /// <param name="entityKey">Entity PK</param>
     /// <returns>True of False</returns>
+    /// <remarks>Prefer DeleteAsync(int) for new code.</remarks>
     bool Delete(int entityKey);
+
+    /// <summary>This method deletes a single row in the master entity based on its primary key asynchronously.</summary>
+    /// <param name="entityKey">Entity PK</param>
+    /// <returns>True or False</returns>
+    Task<bool> DeleteAsync(string entityKey);
+
+    /// <summary>This method deletes a single row in the master entity based on its primary key asynchronously.</summary>
+    /// <param name="entityKey">Entity PK</param>
+    /// <returns>True or False</returns>
+    Task<bool> DeleteAsync(Guid entityKey);
+
+    /// <summary>This method deletes a single row in the master entity based on its primary key asynchronously.</summary>
+    /// <param name="entityKey">Entity PK</param>
+    /// <returns>True or False</returns>
+    Task<bool> DeleteAsync(int entityKey);
 
     /// <summary>Saves a DataSet to the back end.</summary>
     /// <param name="masterDataSet">DataSet that is to be saved</param>
     /// <returns>True or False</returns>
+    /// <remarks>Prefer SaveAsync(DataSet) for new code.</remarks>
     bool Save(DataSet masterDataSet);
 
     /// <summary>Saves a business entity to the back end.</summary>
     /// <param name="entity">Business entity that is to be saved</param>
     /// <returns>True or False</returns>
+    /// <remarks>Prefer SaveAsync(IBusinessEntity) for new code.</remarks>
     bool Save(IBusinessEntity entity);
 
     /// <summary>Saves a batch of business entities to the back end.</summary>
     /// <param name="entities">Business entity array that is to be saved</param>
     /// <returns>True or False</returns>
+    /// <remarks>Prefer SaveAsync(IEnumerable{IBusinessEntity}) for new code.</remarks>
     bool Save(IEnumerable<IBusinessEntity> entities);
 
     /// <summary>Saves a batch of DataSets to the back end.</summary>
     /// <param name="masterDataSets">DataSet array that is to be saved</param>
     /// <returns>True or False</returns>
+    /// <remarks>Prefer SaveAsync(IEnumerable{DataSet}) for new code.</remarks>
     bool Save(IEnumerable<DataSet> masterDataSets);
+
+    /// <summary>Saves a DataSet to the back end asynchronously.</summary>
+    /// <param name="masterDataSet">DataSet that is to be saved</param>
+    /// <returns>True or False</returns>
+    Task<bool> SaveAsync(DataSet masterDataSet);
+
+    /// <summary>Saves a business entity to the back end asynchronously.</summary>
+    /// <param name="entity">Business entity that is to be saved</param>
+    /// <returns>True or False</returns>
+    Task<bool> SaveAsync(IBusinessEntity entity);
+
+    /// <summary>Saves a batch of business entities to the back end asynchronously.</summary>
+    /// <param name="entities">Business entity array that is to be saved</param>
+    /// <returns>True or False</returns>
+    Task<bool> SaveAsync(IEnumerable<IBusinessEntity> entities);
+
+    /// <summary>Saves a batch of DataSets to the back end asynchronously.</summary>
+    /// <param name="masterDataSets">DataSet array that is to be saved</param>
+    /// <returns>True or False</returns>
+    Task<bool> SaveAsync(IEnumerable<DataSet> masterDataSets);
 
     /// <summary>Retrieves a list of main entity data.</summary>
     /// <returns>DataSet</returns>
+    /// <remarks>Prefer GetListAsync() for new code.</remarks>
     DataSet GetList();
+
+    /// <summary>Retrieves a list of main entity data asynchronously.</summary>
+    /// <returns>DataSet</returns>
+    Task<DataSet> GetListAsync();
 
     /// <summary>Loads a single record of the main entity into a DataSet and returns it.</summary>
     /// <param name="entityKey">Entity PK</param>
     /// <returns></returns>
+    /// <remarks>Prefer LoadEntityAsync(string) for new code.</remarks>
     DataSet LoadEntity(string entityKey);
 
     /// <summary>
-    ///     Loads a single record of the main entity into a DataSet and returns it.
+    /// Loads a single record of the main entity into a DataSet and returns it.
     /// </summary>
     /// <param name="entityKey">Entity PK</param>
     /// <returns>DataSet</returns>
+    /// <remarks>Prefer LoadEntityAsync(Guid) for new code.</remarks>
     DataSet LoadEntity(Guid entityKey);
 
     /// <summary>Loads a single record of the main entity into a DataSet and returns it.</summary>
     /// <param name="entityKey">Entity PK</param>
     /// <returns>DataSet</returns>
+    /// <remarks>Prefer LoadEntityAsync(int) for new code.</remarks>
     DataSet LoadEntity(int entityKey);
+
+    /// <summary>Loads a single record of the main entity into a DataSet and returns it asynchronously.</summary>
+    /// <param name="entityKey">Entity PK</param>
+    /// <returns>DataSet</returns>
+    Task<DataSet> LoadEntityAsync(string entityKey);
+
+    /// <summary>Loads a single record of the main entity into a DataSet and returns it asynchronously.</summary>
+    /// <param name="entityKey">Entity PK</param>
+    /// <returns>DataSet</returns>
+    Task<DataSet> LoadEntityAsync(Guid entityKey);
+
+    /// <summary>Loads a single record of the main entity into a DataSet and returns it asynchronously.</summary>
+    /// <param name="entityKey">Entity PK</param>
+    /// <returns>DataSet</returns>
+    Task<DataSet> LoadEntityAsync(int entityKey);
+
+    /// <summary>Executes a stored procedure using the current data service and adds the result to an existing DataSet asynchronously.</summary>
+    /// <param name="command">IDbCommand object</param>
+    /// <param name="entityName">Name of the resulting entity in the DataSet</param>
+    /// <param name="existingDataSet">Existing DataSet the data is to be added to</param>
+    /// <returns>DataSet</returns>
+    Task<DataSet> ExecuteStoredProcedureQueryAsync(IDbCommand command, string entityName = "", DataSet existingDataSet = null);
+
+    /// <summary>Executes a stored procedure asynchronously.</summary>
+    /// <param name="command">IDbCommand object</param>
+    /// <returns>True or False</returns>
+    Task<bool> ExecuteStoredProcedureAsync(IDbCommand command);
+
+    /// <summary>Deletes rows after passing verification asynchronously. If verification fails on any of the rows, the whole delete is canceled, and the DataSet gets a BrokenRules table listing the violations.</summary>
+    /// <param name="masterDataSet">The master DataSet.</param>
+    /// <returns>True or False</returns>
+    Task<bool> DeleteWithVerificationAsync(DataSet masterDataSet);
 
     /// <summary>Creates a new instance of the current master entity.</summary>
     /// <returns>DataSet</returns>
+    /// <remarks>Prefer AddNewAsync() for new code.</remarks>
     DataSet AddNew();
+
+    /// <summary>Creates a new instance of the current master entity asynchronously.</summary>
+    /// <returns>DataSet</returns>
+    Task<DataSet> AddNewAsync();
 
     /// <summary>This method creates a new key for integer-key rows.</summary>
     /// <param name="entityName">Name of the entity the key is generated for</param>

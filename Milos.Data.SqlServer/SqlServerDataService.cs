@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
 using Microsoft.Data.SqlClient;
 using System.Data.SqlTypes;
 using System.Globalization;
+using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using CODE.Framework.Fundamentals.Configuration;
@@ -20,6 +23,14 @@ public class SqlDataService : DataService
     /// For internal use only (app role filo stack)
     /// </summary>
     private readonly List<AppRoleStackItem> appRoleStack = [];
+
+    private static readonly ConcurrentDictionary<Type, Dictionary<string, PropertySetter>> PropertySetterCache = new();
+
+    private sealed class PropertySetter
+    {
+        public Action<object, object> Setter { get; set; }
+        public Type PropertyType { get; set; }
+    }
 
     /// <summary>
     /// Defines which data access modes are allowed in the current scenario.
@@ -767,6 +778,7 @@ public class SqlDataService : DataService
     /// Executes an Sql Command and returns the number of affected rows.
     /// </summary>
     /// <param name="command">Sql Command object</param>
+    /// <remarks>Prefer ExecuteNonQueryAsync(IDbCommand) for new code.</remarks>
     public override int ExecuteNonQuery(IDbCommand command)
     {
         if (command is not SqlCommand sqlCommand) throw new UnsupportedCommandObjectException("SqlCommand expected.");
@@ -799,19 +811,14 @@ public class SqlDataService : DataService
     }
 
     /// <summary>
-    /// Executes a query and returns a DataSet
+    /// Executes a data reader based on the provided query (asynchronously)
     /// </summary>
-    /// <param name="command">Sql Command object</param>
-    /// <param name="entityName">Entity Name (name of the table added to the DataSet)</param>
-    /// <param name="existingDataSet">Existing data set to add the data to</param>
-    /// <returns>DataSet</returns>
-    /// <exception>Throws ArgumentNullException if null existingDataSet is passed.</exception>
-    public override async Task<DataSet> ExecuteQueryAsync(IDbCommand command, string entityName = "", DataSet existingDataSet = null)
+    /// <param name="command">Database Command</param>
+    /// <returns>Data Reader</returns>
+    public override IDataReader ExecuteReader(IDbCommand command)
     {
         // We grab the command object and verify that it is an SQLCommand
         if (command is not SqlCommand sqlCommand) throw new UnsupportedCommandObjectException("SqlCommand expected.");
-
-        existingDataSet ??= new DataSet {Locale = CultureInfo.InvariantCulture};
 
         // We check whether the execution method of this command object conforms to allowable settings
         if (AllowedDataMethod != AllowedDataAccessMethod.All)
@@ -828,27 +835,111 @@ public class SqlDataService : DataService
         // This is an SqlCommand object. We are ready to go.
         PrepareCommandObject(sqlCommand);
 
-        // Since there is no intrinsic way of filling a DataSet async, we do it manually
-        return await Task.Run(() =>
-                              {
-                                  using (var sqlDataAdapter = new SqlDataAdapter(sqlCommand))
-                                  {
-                                      if (AutoRetrieveDatabaseSchema) sqlDataAdapter.MissingSchemaAction = MissingSchemaAction.AddWithKey;
-                                      if (!string.IsNullOrEmpty(entityName))
-                                          sqlDataAdapter.Fill(existingDataSet, entityName);
-                                      else
-                                          sqlDataAdapter.Fill(existingDataSet);
-                                  }
-
-                                  // We fire an event
-                                  RaiseOnQueryCompleteEvent(existingDataSet, sqlCommand, entityName);
-
-                                  // We do not want to keep the connection attached to the command, since we do not know how long the command will stay around...
-                                  CleanCommandObject(sqlCommand);
-                                  CloseConnection();
-                                  return existingDataSet;
-                              });
+        // Since there is no intrinsic way of filling a DataSet async, we use an async reader and fill manually
+        return sqlCommand.ExecuteReader();
     }
+
+    /// <summary>
+    /// Executes a data reader based on the provided query (asynchronously)
+    /// </summary>
+    /// <param name="command">Database Command</param>
+    /// <returns>Data Reader</returns>
+    public override async Task<IDataReader> ExecuteReaderAsync(IDbCommand command)
+    {
+        // We grab the command object and verify that it is an SQLCommand
+        if (command is not SqlCommand sqlCommand) throw new UnsupportedCommandObjectException("SqlCommand expected.");
+
+        // We check whether the execution method of this command object conforms to allowable settings
+        if (AllowedDataMethod != AllowedDataAccessMethod.All)
+        {
+            // There are special settings! We need to verify things are OK!
+            if (command.CommandType == CommandType.StoredProcedure && AllowedDataMethod != AllowedDataAccessMethod.StoredProceduresOnly)
+                // The command type is a stored proc, but stored procedures are not allowed!
+                throw new UnsupportedProcessMethodException("Stored Procedures are not a valid data access method based on the current system configuration!");
+            if (command.CommandType == CommandType.Text && AllowedDataMethod != AllowedDataAccessMethod.IndividualCommandsOnly)
+                // The command type is a text command, but individual text commands are not allowed!
+                throw new UnsupportedProcessMethodException("Individual text commands are not a valid data access method based on the current system configuration!");
+        }
+
+        // This is an SqlCommand object. We are ready to go.
+        PrepareCommandObject(sqlCommand);
+
+        // Since there is no intrinsic way of filling a DataSet async, we use an async reader and fill manually
+        return await sqlCommand.ExecuteReaderAsync();
+    }
+
+    public async Task<List<TItem>> ExecuteReaderAsync<TItem>(IDbCommand command) where TItem : new()
+    {
+        var result = new List<TItem>();
+        using var reader = await ExecuteReaderAsync(command);
+        if (reader == null) return result;
+
+        var setters = GetPropertySetters(typeof(TItem));
+        var mappedColumns = new List<(int Ordinal, PropertySetter Setter)>();
+        for (var columnIndex = 0; columnIndex < reader.FieldCount; columnIndex++)
+        {
+            var columnName = reader.GetName(columnIndex);
+            // TODO: Support mapping
+            if (setters.TryGetValue(columnName, out var setter))
+                mappedColumns.Add((columnIndex, setter));
+        }
+
+        while (reader.Read())
+        {
+            var record = new TItem();
+
+            foreach (var mappedColumn in mappedColumns)
+            {
+                var value = reader.GetValue(mappedColumn.Ordinal);
+                if (value == DBNull.Value)
+                {
+                    if (!mappedColumn.Setter.PropertyType.IsValueType || Nullable.GetUnderlyingType(mappedColumn.Setter.PropertyType) != null)
+                        mappedColumn.Setter.Setter(record, null);
+                    continue;
+                }
+
+                var targetType = Nullable.GetUnderlyingType(mappedColumn.Setter.PropertyType) ?? mappedColumn.Setter.PropertyType;
+                if (value.GetType() != targetType)
+                    value = Convert.ChangeType(value, targetType, CultureInfo.InvariantCulture);
+
+                mappedColumn.Setter.Setter(record, value);
+            }
+
+            result.Add(record);
+        }
+
+        return result;
+    }
+
+    private static Dictionary<string, PropertySetter> GetPropertySetters(Type targetType) =>
+        PropertySetterCache.GetOrAdd(targetType, static type =>
+        {
+            var setters = new Dictionary<string, PropertySetter>(StringComparer.OrdinalIgnoreCase);
+            var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+            foreach (var property in properties)
+            {
+                if (!property.CanWrite) continue;
+                var setMethod = property.GetSetMethod();
+                if (setMethod == null) continue;
+
+                var targetParameter = Expression.Parameter(typeof(object), "target");
+                var valueParameter = Expression.Parameter(typeof(object), "value");
+
+                var targetCast = Expression.Convert(targetParameter, type);
+                var valueCast = Expression.Convert(valueParameter, property.PropertyType);
+                var body = Expression.Call(targetCast, setMethod, valueCast);
+
+                var action = Expression.Lambda<Action<object, object>>(body, targetParameter, valueParameter).Compile();
+                setters[property.Name] = new PropertySetter
+                {
+                    Setter = action,
+                    PropertyType = property.PropertyType
+                };
+            }
+
+            return setters;
+        });
 
     /// <summary>
     /// Executes a query and returns a DataSet
@@ -858,13 +949,108 @@ public class SqlDataService : DataService
     /// <param name="existingDataSet">Existing data set to add the data to</param>
     /// <returns>DataSet</returns>
     /// <exception>Throws ArgumentNullException if null existingDataSet is passed.</exception>
+    public override async Task<DataSet> ExecuteQueryAsync(IDbCommand command, string entityName = "", DataSet existingDataSet = null)
+    {
+        // We grab the command object and verify that it is an SQLCommand
+        if (command is not SqlCommand sqlCommand) throw new UnsupportedCommandObjectException("SqlCommand expected.");
+
+        existingDataSet ??= new DataSet { Locale = CultureInfo.InvariantCulture };
+
+        // We check whether the execution method of this command object conforms to allowable settings
+        if (AllowedDataMethod != AllowedDataAccessMethod.All)
+        {
+            // There are special settings! We need to verify things are OK!
+            if (command.CommandType == CommandType.StoredProcedure && AllowedDataMethod != AllowedDataAccessMethod.StoredProceduresOnly)
+                // The command type is a stored proc, but stored procedures are not allowed!
+                throw new UnsupportedProcessMethodException("Stored Procedures are not a valid data access method based on the current system configuration!");
+            if (command.CommandType == CommandType.Text && AllowedDataMethod != AllowedDataAccessMethod.IndividualCommandsOnly)
+                // The command type is a text command, but individual text commands are not allowed!
+                throw new UnsupportedProcessMethodException("Individual text commands are not a valid data access method based on the current system configuration!");
+        }
+
+        // This is an SqlCommand object. We are ready to go.
+        PrepareCommandObject(sqlCommand);
+
+        // Since there is no intrinsic way of filling a DataSet async, we use an async reader and fill manually
+        using (var reader = await sqlCommand.ExecuteReaderAsync())
+        {
+            var resultCounter = 0;
+            do
+            {
+                var tableName = !string.IsNullOrEmpty(entityName)
+                    ? resultCounter == 0 ? entityName : entityName + resultCounter
+                    : resultCounter == 0 ? "Table" : "Table" + resultCounter;
+
+                var table = existingDataSet.Tables.Contains(tableName)
+                    ? existingDataSet.Tables[tableName]
+                    : existingDataSet.Tables.Add(tableName);
+
+                if (table.Columns.Count == 0)
+                {
+                    var schemaTable = reader.GetSchemaTable();
+                    var keyColumns = new List<DataColumn>();
+
+                    for (var columnIndex = 0; columnIndex < reader.FieldCount; columnIndex++)
+                    {
+                        var columnName = reader.GetName(columnIndex);
+                        if (string.IsNullOrEmpty(columnName)) columnName = "Column" + (columnIndex + 1);
+                        if (table.Columns.Contains(columnName)) columnName = columnName + "_" + columnIndex;
+
+                        var column = new DataColumn(columnName, reader.GetFieldType(columnIndex));
+
+                        if (schemaTable?.Rows.Count > columnIndex)
+                        {
+                            var schemaRow = schemaTable.Rows[columnIndex];
+
+                            if (schemaTable.Columns.Contains("AllowDBNull") && schemaRow["AllowDBNull"] != DBNull.Value)
+                                column.AllowDBNull = (bool)schemaRow["AllowDBNull"];
+
+                            if (AutoRetrieveDatabaseSchema && schemaTable.Columns.Contains("IsKey") && schemaRow["IsKey"] != DBNull.Value && (bool)schemaRow["IsKey"])
+                                keyColumns.Add(column);
+                        }
+
+                        table.Columns.Add(column);
+                    }
+
+                    if (AutoRetrieveDatabaseSchema && keyColumns.Count > 0) table.PrimaryKey = keyColumns.ToArray();
+                }
+
+                while (await reader.ReadAsync())
+                {
+                    var row = table.NewRow();
+                    for (var columnIndex = 0; columnIndex < reader.FieldCount; columnIndex++)
+                        row[columnIndex] = await reader.IsDBNullAsync(columnIndex) ? DBNull.Value : reader.GetValue(columnIndex);
+                    table.Rows.Add(row);
+                }
+
+                resultCounter++;
+            } while (await reader.NextResultAsync());
+        }
+
+        // We fire an event
+        RaiseOnQueryCompleteEvent(existingDataSet, sqlCommand, entityName);
+
+        // We do not want to keep the connection attached to the command, since we do not know how long the command will stay around...
+        CleanCommandObject(sqlCommand);
+        CloseConnection();
+        return existingDataSet;
+    }
+
+    /// <summary>
+    /// Executes a query and returns a DataSet
+    /// </summary>
+    /// <param name="command">Sql Command object</param>
+    /// <param name="entityName">Entity Name (name of the table added to the DataSet)</param>
+    /// <param name="existingDataSet">Existing data set to add the data to</param>
+    /// <returns>DataSet</returns>
+    /// <remarks>Prefer ExecuteQueryAsync(IDbCommand, string, DataSet) for new code.</remarks>
+    /// <exception>Throws ArgumentNullException if null existingDataSet is passed.</exception>
     public override DataSet ExecuteQuery(IDbCommand command, string entityName = "", DataSet existingDataSet = null)
     {
         // We grab the command object and verify that it is an SQLCommand
-        if (!(command is SqlCommand sqlCommand)) throw new UnsupportedCommandObjectException("SqlCommand expected.");
+        if (command is not SqlCommand sqlCommand) throw new UnsupportedCommandObjectException("SqlCommand expected.");
 
-        if (existingDataSet == null)
-            existingDataSet = new DataSet {Locale = CultureInfo.InvariantCulture};
+        existingDataSet ??= new DataSet {Locale = CultureInfo.InvariantCulture};
 
         // We check whether the execution method of this command object conforms to allowable settings
         if (AllowedDataMethod != AllowedDataAccessMethod.All)
@@ -938,6 +1124,11 @@ public class SqlDataService : DataService
         }
     }
 
+    /// <summary>
+    /// Executes a query and returns a single value.
+    /// </summary>
+    /// <param name="command">Sql Command object</param>
+    /// <remarks>Prefer ExecuteScalarAsync(IDbCommand) for new code.</remarks>
     public override object ExecuteScalar(IDbCommand command)
     {
         // We grab the command object and verify that it is an SQLCommand
@@ -1016,6 +1207,11 @@ public class SqlDataService : DataService
         }
     }
 
+    /// <summary>
+    /// Executes a query and returns a single value.
+    /// </summary>
+    /// <param name="command">Sql Command object</param>
+    /// <remarks>Prefer ExecuteScalarAsync&lt;T&gt;(IDbCommand) for new code.</remarks>
     public override T ExecuteScalar<T>(IDbCommand command)
     {
         // We grab the command object and verify that it is an SQLCommand
@@ -1104,6 +1300,13 @@ public class SqlDataService : DataService
                               });
     }
 
+    /// <summary>
+    /// Executes a stored procedure and adds the result to an existing DataSet.
+    /// </summary>
+    /// <param name="command">Sql Command object</param>
+    /// <param name="entityName">Name of the resulting entity in the DataSet</param>
+    /// <param name="existingDataSet">Existing data set the data is to be added to</param>
+    /// <remarks>Prefer ExecuteStoredProcedureQueryAsync(IDbCommand, string, DataSet) for new code.</remarks>
     public override DataSet ExecuteStoredProcedureQuery(IDbCommand command, string entityName = "", DataSet existingDataSet = null)
     {
         // We grab the command object and verify that it is an SQLCommand
@@ -1195,6 +1398,7 @@ public class SqlDataService : DataService
     /// </summary>
     /// <param name="command">Sql Command object</param>
     /// <returns>True or False</returns>
+    /// <remarks>Prefer ExecuteStoredProcedureAsync(IDbCommand) for new code.</remarks>
     public override bool ExecuteStoredProcedure(IDbCommand command)
     {
         // We grab the command object and verify that it is an SQLCommand
@@ -1379,14 +1583,10 @@ public class SqlDataService : DataService
     /// <param name="updateMethod">Method used to update the database (commands, stored procedures,...)</param>
     /// <returns>IDbCommand object that can sub-sequentially be executed against a database</returns>
     /// <remarks>Whenever this method is called in Stored Procedure mode, there needs to be a Stored Procedure on the server that follows the following naming convention:
-    /// 
-    ///   [Prefix]del[TableName]
-    ///   
-    /// So in a scenario where the default prefix is used and the table name is Customer, the SP needs to have the following name:
-    /// 
-    ///   milos_delCustomer
-    ///   
-    /// The SP needs to accept a single parameter, which defines the primary key value of the row that is to be deleted. The name of the parameter needs to be the same as the primary key field. (If the PK field is named pk_customer, the parameter name is @pk_customer).</remarks>
+    /// ///   [Prefix]del[TableName]
+    /// /// So in a scenario where the default prefix is used and the table name is Customer, the SP needs to have the following name:
+    /// ///   milos_delCustomer
+    /// /// The SP needs to accept a single parameter, which defines the primary key value of the row that is to be deleted. The name of the parameter needs to be the same as the primary key field. (If the PK field is named pk_customer, the parameter name is @pk_customer).</remarks>
     /// <exception>
     /// Throws ArgumentNullException if null tableName is passed.
     /// Throws ArgumentNullException if null primaryKeyFieldName is passed.
@@ -1421,14 +1621,10 @@ public class SqlDataService : DataService
     /// <param name="selectMethod">Select method (such as stored procedure or select commands)</param>
     /// <returns>IDbCommand object</returns>
     /// <remarks>Whenever this method is called in Stored Procedure mode, there needs to be a Stored Procedure on the server that follows the following naming convention:
-    /// 
-    ///   [Prefix]new[TableName]
-    ///   
-    /// So in a scenario where the default prefix is used and the table name is Customer, the SP needs to have the following name:
-    /// 
-    ///   milos_newCustomer
-    ///   
-    /// The SP accepts no parameters.</remarks>
+    /// ///   [Prefix]new[TableName]
+    /// /// So in a scenario where the default prefix is used and the table name is Customer, the SP needs to have the following name:
+    /// ///   milos_newCustomer
+    /// /// The SP accepts no parameters.</remarks>
     /// <exception>
     /// Throws ArgumentNullException if null tableName is passed.
     /// Throws ArgumentException if empty tableName is passed.
@@ -1442,7 +1638,7 @@ public class SqlDataService : DataService
             case DataRowProcessMethod.Default:
             case DataRowProcessMethod.IndividualCommands:
                 var comSelect = NewCommandObject();
-                comSelect.CommandText = "SET FMTONLY ON;SELECT " + fieldList + " FROM " + tableName + ";SET FMTONLY OFF";
+                comSelect.CommandText = $"SET FMTONLY ON;SELECT {fieldList} FROM {tableName};SET FMTONLY OFF";
                 return comSelect;
             case DataRowProcessMethod.StoredProcedures:
                 var comNew = NewCommandObject();
@@ -1464,14 +1660,10 @@ public class SqlDataService : DataService
     /// <param name="selectMethod">Select method (such as stored procedure or select commands)</param>
     /// <returns>IDbCommand object</returns>
     /// <remarks>Whenever this data service runs in Stored Procedure mode, it will automatically look for a Stored Procedure that matches the following naming convention:
-    /// 
-    ///   [prefix]get[Tablename]AllRecords
-    /// 
-    /// For instance, if the prefix is the default prefix ("milos_"), and the table name is Customer, then the resulting stored procedure the system would use is:
-    /// 
-    ///   milos_getCustomerAlLRecords
-    /// 
-    /// Note that the list of fields as well as the sort order is defined by the stored procedure, and not by the fields passed to this method.
+    /// ///   [prefix]get[Tablename]AllRecords
+    /// /// For instance, if the prefix is the default prefix ("milos_"), and the table name is Customer, then the resulting stored procedure the system would use is:
+    /// ///   milos_getCustomerAlLRecords
+    /// /// Note that the list of fields as well as the sort order is defined by the stored procedure, and not by the fields passed to this method.
     /// </remarks>
     /// <exception>
     /// Throws ArgumentNullException if null tableName is passed.

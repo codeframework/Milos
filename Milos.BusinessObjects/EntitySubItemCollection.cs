@@ -172,14 +172,14 @@ public abstract class EntitySubItemCollection : IEntitySubItemCollection, IFilte
     public virtual IEntitySubItemCollectionItem this[Guid key] => GetItemByKey(key);
 
     /// <summary>
-    ///     This method instantiated the appropriate item collection object
-    ///     It can be overwritten in subclasses
+    /// This method instantiated the appropriate item collection object
+    /// It can be overwritten in subclasses
     /// </summary>
     /// <returns>Collection item object</returns>
     public virtual IEntitySubItemCollectionItem GetItemObject() => null;
 
     /// <summary>
-    ///     Implementation of IEnumerable, in particular GetEnumerator()
+    /// Implementation of IEnumerable, in particular GetEnumerator()
     /// </summary>
     /// <returns>Entity Item Enumerator</returns>
     public IEnumerator GetEnumerator()
@@ -189,11 +189,11 @@ public abstract class EntitySubItemCollection : IEntitySubItemCollection, IFilte
     }
 
     /// <summary>
-    ///     Adds the <see cref="T:System.ComponentModel.PropertyDescriptor" /> to the indexes used for searching.
+    /// Adds the <see cref="T:System.ComponentModel.PropertyDescriptor" /> to the indexes used for searching.
     /// </summary>
     /// <param name="property">
-    ///     The <see cref="T:System.ComponentModel.PropertyDescriptor" /> to add to the indexes used for
-    ///     searching.
+    /// The <see cref="T:System.ComponentModel.PropertyDescriptor" /> to add to the indexes used for
+    /// searching.
     /// </param>
     void IBindingList.AddIndex(PropertyDescriptor property)
     {
@@ -201,48 +201,48 @@ public abstract class EntitySubItemCollection : IEntitySubItemCollection, IFilte
     }
 
     /// <summary>
-    ///     Adds a new item to the list.
+    /// Adds a new item to the list.
     /// </summary>
     /// <returns>The item added to the list.</returns>
     /// <exception cref="T:System.NotSupportedException">
-    ///     <see cref="P:System.ComponentModel.IBindingList.AllowNew" /> is false.
+    /// <see cref="P:System.ComponentModel.IBindingList.AllowNew" /> is false.
     /// </exception>
     object IBindingList.AddNew() => Add();
 
     /// <summary>
-    ///     Gets whether you can update items in the list.
+    /// Gets whether you can update items in the list.
     /// </summary>
     /// <value></value>
     /// <returns>true if you can update the items in the list; otherwise, false.</returns>
     bool IBindingList.AllowEdit => true;
 
     /// <summary>
-    ///     Gets whether you can add items to the list using <see cref="M:System.ComponentModel.IBindingList.AddNew" />.
+    /// Gets whether you can add items to the list using <see cref="M:System.ComponentModel.IBindingList.AddNew" />.
     /// </summary>
     /// <value></value>
     /// <returns>
-    ///     true if you can add items to the list using <see cref="M:System.ComponentModel.IBindingList.AddNew" />;
-    ///     otherwise, false.
+    /// true if you can add items to the list using <see cref="M:System.ComponentModel.IBindingList.AddNew" />;
+    /// otherwise, false.
     /// </returns>
     bool IBindingList.AllowNew => true;
 
     /// <summary>
-    ///     Gets whether you can remove items from the list, using
-    ///     <see cref="M:System.Collections.IList.Remove(System.Object)" /> or
-    ///     <see cref="M:System.Collections.IList.RemoveAt(System.Int32)" />.
+    /// Gets whether you can remove items from the list, using
+    /// <see cref="M:System.Collections.IList.Remove(System.Object)" /> or
+    /// <see cref="M:System.Collections.IList.RemoveAt(System.Int32)" />.
     /// </summary>
     /// <value></value>
     /// <returns>true if you can remove items from the list; otherwise, false.</returns>
     bool IBindingList.AllowRemove => true;
 
     /// <summary>
-    ///     Sorts the list based on a <see cref="T:System.ComponentModel.PropertyDescriptor" /> and a
-    ///     <see cref="T:System.ComponentModel.ListSortDirection" />.
+    /// Sorts the list based on a <see cref="T:System.ComponentModel.PropertyDescriptor" /> and a
+    /// <see cref="T:System.ComponentModel.ListSortDirection" />.
     /// </summary>
     /// <param name="property">The <see cref="T:System.ComponentModel.PropertyDescriptor" /> to sort by.</param>
     /// <param name="direction">One of the <see cref="T:System.ComponentModel.ListSortDirection" /> values.</param>
     /// <exception cref="T:System.NotSupportedException">
-    ///     <see cref="P:System.ComponentModel.IBindingList.SupportsSorting" /> is false.
+    /// <see cref="P:System.ComponentModel.IBindingList.SupportsSorting" /> is false.
     /// </exception>
     void IBindingList.ApplySort(PropertyDescriptor property, ListSortDirection direction)
     {
@@ -263,36 +263,36 @@ public abstract class EntitySubItemCollection : IEntitySubItemCollection, IFilte
     }
 
     /// <summary>
-    ///     Returns the index of the row that has the given <see cref="T:System.ComponentModel.PropertyDescriptor" />.
+    /// Returns the index of the row that has the given <see cref="T:System.ComponentModel.PropertyDescriptor" />.
     /// </summary>
     /// <param name="property">The <see cref="T:System.ComponentModel.PropertyDescriptor" /> to search on.</param>
     /// <param name="key">The value of the <paramref name="property" /> parameter to search for.</param>
     /// <returns>
-    ///     The index of the row that has the given <see cref="T:System.ComponentModel.PropertyDescriptor" />.
+    /// The index of the row that has the given <see cref="T:System.ComponentModel.PropertyDescriptor" />.
     /// </returns>
     /// <exception cref="T:System.NotSupportedException">
-    ///     <see cref="P:System.ComponentModel.IBindingList.SupportsSearching" /> is false.
+    /// <see cref="P:System.ComponentModel.IBindingList.SupportsSearching" /> is false.
     /// </exception>
     int IBindingList.Find(PropertyDescriptor property, object key) => -1;
 
     /// <summary>
-    ///     Gets whether the items in the list are sorted.
+    /// Gets whether the items in the list are sorted.
     /// </summary>
     /// <value></value>
     /// <returns>
-    ///     true if
-    ///     <see
-    ///         cref="M:System.ComponentModel.IBindingList.ApplySort(System.ComponentModel.PropertyDescriptor,System.ComponentModel.ListSortDirection)" />
-    ///     has been called and <see cref="M:System.ComponentModel.IBindingList.RemoveSort" /> has not been called; otherwise,
-    ///     false.
+    /// true if
+    /// <see
+    /// cref="M:System.ComponentModel.IBindingList.ApplySort(System.ComponentModel.PropertyDescriptor,System.ComponentModel.ListSortDirection)" />
+    /// has been called and <see cref="M:System.ComponentModel.IBindingList.RemoveSort" /> has not been called; otherwise,
+    /// false.
     /// </returns>
     /// <exception cref="T:System.NotSupportedException">
-    ///     <see cref="P:System.ComponentModel.IBindingList.SupportsSorting" /> is false.
+    /// <see cref="P:System.ComponentModel.IBindingList.SupportsSorting" /> is false.
     /// </exception>
     bool IBindingList.IsSorted => !string.IsNullOrEmpty(sortBy);
 
     /// <summary>
-    ///     Occurs when the list changes or an item in the list changes.
+    /// Occurs when the list changes or an item in the list changes.
     /// </summary>
     event ListChangedEventHandler IBindingList.ListChanged
     {
@@ -307,11 +307,11 @@ public abstract class EntitySubItemCollection : IEntitySubItemCollection, IFilte
     }
 
     /// <summary>
-    ///     Removes the <see cref="T:System.ComponentModel.PropertyDescriptor" /> from the indexes used for searching.
+    /// Removes the <see cref="T:System.ComponentModel.PropertyDescriptor" /> from the indexes used for searching.
     /// </summary>
     /// <param name="property">
-    ///     The <see cref="T:System.ComponentModel.PropertyDescriptor" /> to remove from the indexes used
-    ///     for searching.
+    /// The <see cref="T:System.ComponentModel.PropertyDescriptor" /> to remove from the indexes used
+    /// for searching.
     /// </param>
     void IBindingList.RemoveIndex(PropertyDescriptor property)
     {
@@ -319,23 +319,23 @@ public abstract class EntitySubItemCollection : IEntitySubItemCollection, IFilte
     }
 
     /// <summary>
-    ///     Removes any sort applied using
-    ///     <see
-    ///         cref="M:System.ComponentModel.IBindingList.ApplySort(System.ComponentModel.PropertyDescriptor,System.ComponentModel.ListSortDirection)" />
-    ///     .
+    /// Removes any sort applied using
+    /// <see
+    /// cref="M:System.ComponentModel.IBindingList.ApplySort(System.ComponentModel.PropertyDescriptor,System.ComponentModel.ListSortDirection)" />
+    /// .
     /// </summary>
     /// <exception cref="T:System.NotSupportedException">
-    ///     <see cref="P:System.ComponentModel.IBindingList.SupportsSorting" /> is false.
+    /// <see cref="P:System.ComponentModel.IBindingList.SupportsSorting" /> is false.
     /// </exception>
     void IBindingList.RemoveSort() => SortBy = string.Empty;
 
     /// <summary>
-    ///     Gets the direction of the sort.
+    /// Gets the direction of the sort.
     /// </summary>
     /// <value></value>
     /// <returns>One of the <see cref="T:System.ComponentModel.ListSortDirection" /> values.</returns>
     /// <exception cref="T:System.NotSupportedException">
-    ///     <see cref="P:System.ComponentModel.IBindingList.SupportsSorting" /> is false.
+    /// <see cref="P:System.ComponentModel.IBindingList.SupportsSorting" /> is false.
     /// </exception>
     ListSortDirection IBindingList.SortDirection
     {
@@ -357,12 +357,12 @@ public abstract class EntitySubItemCollection : IEntitySubItemCollection, IFilte
     }
 
     /// <summary>
-    ///     Gets the <see cref="T:System.ComponentModel.PropertyDescriptor" /> that is being used for sorting.
+    /// Gets the <see cref="T:System.ComponentModel.PropertyDescriptor" /> that is being used for sorting.
     /// </summary>
     /// <value></value>
     /// <returns>The <see cref="T:System.ComponentModel.PropertyDescriptor" /> that is being used for sorting.</returns>
     /// <exception cref="T:System.NotSupportedException">
-    ///     <see cref="P:System.ComponentModel.IBindingList.SupportsSorting" /> is false.
+    /// <see cref="P:System.ComponentModel.IBindingList.SupportsSorting" /> is false.
     /// </exception>
     PropertyDescriptor IBindingList.SortProperty
     {
@@ -381,46 +381,46 @@ public abstract class EntitySubItemCollection : IEntitySubItemCollection, IFilte
     }
 
     /// <summary>
-    ///     Gets whether a <see cref="E:System.ComponentModel.IBindingList.ListChanged" /> event is raised when the list
-    ///     changes or an item in the list changes.
+    /// Gets whether a <see cref="E:System.ComponentModel.IBindingList.ListChanged" /> event is raised when the list
+    /// changes or an item in the list changes.
     /// </summary>
     /// <value></value>
     /// <returns>
-    ///     true if a <see cref="E:System.ComponentModel.IBindingList.ListChanged" /> event is raised when the list
-    ///     changes or when an item changes; otherwise, false.
+    /// true if a <see cref="E:System.ComponentModel.IBindingList.ListChanged" /> event is raised when the list
+    /// changes or when an item changes; otherwise, false.
     /// </returns>
     bool IBindingList.SupportsChangeNotification => true;
 
     /// <summary>
-    ///     Gets whether the list supports searching using the
-    ///     <see cref="M:System.ComponentModel.IBindingList.Find(System.ComponentModel.PropertyDescriptor,System.Object)" />
-    ///     method.
+    /// Gets whether the list supports searching using the
+    /// <see cref="M:System.ComponentModel.IBindingList.Find(System.ComponentModel.PropertyDescriptor,System.Object)" />
+    /// method.
     /// </summary>
     /// <value></value>
     /// <returns>
-    ///     true if the list supports searching using the
-    ///     <see cref="M:System.ComponentModel.IBindingList.Find(System.ComponentModel.PropertyDescriptor,System.Object)" />
-    ///     method; otherwise, false.
+    /// true if the list supports searching using the
+    /// <see cref="M:System.ComponentModel.IBindingList.Find(System.ComponentModel.PropertyDescriptor,System.Object)" />
+    /// method; otherwise, false.
     /// </returns>
     bool IBindingList.SupportsSearching => false;
 
     /// <summary>
-    ///     Gets whether the list supports sorting.
+    /// Gets whether the list supports sorting.
     /// </summary>
     /// <value></value>
     /// <returns>true if the list supports sorting; otherwise, false.</returns>
     bool IBindingList.SupportsSorting => true;
 
     /// <summary>
-    ///     Adds an item to the <see cref="T:System.Collections.IList" />.
+    /// Adds an item to the <see cref="T:System.Collections.IList" />.
     /// </summary>
     /// <param name="value">The <see cref="T:System.Object" /> to add to the <see cref="T:System.Collections.IList" />.</param>
     /// <returns>
-    ///     The position into which the new element was inserted.
+    /// The position into which the new element was inserted.
     /// </returns>
     /// <exception cref="T:System.NotSupportedException">
-    ///     The <see cref="T:System.Collections.IList" /> is read-only.-or- The
-    ///     <see cref="T:System.Collections.IList" /> has a fixed size.
+    /// The <see cref="T:System.Collections.IList" /> is read-only.-or- The
+    /// <see cref="T:System.Collections.IList" /> has a fixed size.
     /// </exception>
     int IList.Add(object value)
     {
@@ -428,7 +428,7 @@ public abstract class EntitySubItemCollection : IEntitySubItemCollection, IFilte
     }
 
     /// <summary>
-    ///     Removes all items from the <see cref="T:System.Collections.IList" />.
+    /// Removes all items from the <see cref="T:System.Collections.IList" />.
     /// </summary>
     /// <exception cref="T:System.NotSupportedException">The <see cref="T:System.Collections.IList" /> is read-only. </exception>
     void IList.Clear()
@@ -438,12 +438,12 @@ public abstract class EntitySubItemCollection : IEntitySubItemCollection, IFilte
     }
 
     /// <summary>
-    ///     Determines whether the <see cref="T:System.Collections.IList" /> contains a specific value.
+    /// Determines whether the <see cref="T:System.Collections.IList" /> contains a specific value.
     /// </summary>
     /// <param name="value">The <see cref="T:System.Object" /> to locate in the <see cref="T:System.Collections.IList" />.</param>
     /// <returns>
-    ///     true if the <see cref="T:System.Object" /> is found in the <see cref="T:System.Collections.IList" />; otherwise,
-    ///     false.
+    /// true if the <see cref="T:System.Object" /> is found in the <see cref="T:System.Collections.IList" />; otherwise,
+    /// false.
     /// </returns>
     bool IList.Contains(object value)
     {
@@ -471,11 +471,11 @@ public abstract class EntitySubItemCollection : IEntitySubItemCollection, IFilte
     }
 
     /// <summary>
-    ///     Determines the index of a specific item in the <see cref="T:System.Collections.IList" />.
+    /// Determines the index of a specific item in the <see cref="T:System.Collections.IList" />.
     /// </summary>
     /// <param name="value">The <see cref="T:System.Object" /> to locate in the <see cref="T:System.Collections.IList" />.</param>
     /// <returns>
-    ///     The index of <paramref name="value" /> if found in the list; otherwise, -1.
+    /// The index of <paramref name="value" /> if found in the list; otherwise, -1.
     /// </returns>
     int IList.IndexOf(object value)
     {
@@ -507,43 +507,43 @@ public abstract class EntitySubItemCollection : IEntitySubItemCollection, IFilte
     }
 
     /// <summary>
-    ///     Inserts an item to the <see cref="T:System.Collections.IList" /> at the specified index.
+    /// Inserts an item to the <see cref="T:System.Collections.IList" /> at the specified index.
     /// </summary>
     /// <param name="index"></param>
     /// <param name="value">The <see cref="T:System.Object" /> to insert into the <see cref="T:System.Collections.IList" />.</param>
     /// <exception cref="T:System.ArgumentOutOfRangeException">
-    ///     <paramref name="index" /> is not a valid index in the <see cref="T:System.Collections.IList" />.
+    /// <paramref name="index" /> is not a valid index in the <see cref="T:System.Collections.IList" />.
     /// </exception>
     /// <exception cref="T:System.NotSupportedException">
-    ///     The <see cref="T:System.Collections.IList" /> is read-only.-or- The
-    ///     <see cref="T:System.Collections.IList" /> has a fixed size.
+    /// The <see cref="T:System.Collections.IList" /> is read-only.-or- The
+    /// <see cref="T:System.Collections.IList" /> has a fixed size.
     /// </exception>
     /// <exception cref="T:System.NullReferenceException">
-    ///     <paramref name="value" /> is null reference in the <see cref="T:System.Collections.IList" />.
+    /// <paramref name="value" /> is null reference in the <see cref="T:System.Collections.IList" />.
     /// </exception>
     void IList.Insert(int index, object value) => throw new OperationNotSupportedByEntityException();
 
     /// <summary>
-    ///     Gets a value indicating whether the <see cref="T:System.Collections.IList" /> has a fixed size.
+    /// Gets a value indicating whether the <see cref="T:System.Collections.IList" /> has a fixed size.
     /// </summary>
     /// <value></value>
     /// <returns>true if the <see cref="T:System.Collections.IList" /> has a fixed size; otherwise, false.</returns>
     bool IList.IsFixedSize => false;
 
     /// <summary>
-    ///     Gets a value indicating whether the <see cref="T:System.Collections.IList" /> is read-only.
+    /// Gets a value indicating whether the <see cref="T:System.Collections.IList" /> is read-only.
     /// </summary>
     /// <value></value>
     /// <returns>true if the <see cref="T:System.Collections.IList" /> is read-only; otherwise, false.</returns>
     bool IList.IsReadOnly => false;
 
     /// <summary>
-    ///     Removes the first occurrence of a specific object from the <see cref="T:System.Collections.IList" />.
+    /// Removes the first occurrence of a specific object from the <see cref="T:System.Collections.IList" />.
     /// </summary>
     /// <param name="value">The <see cref="T:System.Object" /> to remove from the <see cref="T:System.Collections.IList" />.</param>
     /// <exception cref="T:System.NotSupportedException">
-    ///     The <see cref="T:System.Collections.IList" /> is read-only.-or- The
-    ///     <see cref="T:System.Collections.IList" /> has a fixed size.
+    /// The <see cref="T:System.Collections.IList" /> is read-only.-or- The
+    /// <see cref="T:System.Collections.IList" /> has a fixed size.
     /// </exception>
     void IList.Remove(object value)
     {
@@ -556,20 +556,20 @@ public abstract class EntitySubItemCollection : IEntitySubItemCollection, IFilte
     }
 
     /// <summary>
-    ///     Removes the <see cref="T:System.Collections.IList" /> item at the specified index.
+    /// Removes the <see cref="T:System.Collections.IList" /> item at the specified index.
     /// </summary>
     /// <param name="index">The zero-based index of the item to remove.</param>
     /// <exception cref="T:System.ArgumentOutOfRangeException">
-    ///     <paramref name="index" /> is not a valid index in the <see cref="T:System.Collections.IList" />.
+    /// <paramref name="index" /> is not a valid index in the <see cref="T:System.Collections.IList" />.
     /// </exception>
     /// <exception cref="T:System.NotSupportedException">
-    ///     The <see cref="T:System.Collections.IList" /> is read-only.-or- The
-    ///     <see cref="T:System.Collections.IList" /> has a fixed size.
+    /// The <see cref="T:System.Collections.IList" /> is read-only.-or- The
+    /// <see cref="T:System.Collections.IList" /> has a fixed size.
     /// </exception>
     void IList.RemoveAt(int index) => Remove(index);
 
     /// <summary>
-    ///     Indexer reference to an item in the collection
+    /// Indexer reference to an item in the collection
     /// </summary>
     /// <value></value>
     object IList.this[int index]
@@ -579,30 +579,30 @@ public abstract class EntitySubItemCollection : IEntitySubItemCollection, IFilte
     }
 
     /// <summary>
-    ///     Copies the elements of the <see cref="T:System.Collections.ICollection" /> to an <see cref="T:System.Array" />,
-    ///     starting at a particular <see cref="T:System.Array" /> index.
+    /// Copies the elements of the <see cref="T:System.Collections.ICollection" /> to an <see cref="T:System.Array" />,
+    /// starting at a particular <see cref="T:System.Array" /> index.
     /// </summary>
     /// <param name="array">
-    ///     The one-dimensional <see cref="T:System.Array" /> that is the destination of the elements copied
-    ///     from <see cref="T:System.Collections.ICollection" />. The <see cref="T:System.Array" /> must have zero-based
-    ///     indexing.
+    /// The one-dimensional <see cref="T:System.Array" /> that is the destination of the elements copied
+    /// from <see cref="T:System.Collections.ICollection" />. The <see cref="T:System.Array" /> must have zero-based
+    /// indexing.
     /// </param>
     /// <param name="index">The zero-based index in <paramref name="array" /> at which copying begins.</param>
     /// <exception cref="T:System.ArgumentNullException">
-    ///     <paramref name="array" /> is null.
+    /// <paramref name="array" /> is null.
     /// </exception>
     /// <exception cref="T:System.ArgumentOutOfRangeException">
-    ///     <paramref name="index" /> is less than zero.
+    /// <paramref name="index" /> is less than zero.
     /// </exception>
     /// <exception cref="T:System.ArgumentException">
-    ///     <paramref name="array" /> is multidimensional.-or- <paramref name="index" /> is equal to or greater than the length
-    ///     of <paramref name="array" />.-or- The number of elements in the source
-    ///     <see cref="T:System.Collections.ICollection" /> is greater than the available space from <paramref name="index" />
-    ///     to the end of the destination <paramref name="array" />.
+    /// <paramref name="array" /> is multidimensional.-or- <paramref name="index" /> is equal to or greater than the length
+    /// of <paramref name="array" />.-or- The number of elements in the source
+    /// <see cref="T:System.Collections.ICollection" /> is greater than the available space from <paramref name="index" />
+    /// to the end of the destination <paramref name="array" />.
     /// </exception>
     /// <exception cref="T:System.ArgumentException">
-    ///     The type of the source <see cref="T:System.Collections.ICollection" />
-    ///     cannot be cast automatically to the type of the destination <paramref name="array" />.
+    /// The type of the source <see cref="T:System.Collections.ICollection" />
+    /// cannot be cast automatically to the type of the destination <paramref name="array" />.
     /// </exception>
     void ICollection.CopyTo(Array array, int index)
     {
@@ -614,40 +614,40 @@ public abstract class EntitySubItemCollection : IEntitySubItemCollection, IFilte
     }
 
     /// <summary>
-    ///     Number of items in the collection
+    /// Number of items in the collection
     /// </summary>
     /// <value></value>
     int ICollection.Count => Count;
 
     /// <summary>
-    ///     Gets a value indicating whether access to the <see cref="T:System.Collections.ICollection" /> is synchronized
-    ///     (thread safe).
+    /// Gets a value indicating whether access to the <see cref="T:System.Collections.ICollection" /> is synchronized
+    /// (thread safe).
     /// </summary>
     /// <value></value>
     /// <returns>
-    ///     true if access to the <see cref="T:System.Collections.ICollection" /> is synchronized (thread safe);
-    ///     otherwise, false.
+    /// true if access to the <see cref="T:System.Collections.ICollection" /> is synchronized (thread safe);
+    /// otherwise, false.
     /// </returns>
     bool ICollection.IsSynchronized => InternalDataTable.Rows.IsSynchronized;
 
     /// <summary>
-    ///     Gets an object that can be used to synchronize access to the <see cref="T:System.Collections.ICollection" />.
+    /// Gets an object that can be used to synchronize access to the <see cref="T:System.Collections.ICollection" />.
     /// </summary>
     /// <value></value>
     /// <returns>An object that can be used to synchronize access to the <see cref="T:System.Collections.ICollection" />.</returns>
     object ICollection.SyncRoot => InternalDataTable.Rows.SyncRoot;
 
     /// <summary>
-    ///     Filter expression
+    /// Filter expression
     /// </summary>
     /// <remarks>
-    ///     Filterable objects are always filtered by their master expression
-    ///     AND the individual filter expression.
-    ///     Filter expressions are NOT mapped. Therefore, they are based on the
-    ///     field names used internally by the entity, and not by the publicly exposed
-    ///     property names. If a property name needs to be used for filtering purposes,
-    ///     one can retrieve the internal field name through the GetInternalFieldName()
-    ///     method of the parent entity.
+    /// Filterable objects are always filtered by their master expression
+    /// AND the individual filter expression.
+    /// Filter expressions are NOT mapped. Therefore, they are based on the
+    /// field names used internally by the entity, and not by the publicly exposed
+    /// property names. If a property name needs to be used for filtering purposes,
+    /// one can retrieve the internal field name through the GetInternalFieldName()
+    /// method of the parent entity.
     /// </remarks>
     /// <example>iStatus = 1</example>
     public string FilterMaster
@@ -661,8 +661,8 @@ public abstract class EntitySubItemCollection : IEntitySubItemCollection, IFilte
     }
 
     /// <summary>
-    ///     Complete filter expression, including the master filter
-    ///     and the individual filter
+    /// Complete filter expression, including the master filter
+    /// and the individual filter
     /// </summary>
     /// <example>(Status = 1) AND (FirstName = 'John')</example>
     [NotReportSerializable]
@@ -686,15 +686,15 @@ public abstract class EntitySubItemCollection : IEntitySubItemCollection, IFilte
     }
 
     /// <summary>
-    ///     Filter expression
+    /// Filter expression
     /// </summary>
     /// <example>cFirstName = 'John'</example>
     /// <remarks>
-    ///     Filter expressions are NOT mapped. Therefore, they are based on the
-    ///     field names used internally by the entity, and not by the publicly exposed
-    ///     property names. If a property name needs to be used for filtering purposes,
-    ///     one can retrieve the internal field name through the GetInternalFieldName()
-    ///     method of the parent entity.
+    /// Filter expressions are NOT mapped. Therefore, they are based on the
+    /// field names used internally by the entity, and not by the publicly exposed
+    /// property names. If a property name needs to be used for filtering purposes,
+    /// one can retrieve the internal field name through the GetInternalFieldName()
+    /// method of the parent entity.
     /// </remarks>
     public string Filter
     {
@@ -707,7 +707,7 @@ public abstract class EntitySubItemCollection : IEntitySubItemCollection, IFilte
     }
 
     /// <summary>
-    ///     Clears out all filter expressions, except the master filter.
+    /// Clears out all filter expressions, except the master filter.
     /// </summary>
     public void ClearFilter() => Filter = string.Empty;
 
@@ -792,8 +792,8 @@ public abstract class EntitySubItemCollection : IEntitySubItemCollection, IFilte
 
     /// <summary>Returns the current item count.</summary>
     /// <param name="ignoreSorting">
-    ///     If set to <c>true</c> the sorting sequence (if present) is ignored and the raw table is
-    ///     used instead..
+    /// If set to <c>true</c> the sorting sequence (if present) is ignored and the raw table is
+    /// used instead..
     /// </param>
     /// <returns></returns>
     protected virtual int GetItemCount(bool ignoreSorting)
@@ -875,16 +875,16 @@ public abstract class EntitySubItemCollection : IEntitySubItemCollection, IFilte
     }
 
     /// <summary>
-    ///     This method can be used to make sure the default table in the internal recordset has all the required fields.
-    ///     If the field (column) doesn't exist, it will be added.
+    /// This method can be used to make sure the default table in the internal recordset has all the required fields.
+    /// If the field (column) doesn't exist, it will be added.
     /// </summary>
     /// <param name="fieldName">Field name to check for.</param>
     /// <returns>true or false</returns>
     protected bool CheckColumn(string fieldName) => BusinessEntityHelper.CheckColumn(InternalDataTable, fieldName);
 
     /// <summary>
-    ///     Adds a new row to the internal data table, and returns a
-    ///     sub-item entity that links to it.
+    /// Adds a new row to the internal data table, and returns a
+    /// sub-item entity that links to it.
     /// </summary>
     /// <returns>Entity Sub Item Collection Item</returns>
     protected virtual IEntitySubItemCollectionItem AddNewRow()
@@ -935,20 +935,20 @@ public abstract class EntitySubItemCollection : IEntitySubItemCollection, IFilte
     }
 
     /// <summary>
-    ///     This method is provided to be overridden in subclasses.
-    ///     It can be used to add new information to a newly added record
-    ///     of the collection table. For instance, if the developer wanted
-    ///     to set a timestamp field in the table every time a new record
-    ///     gets added and before the record is available as a collection item,
-    ///     this method could be overridden, and the timestamp field could simply
-    ///     be set like so: NewRow["timeStamp"] = DateTime.Now;
+    /// This method is provided to be overridden in subclasses.
+    /// It can be used to add new information to a newly added record
+    /// of the collection table. For instance, if the developer wanted
+    /// to set a timestamp field in the table every time a new record
+    /// gets added and before the record is available as a collection item,
+    /// this method could be overridden, and the timestamp field could simply
+    /// be set like so: NewRow["timeStamp"] = DateTime.Now;
     /// </summary>
     /// <param name="newRow">New Data Row</param>
     protected virtual void AddNewRowInformation(DataRow newRow) { }
 
     /// <summary>
-    ///     This method is used internally to make sure the appropriate data view
-    ///     or data table is used.
+    /// This method is used internally to make sure the appropriate data view
+    /// or data table is used.
     /// </summary>
     protected virtual void UpdateSpecialDataView()
     {
@@ -960,7 +960,7 @@ public abstract class EntitySubItemCollection : IEntitySubItemCollection, IFilte
     }
 
     /// <summary>
-    ///     Called whenever data in a sub-item is updated
+    /// Called whenever data in a sub-item is updated
     /// </summary>
     /// <param name="fieldName">Changed field name</param>
     /// <param name="updatedRow">Reference to the internal row that has been updated</param>
@@ -992,15 +992,15 @@ public abstract class EntitySubItemCollection : IEntitySubItemCollection, IFilte
     }
 
     /// <summary>
-    ///     This method is used to change the filter expression automatically to correct syntax.
+    /// This method is used to change the filter expression automatically to correct syntax.
     /// </summary>
     /// <param name="filterExpression">Original filter expression</param>
     /// <returns>New filter expression</returns>
     protected virtual string MassageFilterExpression(string filterExpression) => filterExpression;
 
     /// <summary>
-    ///     Changes the sort expression, so things like property names
-    ///     are replaced by actual field names.
+    /// Changes the sort expression, so things like property names
+    /// are replaced by actual field names.
     /// </summary>
     /// <param name="sortExpression">Original sort expression</param>
     /// <returns>New sort expression</returns>

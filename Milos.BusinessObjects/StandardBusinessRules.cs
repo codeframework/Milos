@@ -1,37 +1,37 @@
 ﻿namespace Milos.BusinessObjects;
 
 /// <summary>
-///     This class provides an abstract implementation of a business rule.
+/// This class provides an abstract implementation of a business rule.
 /// </summary>
 /// <remarks>
-///     Constructor
+/// Constructor
 /// </remarks>
 /// <param name="tableName">Name of the table the rule is to be applied to.</param>
 /// <param name="ruleType">Severity of the rule violation</param>
 public abstract class BusinessRule(string tableName, RuleViolationType ruleType = RuleViolationType.Violation) : IBusinessRule
 {
     /// <summary>
-    ///     Type of the rule violation
+    /// Type of the rule violation
     /// </summary>
     private readonly RuleViolationType violationType = ruleType;
 
     /// <summary>
-    ///     Holds a reference to a business object
+    /// Holds a reference to a business object
     /// </summary>
     protected IBusinessObject BusinessObject { get; private set; }
 
     /// <summary>
-    ///     Holds the name of the table this rule is to be applied to
+    /// Holds the name of the table this rule is to be applied to
     /// </summary>
     public string TableName { get; } = tableName;
 
     /// <summary>
-    ///     Defines whether this rule is applied to deleted rows
+    /// Defines whether this rule is applied to deleted rows
     /// </summary>
     public bool CheckDeletedRows { get; set; }
 
     /// <summary>
-    ///     Sets the business object this object belongs to.
+    /// Sets the business object this object belongs to.
     /// </summary>
     /// <param name="currentBusinessObject">Business Object</param>
     public virtual void SetBusinessObject(IBusinessObject currentBusinessObject)
@@ -40,15 +40,15 @@ public abstract class BusinessRule(string tableName, RuleViolationType ruleType 
     }
 
     /// <summary>
-    ///     Verifies a single row of data.
+    /// Verifies a single row of data.
     /// </summary>
     /// <param name="currentRow">Data row that is to be verified</param>
     /// <param name="rowIndex">Index of the row that is to be identified (within its data table)</param>
     public abstract void VerifyRow(DataRow currentRow, int rowIndex);
 
     /// <summary>
-    ///     This method can be used to log business rule violations.
-    ///     This method is usually called from within the Verify() method.
+    /// This method can be used to log business rule violations.
+    /// This method is usually called from within the Verify() method.
     /// </summary>
     /// <param name="currentDataRow">DataRow that contains the data that violated a rule.</param>
     /// <param name="rowIndex">Index if the row within the current data set/ data table</param>
@@ -58,27 +58,27 @@ public abstract class BusinessRule(string tableName, RuleViolationType ruleType 
 }
 
 /// <summary>
-///     This rule verifies that a certain field (or fields) are not empty.
+/// This rule verifies that a certain field (or fields) are not empty.
 /// </summary>
 public class EmptyFieldBusinessRule : BusinessRule
 {
     /// <summary>
-    ///     Default message
+    /// Default message
     /// </summary>
     private readonly string defaultMessage = string.Empty;
 
     /// <summary>
-    ///     Internal list of messages
+    /// Internal list of messages
     /// </summary>
     private readonly List<string> messages = new List<string>();
 
     /// <summary>
-    ///     For internal use only
+    /// For internal use only
     /// </summary>
     private string fields;
 
     /// <summary>
-    ///     Constructor
+    /// Constructor
     /// </summary>
     /// <param name="fieldList">Field list (multiple fields can be separated by commas)</param>
     /// <param name="tableName">Table this object is responsible for.</param>
@@ -93,7 +93,7 @@ public class EmptyFieldBusinessRule : BusinessRule
     }
 
     /// <summary>
-    ///     Constructor
+    /// Constructor
     /// </summary>
     /// <param name="fieldList">Field list (multiple fields can be separated by commas)</param>
     /// <param name="tableName">Table this object is responsible for.</param>
@@ -105,7 +105,7 @@ public class EmptyFieldBusinessRule : BusinessRule
     }
 
     /// <summary>
-    ///     Constructor
+    /// Constructor
     /// </summary>
     /// <param name="fieldList">Field list (multiple fields can be separated by commas)</param>
     /// <param name="tableName">Table this object is responsible for.</param>
@@ -121,7 +121,7 @@ public class EmptyFieldBusinessRule : BusinessRule
     }
 
     /// <summary>
-    ///     Verifies that the current row contains all the required fields
+    /// Verifies that the current row contains all the required fields
     /// </summary>
     /// <param name="currentRow">Current data row</param>
     /// <param name="rowIndex">Index of the row that is to be identified (within its data table)</param>
@@ -148,7 +148,7 @@ public class EmptyFieldBusinessRule : BusinessRule
     }
 
     /// <summary>
-    ///     Adds another field to the list of fields that can not be empty for this table.
+    /// Adds another field to the list of fields that can not be empty for this table.
     /// </summary>
     /// <param name="fieldName">Field name</param>
     public void AddFieldToList(string fieldName)
@@ -159,7 +159,7 @@ public class EmptyFieldBusinessRule : BusinessRule
     }
 
     /// <summary>
-    ///     Adds another field to the list of fields that can not be empty for this table.
+    /// Adds another field to the list of fields that can not be empty for this table.
     /// </summary>
     /// <param name="fieldName">Field name</param>
     /// <param name="message">Message</param>
@@ -172,19 +172,19 @@ public class EmptyFieldBusinessRule : BusinessRule
 }
 
 /// <summary>
-///     This class provides an abstract implementation of a deletion business rule.
+/// This class provides an abstract implementation of a deletion business rule.
 /// </summary>
 public abstract class DeletionBusinessRule : BusinessRule
 {
     /// <summary>
-    ///     Initializes a new instance of the <see cref="DeletionBusinessRule" /> class.
+    /// Initializes a new instance of the <see cref="DeletionBusinessRule" /> class.
     /// </summary>
     /// <param name="tableName">Name of the table the rule is to be applied to.</param>
     /// <param name="ruleType">Severity of the rule violation</param>
     protected DeletionBusinessRule(string tableName, RuleViolationType ruleType) : base(tableName, ruleType) { }
 
     /// <summary>
-    ///     Verifies a single row of data.
+    /// Verifies a single row of data.
     /// </summary>
     /// <param name="currentRow">Data row that is to be verified</param>
     /// <param name="rowIndex">Index of the row that is to be identified (within its data table)</param>

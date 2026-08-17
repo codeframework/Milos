@@ -7,35 +7,35 @@ namespace Milos.Data;
 public static class DataServiceFactory
 {
     /// <summary>
-    ///     Internal field used to store the name of the last data service
-    ///     that was used successfully.
+    /// Internal field used to store the name of the last data service
+    /// that was used successfully.
     /// </summary>
     private static string _lastGoodService = string.Empty;
 
     /// <summary>
-    ///     For internal use only
+    /// For internal use only
     /// </summary>
     private static string _instantiationProblemList = string.Empty;
 
     /// <summary>
-    ///     Property that exposes the last error message
+    /// Property that exposes the last error message
     /// </summary>
     public static string LastError { get; private set; }
 
     /// <summary>
-    ///     Connection status of the last used data service
+    /// Connection status of the last used data service
     /// </summary>
     public static DataServiceConnectionStatus ConnectionStatus { get; private set; } = DataServiceConnectionStatus.Unknown;
 
     /// <summary>
-    ///     This method can be used to retrieve a valid data service.
-    ///     This method is designed to be called by BusinessObject instances.
-    ///     Depending on the application configuration, a valid DataService will be returned.
+    /// This method can be used to retrieve a valid data service.
+    /// This method is designed to be called by BusinessObject instances.
+    /// Depending on the application configuration, a valid DataService will be returned.
     /// </summary>
     /// <param name="dataConfigurationPrefix">This prefix can be used to differentiate different database connection settings.</param>
     /// <param name="serviceIdentifier">
-    ///     This parameter can be used to retrieve different connection options (such as an SQL
-    ///     Server data service and an Oracle data service being shared by one application)
+    /// This parameter can be used to retrieve different connection options (such as an SQL
+    /// Server data service and an Oracle data service being shared by one application)
     /// </param>
     /// <returns>DataService</returns>
     public static IDataService GetDataService(string dataConfigurationPrefix, string serviceIdentifier = "")
@@ -86,7 +86,7 @@ public static class DataServiceFactory
     }
 
     /// <summary>
-    ///     This method is used to instantiate the actual service
+    /// This method is used to instantiate the actual service
     /// </summary>
     /// <param name="serviceIdentifier">Name of the service object</param>
     /// <param name="dataConfigurationPrefix">Configuration Prefix (for settings in the configuration files)</param>
@@ -197,86 +197,86 @@ public static class DataServiceFactory
     }
 
     /// <summary>
-    ///     Method used internally to raise data service initialization event
+    /// Method used internally to raise data service initialization event
     /// </summary>
     /// <param name="initializedService">DataService object that caused the event</param>
     private static void OnDataServiceInitialization(IDataService initializedService) => DataServiceInitialization?.Invoke(null, new DataServiceInitiationEventArgs(initializedService));
 
     /// <summary>
-    ///     Static event sink that can be bound to data services and hand the
-    ///     event on to other potential subscribers
+    /// Static event sink that can be bound to data services and hand the
+    /// event on to other potential subscribers
     /// </summary>
     /// <param name="sender">Sender (data service)</param>
     /// <param name="e">Query Event Arguments</param>
     private static void OnQueryComplete(object sender, QueryEventArgs e) => QueryComplete?.Invoke(sender, e);
 
     /// <summary>
-    ///     Static event sink that can be bound to data services and hand the
-    ///     event on to other potential subscribers
+    /// Static event sink that can be bound to data services and hand the
+    /// event on to other potential subscribers
     /// </summary>
     /// <param name="sender">Sender (data service)</param>
     /// <param name="e">Scalar (Query) Event Arguments</param>
     private static void OnScalarQueryComplete(object sender, ScalarEventArgs e) => ScalarQueryComplete?.Invoke(sender, e);
 
     /// <summary>
-    ///     Static event sink that can be bound to data services and hand the
-    ///     event on to other potential subscribers
+    /// Static event sink that can be bound to data services and hand the
+    /// event on to other potential subscribers
     /// </summary>
     /// <param name="sender">Sender (data service)</param>
     /// <param name="e">Non-Query Event Arguments</param>
     private static void OnNonQueryComplete(object sender, NonQueryEventArgs e) => NonQueryComplete?.Invoke(sender, e);
 
     /// <summary>
-    ///     Public event that fires whenever a new valid data service is loaded
-    ///     and considered valid.
+    /// Public event that fires whenever a new valid data service is loaded
+    /// and considered valid.
     /// </summary>
     /// <remarks>
-    ///     This is a somewhat unusual event, since it is static (shared).
-    ///     This means that rather than binding to an event on the object instance,
-    ///     event sinks are bound straight to the class.
+    /// This is a somewhat unusual event, since it is static (shared).
+    /// This means that rather than binding to an event on the object instance,
+    /// event sinks are bound straight to the class.
     /// </remarks>
     /// <example>DataServiceFactory.DataServiceInitialization += new DataServiceInitiationEventHandler(this.MyHandler);</example>
     public static event DataServiceInitiationEventHandler DataServiceInitialization;
 
     /// <summary>
-    ///     This event fires whenever a query has been completed
+    /// This event fires whenever a query has been completed
     /// </summary>
     public static event EventHandler<QueryEventArgs> QueryComplete;
 
     /// <summary>
-    ///     This event fires whenever a scalar query has been completed
+    /// This event fires whenever a scalar query has been completed
     /// </summary>
     public static event EventHandler<ScalarEventArgs> ScalarQueryComplete;
 
     /// <summary>
-    ///     This event fires whenever a non-query has been completed
+    /// This event fires whenever a non-query has been completed
     /// </summary>
     public static event EventHandler<NonQueryEventArgs> NonQueryComplete;
 }
 
 /// <summary>
-///     Delegate used for the DataServiceInitiation event.
+/// Delegate used for the DataServiceInitiation event.
 /// </summary>
 public delegate void DataServiceInitiationEventHandler(object sender, DataServiceInitiationEventArgs e);
 
 /// <summary>
-///     Data service initiation event arguments
+/// Data service initiation event arguments
 /// </summary>
 public class DataServiceInitiationEventArgs : EventArgs
 {
     /// <summary>
-    ///     Constructor
+    /// Constructor
     /// </summary>
     /// <param name="sourceService">Data service that caused the event</param>
     public DataServiceInitiationEventArgs(IDataService sourceService) => DataService = sourceService;
 
     /// <summary>
-    ///     Connection status
+    /// Connection status
     /// </summary>
     public DataServiceConnectionStatus ConnectionStatus => DataService.ConnectionStatus;
 
     /// <summary>
-    ///     Data Service that caused the event
+    /// Data Service that caused the event
     /// </summary>
     public IDataService DataService { get; }
 }

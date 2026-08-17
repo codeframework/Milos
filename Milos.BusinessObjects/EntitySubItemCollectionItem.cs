@@ -1,4 +1,5 @@
 ﻿using Milos.Data;
+using System.Runtime.CompilerServices;
 
 namespace Milos.BusinessObjects;
 
@@ -436,6 +437,9 @@ public class EntitySubItemCollectionItem : IEntitySubItemCollectionItem
         return retVal;
     }
 
+    protected bool Set<TField>(TField value, [CallerMemberName] string fieldName = null, string tableName = null, bool forceUpdate = false) =>
+        WriteFieldValue(fieldName, value, forceUpdate, null);
+
     /// <summary>
     /// Sets the value of a field in the database in the table specified.
     /// The record of the table is identified by the search expression
@@ -446,7 +450,8 @@ public class EntitySubItemCollectionItem : IEntitySubItemCollectionItem
     /// <param name="searchExpression">Search expression used to identify the record that needs to be updated</param>
     /// <returns>True or False</returns>
     /// <example>SetFieldValue("MyField","xxx value","MySecondaryTable","id = 'x'");</example>
-    protected virtual bool SetFieldValue(string fieldName, object value, string tableName, string searchExpression) => SetFieldValue(fieldName, value, false, tableName, searchExpression);
+    protected virtual bool SetFieldValue(string fieldName, object value, string tableName, string searchExpression) => 
+        SetFieldValue(fieldName, value, false, tableName, searchExpression);
 
     /// <summary>
     /// Sets the value of a field in the database in the table specified.
@@ -459,7 +464,8 @@ public class EntitySubItemCollectionItem : IEntitySubItemCollectionItem
     /// <param name="searchExpression">Search expression used to identify the record that needs to be updated</param>
     /// <returns>True or False</returns>
     /// <example>SetFieldValue("MyField","xxx value","MySecondaryTable","id = 'x'");</example>
-    protected virtual bool WriteFieldValue<TField>(string fieldName, TField value, string tableName, string searchExpression) => WriteFieldValue(fieldName, value, false, tableName, searchExpression);
+    protected virtual bool WriteFieldValue<TField>(string fieldName, TField value, string tableName, string searchExpression) => 
+        WriteFieldValue(fieldName, value, false, tableName, searchExpression);
 
     /// <summary>
     /// Returns the value of the specified field in the database
@@ -467,6 +473,7 @@ public class EntitySubItemCollectionItem : IEntitySubItemCollectionItem
     /// <param name="fieldName">Field name</param>
     /// <param name="ignoreNulls">Should nulls be ignored and returned as such (true) or should the be turned into default values (false)?</param>
     /// <returns>Value object</returns>
+    [Obsolete("Use ReadFieldValue<TField>() instead.")]
     protected virtual object GetFieldValue(string fieldName, bool ignoreNulls = false)
     {
         if (ParentEntity is not BusinessEntity entity) throw new NullReferenceException("Parent entity is not a business entity.");
@@ -480,11 +487,22 @@ public class EntitySubItemCollectionItem : IEntitySubItemCollectionItem
     /// <param name="fieldName">Field name</param>
     /// <param name="ignoreNulls">Should nulls be ignored and returned as such (true) or should the be turned into default values (false)?</param>
     /// <returns>Value object</returns>
-    protected virtual TField ReadFieldValue<TField>(string fieldName, bool ignoreNulls = false)
+    protected virtual TField ReadFieldValue<TField>(string fieldName, bool ignoreNulls = false, DataRow currentRow = null)
     {
         if (ParentEntity is not BusinessEntity entity) throw new NullReferenceException("Parent entity is not a business entity.");
-        return BusinessEntityHelper.GetFieldValue<TField>(entity, CurrentRow.Table.DataSet, TableName, fieldName, CurrentRow, ignoreNulls);
+        return BusinessEntityHelper.GetFieldValue<TField>(entity, CurrentRow.Table.DataSet, TableName, fieldName, currentRow ?? CurrentRow, ignoreNulls);
     }
+
+    /// <summary>
+    /// Returns the value of the specified field in the database
+    /// THis is a shortcut to ReadFieldValue<typeparamref name="TField"/>()
+    /// </summary>
+    /// <typeparam name="TField">The type of the field.</typeparam>
+    /// <param name="fieldName">Field name</param>
+    /// <param name="ignoreNulls">Should nulls be ignored and returned as such (true) or should the be turned into default values (false)?</param>
+    /// <returns>Value object</returns>
+    protected TField Get<TField>([CallerMemberName] string fieldName = null, bool ignoreNulls = false, DataRow currentRow = null) => 
+        ReadFieldValue<TField>(fieldName, ignoreNulls, currentRow);
 
     /// <summary>
     /// Returns the value of the specified field in the database
@@ -493,6 +511,7 @@ public class EntitySubItemCollectionItem : IEntitySubItemCollectionItem
     /// <param name="ignoreNulls">Should nulls be ignored and returned as such (true) or should the be turned into default values (false)?</param>
     /// <param name="currentRow">Current data row, which contains the value we are interested in</param>
     /// <returns>Value object</returns>
+    [Obsolete("Use ReadFieldValue<TField>() instead.")]
     protected virtual object GetFieldValue(string fieldName, bool ignoreNulls, DataRow currentRow)
     {
         if (ParentEntity is not BusinessEntity entity) throw new NullReferenceException("Parent entity is not a business entity.");
@@ -500,20 +519,6 @@ public class EntitySubItemCollectionItem : IEntitySubItemCollectionItem
     }
 
     /// <summary>
-    /// Returns the value of the specified field in the database
-    /// </summary>
-    /// <typeparam name="TField">The type of the field.</typeparam>
-    /// <param name="fieldName">Field name</param>
-    /// <param name="ignoreNulls">Should nulls be ignored and returned as such (true) or should the be turned into default values (false)?</param>
-    /// <param name="currentRow">Current data row, which contains the value we are interested in</param>
-    /// <returns>Value object</returns>
-    protected virtual TField ReadFieldValue<TField>(string fieldName, bool ignoreNulls, DataRow currentRow)
-    {
-        if (ParentEntity is not BusinessEntity entity) throw new NullReferenceException("Parent entity is not a business entity.");
-        return BusinessEntityHelper.GetFieldValue<TField>(entity, currentRow.Table.DataSet, TableName, fieldName, currentRow, ignoreNulls);
-    }
-
-    /// <summary>
     /// Returns the value from a field in a row of the specified table.
     /// The row is identified by the primary key field name and value that is passed along.
     /// The table is identified by the provided table name.
@@ -527,7 +532,8 @@ public class EntitySubItemCollectionItem : IEntitySubItemCollectionItem
     /// <returns>Value object</returns>
     /// <example>GetFieldValue("CustomerStatus", "ExtendedCustomerInformationTable", "cust_id = 'x'");</example>
     /// <remarks>May throw ArgumentException and RowNotInTableException.</remarks>
-    protected virtual object GetFieldValue(string fieldName, string tableName, string searchExpression) => GetFieldValue(fieldName, false, tableName, searchExpression);
+    protected virtual object GetFieldValue(string fieldName, string tableName, string searchExpression) => 
+        GetFieldValue(fieldName, false, tableName, searchExpression);
 
     /// <summary>
     /// Returns the value from a field in a row of the specified table.
@@ -544,7 +550,8 @@ public class EntitySubItemCollectionItem : IEntitySubItemCollectionItem
     /// <returns>Value object</returns>
     /// <example>GetFieldValue("CustomerStatus", "ExtendedCustomerInformationTable", "cust_id = 'x'");</example>
     /// <remarks>May throw ArgumentException and RowNotInTableException.</remarks>
-    protected virtual TField GetFieldValue<TField>(string fieldName, string tableName, string searchExpression) => ReadFieldValue<TField>(fieldName, false, tableName, searchExpression);
+    protected virtual TField GetFieldValue<TField>(string fieldName, string tableName, string searchExpression) => 
+        ReadFieldValue<TField>(fieldName, false, tableName, searchExpression);
 
     /// <summary>
     /// Returns the value from a field in a row of the specified table.

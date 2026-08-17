@@ -1,38 +1,40 @@
-﻿namespace Milos.BusinessObjects;
+﻿using System.Threading.Tasks;
+
+namespace Milos.BusinessObjects;
 
 /// <summary>
-///     Defines the type of a business rule violation
+/// Defines the type of a business rule violation
 /// </summary>
 public enum RuleViolationType
 {
     /// <summary>
-    ///     Serious (critical) violation. Data can not be saved!
+    /// Serious (critical) violation. Data can not be saved!
     /// </summary>
     Violation,
 
     /// <summary>
-    ///     Minor violation. Saving data is not recommended, but supported.
+    /// Minor violation. Saving data is not recommended, but supported.
     /// </summary>
     Warning
 }
 
 /// <summary>
-///     Defines what data is to be updated in save operations
+/// Defines what data is to be updated in save operations
 /// </summary>
 public enum DataSaveMode
 {
     /// <summary>
-    ///     Process all changes
+    /// Process all changes
     /// </summary>
     AllChanges,
 
     /// <summary>
-    ///     Process deleted records only
+    /// Process deleted records only
     /// </summary>
     DeletesOnly,
 
     /// <summary>
-    ///     Process all changes except deleted records
+    /// Process all changes except deleted records
     /// </summary>
     AllChangesExceptDeletes
 }
@@ -47,10 +49,17 @@ public enum QueryType
 public interface IDeletable
 {
     /// <summary>
-    /// Delete
+    /// Deletes the current data
     /// </summary>
     /// <returns>Success (true or false)</returns>
+    /// <remarks>Prefer DeleteAsync() for new code.</remarks>
     bool Delete();
+
+    /// <summary>
+    /// Deletes the current data asynchronously.
+    /// </summary>
+    /// <returns>Success (true or false)</returns>
+    Task<bool> DeleteAsync();
 }
 
 /// <summary>
@@ -70,10 +79,17 @@ public interface IVerifyable
 public interface ISavable
 {
     /// <summary>
-    /// Save
+    /// Saves the current data
     /// </summary>
     /// <returns>Success (true or false)</returns>
+    /// <remarks>Prefer SaveAsync() for new code.</remarks>
     bool Save();
+
+    /// <summary>
+    /// Saves the current data asynchronously.
+    /// </summary>
+    /// <returns>Success (true or false)</returns>
+    Task<bool> SaveAsync();
 }
 
 /// <summary>

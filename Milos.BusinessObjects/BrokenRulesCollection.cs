@@ -1,21 +1,21 @@
 ﻿namespace Milos.BusinessObjects;
 
 /// <summary>
-///     Broken Business Rules collection class
+/// Broken Business Rules collection class
 /// </summary>
 public class BrokenRulesCollection : ICollection
 {
     /// <summary>
-    ///     Stores the ultimate associated business entity this collection lives in.
-    ///     If the collection lives in a business entity, this property returns the same
-    ///     reference as the BusinessEntity property. If the collection lives in
-    ///     either a SubItem or SubItem collection, this property returns the business entity
-    ///     that those objects live in.
+    /// Stores the ultimate associated business entity this collection lives in.
+    /// If the collection lives in a business entity, this property returns the same
+    /// reference as the BusinessEntity property. If the collection lives in
+    /// either a SubItem or SubItem collection, this property returns the business entity
+    /// that those objects live in.
     /// </summary>
     private BusinessEntity associatedBusinessEntity;
 
     /// <summary>
-    ///     Constructor
+    /// Constructor
     /// </summary>
     /// <param name="parentBusinessEntity">Business entity object this collection lives in.</param>
     public BrokenRulesCollection(BusinessEntity parentBusinessEntity)
@@ -26,7 +26,7 @@ public class BrokenRulesCollection : ICollection
     }
 
     /// <summary>
-    ///     Constructor
+    /// Constructor
     /// </summary>
     /// <param name="parentBusinessEntitySubItem">Business entity sub item object this collection lives in.</param>
     public BrokenRulesCollection(EntitySubItemCollectionItem parentBusinessEntitySubItem)
@@ -36,7 +36,7 @@ public class BrokenRulesCollection : ICollection
     }
 
     /// <summary>
-    ///     Constructor
+    /// Constructor
     /// </summary>
     /// <param name="parentBusinessEntitySubItemCollection">Business entity sub item collection this collection lives in.</param>
     public BrokenRulesCollection(EntitySubItemCollection parentBusinessEntitySubItemCollection)
@@ -46,42 +46,42 @@ public class BrokenRulesCollection : ICollection
     }
 
     /// <summary>
-    ///     Initializes a new instance of the DeletionBrokenRulesCollection class.
+    /// Initializes a new instance of the DeletionBrokenRulesCollection class.
     /// </summary>
     public BrokenRulesCollection(DataSet brokenRulesDataSet) : this((BusinessEntity) null) => InternalDataSet = brokenRulesDataSet;
 
     /// <summary>
-    ///     Gets reference to the underlying dataset that contains the broken rules data.
+    /// Gets reference to the underlying dataset that contains the broken rules data.
     /// </summary>
     protected DataSet InternalDataSet { get; }
 
     /// <summary>
-    ///     Gets the name of the broken rules table.
+    /// Gets the name of the broken rules table.
     /// </summary>
     /// <value>The name of the broken rules table.</value>
     public string BrokenRulesTableName { get; protected set; } = "__BrokenRules";
 
     /// <summary>
-    ///     Internal reference to the business entity this collection lives in.
+    /// Internal reference to the business entity this collection lives in.
     /// </summary>
     internal BusinessEntity BusinessEntity { get; }
 
     /// <summary>
-    ///     Internal reference to the business entity sub-item this collection lives in.
+    /// Internal reference to the business entity sub-item this collection lives in.
     /// </summary>
     internal EntitySubItemCollectionItem BusinessEntitySubItem { get; }
 
     /// <summary>
-    ///     Inernal reference to the business entity sub item collection this collection lives in.
+    /// Inernal reference to the business entity sub item collection this collection lives in.
     /// </summary>
     internal EntitySubItemCollection SubItemCollection { get; }
 
     /// <summary>
-    ///     Gets the ultimate associated business entity this collection lives in.
-    ///     If the collection lives in a business entity, this property returns the same
-    ///     reference as the BusinessEntity property. If the collection lives in
-    ///     either a SubItem or SubItem collection, this property returns the business entity
-    ///     that those objects live in.
+    /// Gets the ultimate associated business entity this collection lives in.
+    /// If the collection lives in a business entity, this property returns the same
+    /// reference as the BusinessEntity property. If the collection lives in
+    /// either a SubItem or SubItem collection, this property returns the business entity
+    /// that those objects live in.
     /// </summary>
     /// <value>The associated business entity.</value>
     public BusinessEntity AssociatedBusinessEntity
@@ -103,7 +103,7 @@ public class BrokenRulesCollection : ICollection
     }
 
     /// <summary>
-    ///     Returns a broken rule by index
+    /// Returns a broken rule by index
     /// </summary>
     public virtual BrokenRule this[int index]
     {
@@ -131,7 +131,7 @@ public class BrokenRulesCollection : ICollection
 
 
     /// <summary>
-    ///     Gets a reference to an object that can be used to synchronize access to this collection.
+    /// Gets a reference to an object that can be used to synchronize access to this collection.
     /// </summary>
     public object SyncRoot
     {
@@ -144,7 +144,7 @@ public class BrokenRulesCollection : ICollection
     }
 
     /// <summary>
-    ///     Defines whether this class is thread-safe
+    /// Defines whether this class is thread-safe
     /// </summary>
     public bool IsSynchronized
     {
@@ -157,7 +157,7 @@ public class BrokenRulesCollection : ICollection
     }
 
     /// <summary>
-    ///     Number of broken rules in the collection
+    /// Number of broken rules in the collection
     /// </summary>
     public virtual int Count
     {
@@ -179,7 +179,7 @@ public class BrokenRulesCollection : ICollection
     }
 
     /// <summary>
-    ///     Copies the items within this collection to a one-dimensional array starting at the specified index
+    /// Copies the items within this collection to a one-dimensional array starting at the specified index
     /// </summary>
     /// <param name="array">Array</param>
     /// <param name="index">Index</param>
@@ -190,7 +190,7 @@ public class BrokenRulesCollection : ICollection
     }
 
     /// <summary>
-    ///     Returns an enumerator for the business rule collection
+    /// Returns an enumerator for the business rule collection
     /// </summary>
     /// <returns></returns>
     public IEnumerator GetEnumerator()
@@ -201,20 +201,20 @@ public class BrokenRulesCollection : ICollection
     }
 
     /// <summary>
-    ///     Returns all rule violations as a string
+    /// Returns all rule violations as a string
     /// </summary>
     /// <returns>Text description of all broken rules</returns>
     public string GetAllViolationsHTML() => GetAllViolations(string.Empty, "<br>", false);
 
     /// <summary>
-    ///     Makes a BrokenRule object based on the given row.
+    /// Makes a BrokenRule object based on the given row.
     /// </summary>
     /// <param name="brokenRuleRow">The broken rule row.</param>
     /// <returns></returns>
     protected virtual BrokenRule MakeBrokenRuleForDataRow(DataRow brokenRuleRow) => new BrokenRule(brokenRuleRow, this);
 
     /// <summary>
-    ///     Gets the broken rule for sub item collection.
+    /// Gets the broken rule for sub item collection.
     /// </summary>
     /// <param name="index">The index.</param>
     /// <param name="brokenRulesTable">The broken rules table.</param>
@@ -237,7 +237,7 @@ public class BrokenRulesCollection : ICollection
     }
 
     /// <summary>
-    ///     Gets the broken rule for sub item.
+    /// Gets the broken rule for sub item.
     /// </summary>
     /// <param name="index">The index.</param>
     /// <param name="brokenRulesTable">The broken rules table.</param>
@@ -260,7 +260,7 @@ public class BrokenRulesCollection : ICollection
     }
 
     /// <summary>
-    ///     Returns all rule violations as a string
+    /// Returns all rule violations as a string
     /// </summary>
     /// <param name="separationStringBefore">String inserted before each violated rule</param>
     /// <param name="separationStringAfter">String inserted after each violated rule</param>
@@ -282,27 +282,27 @@ public class BrokenRulesCollection : ICollection
     }
 
     /// <summary>
-    ///     Returns all rule violations as a string
+    /// Returns all rule violations as a string
     /// </summary>
     /// <param name="separationStringAfter">String inserted after each violated rule</param>
     /// <returns>Text description of all broken rules</returns>
     public string GetAllViolations(string separationStringAfter) => GetAllViolations(string.Empty, separationStringAfter);
 
     /// <summary>
-    ///     Returns all rule violations as a string
+    /// Returns all rule violations as a string
     /// </summary>
     /// <param name="includeTableName">Should the table name be included?</param>
     /// <returns>Text description of all broken rules</returns>
     public string GetAllViolations(bool includeTableName) => GetAllViolations(string.Empty, "\r\n", includeTableName);
 
     /// <summary>
-    ///     Returns all rule violations as a string
+    /// Returns all rule violations as a string
     /// </summary>
     /// <returns>Text description of all broken rules</returns>
     public string GetAllViolations() => GetAllViolations(string.Empty, "\r\n");
 
     /// <summary>
-    ///     Returns all rule violations as a string
+    /// Returns all rule violations as a string
     /// </summary>
     /// <param name="useBullets">Defines whether or not a list format should be used</param>
     /// <returns>Text description of all broken rules</returns>
@@ -314,8 +314,8 @@ public class BrokenRulesCollection : ICollection
     }
 
     /// <summary>
-    ///     Copies the items within this collection to a one-dimensional array starting at the specified index.
-    ///     This overload performs that operation in a strongly typed fashion.
+    /// Copies the items within this collection to a one-dimensional array starting at the specified index.
+    /// This overload performs that operation in a strongly typed fashion.
     /// </summary>
     /// <param name="array">Array of BrokenRules</param>
     /// <param name="index">Index</param>
@@ -334,14 +334,14 @@ public class BrokenRulesCollection : ICollection
     }
 
     /// <summary>
-    ///     Checks whether the given DataSet contains the BrokenRules table.
+    /// Checks whether the given DataSet contains the BrokenRules table.
     /// </summary>
     /// <param name="dsInternal">The ds internal.</param>
     /// <returns></returns>
     private bool DataSetContainsBrokenRulesTable(DataSet dsInternal) => dsInternal.Tables.Contains(BrokenRulesTableName);
 
     /// <summary>
-    ///     Calculates the broken rules count for the given table.
+    /// Calculates the broken rules count for the given table.
     /// </summary>
     /// <param name="data">The DataSet.</param>
     /// <param name="tableName">Name of the table.</param>
@@ -358,7 +358,7 @@ public class BrokenRulesCollection : ICollection
     }
 
     /// <summary>
-    ///     Displays all violations
+    /// Displays all violations
     /// </summary>
     /// <returns>Violations text</returns>
     public override string ToString() => GetAllViolations();
