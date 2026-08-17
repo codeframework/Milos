@@ -6,6 +6,7 @@ using Microsoft.Data.SqlClient;
 using System.Data.SqlTypes;
 using System.Globalization;
 using System.Linq.Expressions;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -904,17 +905,49 @@ public class SqlDataService : DataService
 
     private static List<(int Ordinal, PropertySetter Setter)> GetMappedColumnsSetters<TItem>(IDataReader reader) where TItem : new()
     {
-        var setters = GetPropertySetters(typeof(TItem));
+        var type = typeof(TItem);
+        var setters = GetPropertySetters(type);
+        var stripPrefix = type.GetCustomAttribute<StripColumnPrefixAttribute>();
         var mappedColumns = new List<(int Ordinal, PropertySetter Setter)>();
+
         for (var columnIndex = 0; columnIndex < reader.FieldCount; columnIndex++)
         {
             var columnName = reader.GetName(columnIndex);
-            // TODO: Support mapping
             if (setters.TryGetValue(columnName, out var setter))
+            {
                 mappedColumns.Add((columnIndex, setter));
+                continue;
+            }
+
+            // Prefix-stripping fallback when the type opts in via [StripColumnPrefix]
+            if (stripPrefix != null)
+            {
+                var stripped = StripPrefix(columnName, stripPrefix.Prefix);
+                if (stripped != columnName && setters.TryGetValue(stripped, out setter))
+                    mappedColumns.Add((columnIndex, setter));
+            }
         }
 
         return mappedColumns;
+    }
+
+    /// <summary>
+    /// Removes a prefix from a column name. When <paramref name="explicitPrefix"/> is null,
+    /// any leading run of lowercase characters is stripped automatically.
+    /// </summary>
+    private static string StripPrefix(string columnName, string explicitPrefix)
+    {
+        if (!string.IsNullOrEmpty(explicitPrefix))
+            return columnName.StartsWith(explicitPrefix, StringComparison.Ordinal) && columnName.Length > explicitPrefix.Length
+                ? columnName.Substring(explicitPrefix.Length)
+                : columnName;
+
+        // Auto mode: strip leading lowercase characters (e.g. "cFirstName" → "FirstName")
+        var i = 0;
+        while (i < columnName.Length && char.IsLower(columnName[i]))
+            i++;
+
+        return i > 0 && i < columnName.Length ? columnName.Substring(i) : columnName;
     }
 
     private static void MapReaderRecordsToResultRecord<TItem>(List<TItem> result, IDataReader reader, List<(int Ordinal, PropertySetter Setter)> mappedColumns) where TItem : new()
@@ -964,7 +997,9 @@ public class SqlDataService : DataService
                 var body = Expression.Call(targetCast, setMethod, valueCast);
 
                 var action = Expression.Lambda<Action<object, object>>(body, targetParameter, valueParameter).Compile();
-                setters[property.Name] = new PropertySetter
+                var columnAttribute = property.GetCustomAttribute<ColumnAttribute>();
+                var key = !string.IsNullOrEmpty(columnAttribute?.Name) ? columnAttribute.Name : property.Name;
+                setters[key] = new PropertySetter
                 {
                     Setter = action,
                     PropertyType = property.PropertyType
