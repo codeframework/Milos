@@ -1095,16 +1095,16 @@ public abstract class BusinessObject : IBusinessObject
     /// <remarks>Prefer GetListAsync() for new code.</remarks>
     public virtual DataSet GetList()
     {
-        using (var selectCommand = DataService.BuildAllRecordsQueryCommand(MasterEntity, DefaultFields, DefaultOrder, QueryMethod))
-            return ExecuteQuery(selectCommand, MasterEntity);
+        using var selectCommand = DataService.BuildAllRecordsQueryCommand(MasterEntity, DefaultFields, DefaultOrder, QueryMethod);
+        return ExecuteQuery(selectCommand, MasterEntity);
     }
 
     /// <summary>This method retrieves all records and all fields for the main entity asynchronously.</summary>
     /// <returns>DataSet</returns>
     public virtual async Task<DataSet> GetListAsync()
     {
-        using (var selectCommand = DataService.BuildAllRecordsQueryCommand(MasterEntity, DefaultFields, DefaultOrder, QueryMethod))
-            return await ExecuteQueryAsync(selectCommand, MasterEntity);
+        using var selectCommand = DataService.BuildAllRecordsQueryCommand(MasterEntity, DefaultFields, DefaultOrder, QueryMethod);
+        return await ExecuteQueryAsync(selectCommand, MasterEntity);
     }
 
     /// <summary>This method can be used to load a single record DataSet based on an entity primary key.</summary>
@@ -1123,13 +1123,15 @@ public abstract class BusinessObject : IBusinessObject
                 return LoadEntity(int.Parse(entityKey, NumberFormatInfo.InvariantInfo));
             case KeyType.String:
                 // We are ready to go.
-                var comLoad = DataService.BuildSingleRecordQueryCommand(MasterEntity, "*", PrimaryKeyField, entityKey, QueryMethod);
-                var dsInternal = ExecuteQuery(comLoad, MasterEntity);
-                if (dsInternal == null || dsInternal.Tables.Count == 0 || dsInternal.Tables[MasterEntity].Rows.Count == 0)
-                    throw new KeyNotFoundException($"Key: {entityKey}");
+                using (var comLoad = DataService.BuildSingleRecordQueryCommand(MasterEntity, "*", PrimaryKeyField, entityKey, QueryMethod))
+                {
+                    var dsInternal = ExecuteQuery(comLoad, MasterEntity);
+                    if (dsInternal == null || dsInternal.Tables.Count == 0 || dsInternal.Tables[MasterEntity].Rows.Count == 0)
+                        throw new KeyNotFoundException($"Key: {entityKey}");
 
-                LoadSecondaryTables(entityKey, dsInternal);
-                return dsInternal;
+                    LoadSecondaryTables(entityKey, dsInternal);
+                    return dsInternal;
+                }
             default:
                 throw new UnsupportedKeyTypeException(GetPrimaryKeyType());
         }
@@ -1758,6 +1760,122 @@ public abstract class BusinessObject : IBusinessObject
         if (!string.IsNullOrEmpty(AppRole)) service.RevertAppRole();
 
         return ds;
+    }
+
+    /// <summary>
+    /// Executes a data reader based on the provided query
+    /// </summary>
+    /// <param name="command">Database Command</param>
+    /// <returns>Data Reader</returns>
+    protected virtual IDataReader ExecuteReader(IDbCommand command)
+    {
+        try
+        {
+            // We use the current DataService and execute the specified command.
+            var service = DataService;
+
+            // We check for app roles
+            if (!string.IsNullOrEmpty(AppRole)) service.ApplyAppRole(AppRole, AppRolePassword);
+
+            var reader = service.ExecuteReader(command);
+            
+            // We reset the app role if we set a role
+            if (!string.IsNullOrEmpty(AppRole)) service.RevertAppRole();
+
+            return reader;
+        }
+        catch (Exception ex)
+        {
+            LastErrorMessage = ex.Message;
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Executes a data reader based on the provided query (asyncronously)
+    /// </summary>
+    /// <param name="command">Database Command</param>
+    /// <returns>Data Reader</returns>
+    protected async virtual Task<IDataReader> ExecuteReaderAsync(IDbCommand command)
+    {
+        try
+        {
+            // We use the current DataService and execute the specified command.
+            var service = DataService;
+
+            // We check for app roles
+            if (!string.IsNullOrEmpty(AppRole)) service.ApplyAppRole(AppRole, AppRolePassword);
+
+            var reader = await service.ExecuteReaderAsync(command);
+
+            // We reset the app role if we set a role
+            if (!string.IsNullOrEmpty(AppRole)) service.RevertAppRole();
+
+            return reader;
+        }
+        catch (Exception ex)
+        {
+            LastErrorMessage = ex.Message;
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Executes a data reader based on the provided query and maps the result into a list of the provided type
+    /// </summary>
+    /// <param name="command">Database Command</param>
+    /// <returns>Enumerable of the provided type</returns>
+    protected virtual IEnumerable<TItem> ExecuteReader<TItem>(IDbCommand command) where TItem : new()
+    {
+        try
+        {
+            // We use the current DataService and execute the specified command.
+            var service = DataService;
+
+            // We check for app roles
+            if (!string.IsNullOrEmpty(AppRole)) service.ApplyAppRole(AppRole, AppRolePassword);
+
+            var result = service.ExecuteReader<TItem>(command);
+
+            // We reset the app role if we set a role
+            if (!string.IsNullOrEmpty(AppRole)) service.RevertAppRole();
+
+            return result;
+        }
+        catch (Exception ex)
+        {
+            LastErrorMessage = ex.Message;
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Executes a data reader based on the provided query (asynchronously) and maps the result into a list of the provided type
+    /// </summary>
+    /// <param name="command">Database Command</param>
+    /// <returns>Enumerable of the provided type</returns>
+    protected async virtual Task<IEnumerable<TItem>> ExecuteReaderAsync<TItem>(IDbCommand command) where TItem : new()
+    {
+        try
+        {
+            // We use the current DataService and execute the specified command.
+            var service = DataService;
+
+            // We check for app roles
+            if (!string.IsNullOrEmpty(AppRole)) service.ApplyAppRole(AppRole, AppRolePassword);
+
+            var result = await service.ExecuteReaderAsync<TItem>(command);
+
+            // We reset the app role if we set a role
+            if (!string.IsNullOrEmpty(AppRole)) service.RevertAppRole();
+
+            return result;
+        }
+        catch (Exception ex)
+        {
+            LastErrorMessage = ex.Message;
+            throw;
+        }
     }
 
     /// <summary>This method executes an SQL Command and returns the number of affected records.</summary>

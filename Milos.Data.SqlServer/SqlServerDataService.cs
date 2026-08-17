@@ -868,12 +868,42 @@ public class SqlDataService : DataService
         return await sqlCommand.ExecuteReaderAsync();
     }
 
-    public async Task<List<TItem>> ExecuteReaderAsync<TItem>(IDbCommand command) where TItem : new()
+    /// <summary>
+    /// Executes a data reader based on the provided query and maps the result into a list of the provided type
+    /// </summary>
+    /// <param name="command">Database Command</param>
+    /// <returns>Enumerable of the provided type</returns>
+    public override IEnumerable<TItem> ExecuteReader<TItem>(IDbCommand command)
+    {
+        var result = new List<TItem>();
+        using var reader = ExecuteReader(command);
+        if (reader == null) return result;
+
+        var mappedColumns = GetMappedColumnsSetters<TItem>(reader);
+        MapReaderRecordsToResultRecord(result, reader, mappedColumns);
+
+        return result;
+    }
+
+    /// <summary>
+    /// Executes a data reader based on the provided query (asynchronously) and maps the result into a list of the provided type
+    /// </summary>
+    /// <param name="command">Database Command</param>
+    /// <returns>Enumerable of the provided type</returns>
+    public async override Task<IEnumerable<TItem>> ExecuteReaderAsync<TItem>(IDbCommand command)
     {
         var result = new List<TItem>();
         using var reader = await ExecuteReaderAsync(command);
         if (reader == null) return result;
 
+        var mappedColumns = GetMappedColumnsSetters<TItem>(reader);
+        MapReaderRecordsToResultRecord(result, reader, mappedColumns);
+
+        return result;
+    }
+
+    private static List<(int Ordinal, PropertySetter Setter)> GetMappedColumnsSetters<TItem>(IDataReader reader) where TItem : new()
+    {
         var setters = GetPropertySetters(typeof(TItem));
         var mappedColumns = new List<(int Ordinal, PropertySetter Setter)>();
         for (var columnIndex = 0; columnIndex < reader.FieldCount; columnIndex++)
@@ -884,6 +914,11 @@ public class SqlDataService : DataService
                 mappedColumns.Add((columnIndex, setter));
         }
 
+        return mappedColumns;
+    }
+
+    private static void MapReaderRecordsToResultRecord<TItem>(List<TItem> result, IDataReader reader, List<(int Ordinal, PropertySetter Setter)> mappedColumns) where TItem : new()
+    {
         while (reader.Read())
         {
             var record = new TItem();
@@ -907,8 +942,6 @@ public class SqlDataService : DataService
 
             result.Add(record);
         }
-
-        return result;
     }
 
     private static Dictionary<string, PropertySetter> GetPropertySetters(Type targetType) =>

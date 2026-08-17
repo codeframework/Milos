@@ -64,7 +64,7 @@ public interface IDataService : IDisposable
     /// <param name="command">SQL Command Object</param>
     /// <param name="entityName">Name of the newly added entity (table) in the DataSet</param>
     /// <param name="existingDataSet">Existing data set the result set is to be added to.</param>
-    /// <returns>Nothing</returns>
+    /// <returns>DataSet</returns>
     Task<DataSet> ExecuteQueryAsync(IDbCommand command, string entityName, DataSet existingDataSet);
 
     /// <summary>
@@ -80,6 +80,20 @@ public interface IDataService : IDisposable
     /// <param name="command">Database Command</param>
     /// <returns>Data Reader</returns>
     Task<IDataReader> ExecuteReaderAsync(IDbCommand command);
+
+    /// <summary>
+    /// Executes a data reader based on the provided query and maps the result into a list of the provided type
+    /// </summary>
+    /// <param name="command">Database Command</param>
+    /// <returns>Enumerable of the provided type</returns>
+    IEnumerable<TItem> ExecuteReader<TItem>(IDbCommand command) where TItem : new();
+
+    /// <summary>
+    /// Executes a data reader based on the provided query (asynchronously) and maps the result into a list of the provided type
+    /// </summary>
+    /// <param name="command">Database Command</param>
+    /// <returns>Enumerable of the provided type</returns>
+    Task<IEnumerable<TItem>> ExecuteReaderAsync<TItem>(IDbCommand command) where TItem : new();
 
     /// <summary>
     /// This method executes a query and returns the number of affected rows.

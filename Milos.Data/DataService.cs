@@ -67,14 +67,22 @@ public abstract class DataService : IDataService
     public virtual string InvalidStatus => "Unknown Invalid Status";
 
     /// <summary>
-    /// Abstract implementation
+    /// This method executes a query and returns a DataSet containing the results.
     /// </summary>
-    /// <param name="command">Command object</param>
-    /// <param name="entityName">Entity Name</param>
-    /// <param name="existingDataSet"></param>
-    /// <returns>DataSet</returns>
+    /// <param name="command">SQL Command Object</param>
+    /// <param name="entityName">Name of the newly added entity (table) in the DataSet</param>
+    /// <param name="existingDataSet">Existing data set the result set is to be added to.</param>
+    /// <returns>Resulting DataSet</returns>
+    /// <remarks>Prefer ExecuteQueryAsync(IDbCommand, string, DataSet) for new code.</remarks>
     public abstract DataSet ExecuteQuery(IDbCommand command, string entityName = "", DataSet existingDataSet = null);
 
+    /// <summary>
+    /// This method executes a query and fills the new information into the DataSet that has been passed as a parameter..
+    /// </summary>
+    /// <param name="command">SQL Command Object</param>
+    /// <param name="entityName">Name of the newly added entity (table) in the DataSet</param>
+    /// <param name="existingDataSet">Existing data set the result set is to be added to.</param>
+    /// <returns>DataSet</returns>
     public abstract Task<DataSet> ExecuteQueryAsync(IDbCommand command, string entityName = "", DataSet existingDataSet = null);
 
     /// <summary>
@@ -90,6 +98,20 @@ public abstract class DataService : IDataService
     /// <param name="command">Database Command</param>
     /// <returns>Data Reader</returns>
     public abstract Task<IDataReader> ExecuteReaderAsync(IDbCommand command);
+
+    /// <summary>
+    /// Executes a data reader based on the provided query and maps the result into a list of the provided type
+    /// </summary>
+    /// <param name="command">Database Command</param>
+    /// <returns>Enumerable of the provided type</returns>
+    public abstract IEnumerable<TItem> ExecuteReader<TItem>(IDbCommand command) where TItem : new();
+
+    /// <summary>
+    /// Executes a data reader based on the provided query (asynchronously) and maps the result into a list of the provided type
+    /// </summary>
+    /// <param name="command">Database Command</param>
+    /// <returns>Enumerable of the provided type</returns>
+    public abstract Task<IEnumerable<TItem>> ExecuteReaderAsync<TItem>(IDbCommand command) where TItem : new();
 
     /// <summary>
     /// Abstract implementation
