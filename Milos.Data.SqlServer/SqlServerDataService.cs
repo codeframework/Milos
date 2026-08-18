@@ -880,8 +880,8 @@ public class SqlDataService : DataService
         using var reader = ExecuteReader(command);
         if (reader == null) return result;
 
-        var mappedColumns = GetMappedColumnsSetters<TItem>(reader);
-        MapReaderRecordsToResultRecord(result, reader, mappedColumns);
+        var (mappedColumns, trimStrings) = GetMappedColumnsSetters<TItem>(reader);
+        MapReaderRecordsToResultRecord(result, reader, mappedColumns, trimStrings);
 
         return result;
     }
@@ -897,17 +897,18 @@ public class SqlDataService : DataService
         using var reader = await ExecuteReaderAsync(command);
         if (reader == null) return result;
 
-        var mappedColumns = GetMappedColumnsSetters<TItem>(reader);
-        MapReaderRecordsToResultRecord(result, reader, mappedColumns);
+        var (mappedColumns, trimStrings) = GetMappedColumnsSetters<TItem>(reader);
+        MapReaderRecordsToResultRecord(result, reader, mappedColumns, trimStrings);
 
         return result;
     }
 
-    private static List<(int Ordinal, PropertySetter Setter)> GetMappedColumnsSetters<TItem>(IDataReader reader) where TItem : new()
+    private static (List<(int Ordinal, PropertySetter Setter)> Columns, bool TrimStrings) GetMappedColumnsSetters<TItem>(IDataReader reader) where TItem : new()
     {
         var type = typeof(TItem);
         var setters = GetPropertySetters(type);
         var stripPrefix = type.GetCustomAttribute<StripColumnPrefixAttribute>();
+        var trimStrings = type.GetCustomAttribute<TrimStringsAttribute>() != null;
         var mappedColumns = new List<(int Ordinal, PropertySetter Setter)>();
 
         for (var columnIndex = 0; columnIndex < reader.FieldCount; columnIndex++)
@@ -928,7 +929,7 @@ public class SqlDataService : DataService
             }
         }
 
-        return mappedColumns;
+        return (mappedColumns, trimStrings);
     }
 
     /// <summary>
@@ -950,7 +951,7 @@ public class SqlDataService : DataService
         return i > 0 && i < columnName.Length ? columnName.Substring(i) : columnName;
     }
 
-    private static void MapReaderRecordsToResultRecord<TItem>(List<TItem> result, IDataReader reader, List<(int Ordinal, PropertySetter Setter)> mappedColumns) where TItem : new()
+    private static void MapReaderRecordsToResultRecord<TItem>(List<TItem> result, IDataReader reader, List<(int Ordinal, PropertySetter Setter)> mappedColumns, bool trimStrings = false) where TItem : new()
     {
         while (reader.Read())
         {
@@ -969,6 +970,9 @@ public class SqlDataService : DataService
                 var targetType = Nullable.GetUnderlyingType(mappedColumn.Setter.PropertyType) ?? mappedColumn.Setter.PropertyType;
                 if (value.GetType() != targetType)
                     value = Convert.ChangeType(value, targetType, CultureInfo.InvariantCulture);
+
+                if (trimStrings && value is string str)
+                    value = str.Trim();
 
                 mappedColumn.Setter.Setter(record, value);
             }
