@@ -969,7 +969,21 @@ public class SqlDataService : DataService
 
                 var targetType = Nullable.GetUnderlyingType(mappedColumn.Setter.PropertyType) ?? mappedColumn.Setter.PropertyType;
                 if (value.GetType() != targetType)
-                    value = Convert.ChangeType(value, targetType, CultureInfo.InvariantCulture);
+                {
+                    if (targetType.IsEnum)
+                    {
+                        if (value is string enumString)
+                            value = Enum.Parse(targetType, enumString, true);
+                        else
+                        {
+                            var enumUnderlyingType = Enum.GetUnderlyingType(targetType);
+                            var enumUnderlyingValue = Convert.ChangeType(value, enumUnderlyingType, CultureInfo.InvariantCulture);
+                            value = Enum.ToObject(targetType, enumUnderlyingValue);
+                        }
+                    }
+                    else
+                        value = Convert.ChangeType(value, targetType, CultureInfo.InvariantCulture);
+                }
 
                 if (trimStrings && value is string str)
                     value = str.Trim();
