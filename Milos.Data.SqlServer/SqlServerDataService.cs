@@ -1086,72 +1086,82 @@ public class SqlDataService : DataService
                 throw new UnsupportedProcessMethodException("Individual text commands are not a valid data access method based on the current system configuration!");
         }
 
-        // This is an SqlCommand object. We are ready to go.
-        PrepareCommandObject(sqlCommand);
-
-        // Since there is no intrinsic way of filling a DataSet async, we use an async reader and fill manually
-        using (var reader = await sqlCommand.ExecuteReaderAsync())
+        var commandPrepared = false;
+        try
         {
-            var resultCounter = 0;
-            do
+            // This is an SqlCommand object. We are ready to go.
+            PrepareCommandObject(sqlCommand);
+            commandPrepared = true;
+
+            // Since there is no intrinsic way of filling a DataSet async, we use an async reader and fill manually
+            using (var reader = await sqlCommand.ExecuteReaderAsync())
             {
-                var tableName = !string.IsNullOrEmpty(entityName)
-                    ? resultCounter == 0 ? entityName : entityName + resultCounter
-                    : resultCounter == 0 ? "Table" : "Table" + resultCounter;
-
-                var table = existingDataSet.Tables.Contains(tableName)
-                    ? existingDataSet.Tables[tableName]
-                    : existingDataSet.Tables.Add(tableName);
-
-                if (table.Columns.Count == 0)
+                var resultCounter = 0;
+                do
                 {
-                    var schemaTable = reader.GetSchemaTable();
-                    var keyColumns = new List<DataColumn>();
+                    var tableName = !string.IsNullOrEmpty(entityName)
+                        ? resultCounter == 0 ? entityName : entityName + resultCounter
+                        : resultCounter == 0 ? "Table" : "Table" + resultCounter;
 
-                    for (var columnIndex = 0; columnIndex < reader.FieldCount; columnIndex++)
+                    var table = existingDataSet.Tables.Contains(tableName)
+                        ? existingDataSet.Tables[tableName]
+                        : existingDataSet.Tables.Add(tableName);
+
+                    if (table.Columns.Count == 0)
                     {
-                        var columnName = reader.GetName(columnIndex);
-                        if (string.IsNullOrEmpty(columnName)) columnName = "Column" + (columnIndex + 1);
-                        if (table.Columns.Contains(columnName)) columnName = columnName + "_" + columnIndex;
+                        var schemaTable = reader.GetSchemaTable();
+                        var keyColumns = new List<DataColumn>();
 
-                        var column = new DataColumn(columnName, reader.GetFieldType(columnIndex));
-
-                        if (schemaTable?.Rows.Count > columnIndex)
+                        for (var columnIndex = 0; columnIndex < reader.FieldCount; columnIndex++)
                         {
-                            var schemaRow = schemaTable.Rows[columnIndex];
+                            var columnName = reader.GetName(columnIndex);
+                            if (string.IsNullOrEmpty(columnName)) columnName = "Column" + (columnIndex + 1);
+                            if (table.Columns.Contains(columnName)) columnName = columnName + "_" + columnIndex;
 
-                            if (schemaTable.Columns.Contains("AllowDBNull") && schemaRow["AllowDBNull"] != DBNull.Value)
-                                column.AllowDBNull = (bool)schemaRow["AllowDBNull"];
+                            var column = new DataColumn(columnName, reader.GetFieldType(columnIndex));
 
-                            if (AutoRetrieveDatabaseSchema && schemaTable.Columns.Contains("IsKey") && schemaRow["IsKey"] != DBNull.Value && (bool)schemaRow["IsKey"])
-                                keyColumns.Add(column);
+                            if (schemaTable?.Rows.Count > columnIndex)
+                            {
+                                var schemaRow = schemaTable.Rows[columnIndex];
+
+                                if (schemaTable.Columns.Contains("AllowDBNull") && schemaRow["AllowDBNull"] != DBNull.Value)
+                                    column.AllowDBNull = (bool)schemaRow["AllowDBNull"];
+
+                                if (AutoRetrieveDatabaseSchema && schemaTable.Columns.Contains("IsKey") && schemaRow["IsKey"] != DBNull.Value && (bool)schemaRow["IsKey"])
+                                    keyColumns.Add(column);
+                            }
+
+                            table.Columns.Add(column);
                         }
 
-                        table.Columns.Add(column);
+                        if (AutoRetrieveDatabaseSchema && keyColumns.Count > 0) table.PrimaryKey = keyColumns.ToArray();
                     }
 
-                    if (AutoRetrieveDatabaseSchema && keyColumns.Count > 0) table.PrimaryKey = keyColumns.ToArray();
-                }
+                    while (await reader.ReadAsync())
+                    {
+                        var row = table.NewRow();
+                        for (var columnIndex = 0; columnIndex < reader.FieldCount; columnIndex++)
+                            row[columnIndex] = await reader.IsDBNullAsync(columnIndex) ? DBNull.Value : reader.GetValue(columnIndex);
+                        table.Rows.Add(row);
+                    }
 
-                while (await reader.ReadAsync())
-                {
-                    var row = table.NewRow();
-                    for (var columnIndex = 0; columnIndex < reader.FieldCount; columnIndex++)
-                        row[columnIndex] = await reader.IsDBNullAsync(columnIndex) ? DBNull.Value : reader.GetValue(columnIndex);
-                    table.Rows.Add(row);
-                }
+                    resultCounter++;
+                } while (await reader.NextResultAsync());
+            }
 
-                resultCounter++;
-            } while (await reader.NextResultAsync());
+            // We fire an event
+            RaiseOnQueryCompleteEvent(existingDataSet, sqlCommand, entityName);
+            return existingDataSet;
         }
-
-        // We fire an event
-        RaiseOnQueryCompleteEvent(existingDataSet, sqlCommand, entityName);
-
-        // We do not want to keep the connection attached to the command, since we do not know how long the command will stay around...
-        CleanCommandObject(sqlCommand);
-        CloseConnection();
-        return existingDataSet;
+        finally
+        {
+            // We do not want to keep the connection attached to the command, since we do not know how long the command will stay around...
+            if (commandPrepared)
+            {
+                CleanCommandObject(sqlCommand);
+                CloseConnection();
+            }
+        }
     }
 
     /// <summary>
@@ -1182,25 +1192,35 @@ public class SqlDataService : DataService
                 throw new UnsupportedProcessMethodException("Individual text commands are not a valid data access method based on the current system configuration!");
         }
 
-        // This is an SqlCommand object. We are ready to go.
-        PrepareCommandObject(sqlCommand);
-
-        using (var sqlDataAdapter = new SqlDataAdapter(sqlCommand))
+        var commandPrepared = false;
+        try
         {
-            if (AutoRetrieveDatabaseSchema) sqlDataAdapter.MissingSchemaAction = MissingSchemaAction.AddWithKey;
-            if (!string.IsNullOrEmpty(entityName))
-                sqlDataAdapter.Fill(existingDataSet, entityName);
-            else
-                sqlDataAdapter.Fill(existingDataSet);
+            // This is an SqlCommand object. We are ready to go.
+            PrepareCommandObject(sqlCommand);
+            commandPrepared = true;
+
+            using (var sqlDataAdapter = new SqlDataAdapter(sqlCommand))
+            {
+                if (AutoRetrieveDatabaseSchema) sqlDataAdapter.MissingSchemaAction = MissingSchemaAction.AddWithKey;
+                if (!string.IsNullOrEmpty(entityName))
+                    sqlDataAdapter.Fill(existingDataSet, entityName);
+                else
+                    sqlDataAdapter.Fill(existingDataSet);
+            }
+
+            // We fire an event
+            RaiseOnQueryCompleteEvent(existingDataSet, sqlCommand, entityName);
+            return existingDataSet;
         }
-
-        // We fire an event
-        RaiseOnQueryCompleteEvent(existingDataSet, sqlCommand, entityName);
-
-        // We do not want to keep the connection attached to the command, since we do not know how long the command will stay around...
-        CleanCommandObject(sqlCommand);
-        CloseConnection();
-        return existingDataSet;
+        finally
+        {
+            // We do not want to keep the connection attached to the command, since we do not know how long the command will stay around...
+            if (commandPrepared)
+            {
+                CleanCommandObject(sqlCommand);
+                CloseConnection();
+            }
+        }
     }
 
     public override async Task<object> ExecuteScalarAsync(IDbCommand command)
@@ -1220,15 +1240,14 @@ public class SqlDataService : DataService
                 throw new UnsupportedProcessMethodException("Individual text commands are not a valid data access method based on the current system configuration!");
         }
 
-        // This is an SqlCommand object. We are ready to go.
-        PrepareCommandObject(sqlCommand);
-
+        var commandPrepared = false;
         try
         {
-            var result = await sqlCommand.ExecuteScalarAsync();
+            // This is an SqlCommand object. We are ready to go.
+            PrepareCommandObject(sqlCommand);
+            commandPrepared = true;
 
-            CleanCommandObject(sqlCommand);
-            CloseConnection();
+            var result = await sqlCommand.ExecuteScalarAsync();
 
             // We raise an event
             RaiseOnScalarQueryCompleteEvent(command, result);
@@ -1239,6 +1258,14 @@ public class SqlDataService : DataService
         {
             LastError = ex.Message;
             return null;
+        }
+        finally
+        {
+            if (commandPrepared)
+            {
+                CleanCommandObject(sqlCommand);
+                CloseConnection();
+            }
         }
     }
 
@@ -1264,15 +1291,14 @@ public class SqlDataService : DataService
                 throw new UnsupportedProcessMethodException("Individual text commands are not a valid data access method based on the current system configuration!");
         }
 
-        // This is an SqlCommand object. We are ready to go.
-        PrepareCommandObject(sqlCommand);
-
+        var commandPrepared = false;
         try
         {
-            var result = sqlCommand.ExecuteScalar();
+            // This is an SqlCommand object. We are ready to go.
+            PrepareCommandObject(sqlCommand);
+            commandPrepared = true;
 
-            CleanCommandObject(sqlCommand);
-            CloseConnection();
+            var result = sqlCommand.ExecuteScalar();
 
             // We raise an event
             RaiseOnScalarQueryCompleteEvent(command, result);
@@ -1283,6 +1309,14 @@ public class SqlDataService : DataService
         {
             LastError = ex.Message;
             return null;
+        }
+        finally
+        {
+            if (commandPrepared)
+            {
+                CleanCommandObject(sqlCommand);
+                CloseConnection();
+            }
         }
     }
 
@@ -1303,15 +1337,14 @@ public class SqlDataService : DataService
                 throw new UnsupportedProcessMethodException("Individual text commands are not a valid data access method based on the current system configuration!");
         }
 
-        // This is an SqlCommand object. We are ready to go.
-        PrepareCommandObject(sqlCommand);
-
+        var commandPrepared = false;
         try
         {
-            var result = await sqlCommand.ExecuteScalarAsync();
+            // This is an SqlCommand object. We are ready to go.
+            PrepareCommandObject(sqlCommand);
+            commandPrepared = true;
 
-            CleanCommandObject(sqlCommand);
-            CloseConnection();
+            var result = await sqlCommand.ExecuteScalarAsync();
 
             // We raise an event
             RaiseOnScalarQueryCompleteEvent(command, result);
@@ -1322,6 +1355,14 @@ public class SqlDataService : DataService
         {
             LastError = ex.Message;
             return default;
+        }
+        finally
+        {
+            if (commandPrepared)
+            {
+                CleanCommandObject(sqlCommand);
+                CloseConnection();
+            }
         }
     }
 
@@ -1347,15 +1388,14 @@ public class SqlDataService : DataService
                 throw new UnsupportedProcessMethodException("Individual text commands are not a valid data access method based on the current system configuration!");
         }
 
-        // This is an SqlCommand object. We are ready to go.
-        PrepareCommandObject(sqlCommand);
-
+        var commandPrepared = false;
         try
         {
-            var result = sqlCommand.ExecuteScalar();
+            // This is an SqlCommand object. We are ready to go.
+            PrepareCommandObject(sqlCommand);
+            commandPrepared = true;
 
-            CleanCommandObject(sqlCommand);
-            CloseConnection();
+            var result = sqlCommand.ExecuteScalar();
 
             // We raise an event
             RaiseOnScalarQueryCompleteEvent(command, result);
@@ -1367,6 +1407,14 @@ public class SqlDataService : DataService
             LastError = ex.Message;
             return default;
         }
+        finally
+        {
+            if (commandPrepared)
+            {
+                CleanCommandObject(sqlCommand);
+                CloseConnection();
+            }
+        }
     }
 
     public override async Task<DataSet> ExecuteStoredProcedureQueryAsync(IDbCommand command, string entityName = "", DataSet existingDataSet = null)
@@ -1374,7 +1422,7 @@ public class SqlDataService : DataService
         // We grab the command object and verify that it is an SQLCommand
         if (command is not SqlCommand sqlCommand) throw new UnsupportedCommandObjectException("SqlCommand expected.");
 
-        existingDataSet ??= new DataSet {Locale = CultureInfo.InvariantCulture};
+        existingDataSet ??= new DataSet { Locale = CultureInfo.InvariantCulture };
 
         // We check whether the execution method of this command object conforms to allowable settings
         if (AllowedDataMethod != AllowedDataAccessMethod.All)
@@ -1388,34 +1436,86 @@ public class SqlDataService : DataService
                 throw new UnsupportedProcessMethodException("Individual text commands are not a valid data access method based on the current system configuration!");
         }
 
-        // This is an SqlCommand object. We are ready to go.
-        PrepareCommandObject(sqlCommand);
+        var commandPrepared = false;
+        try
+        {
+            // This is an SqlCommand object. We are ready to go.
+            PrepareCommandObject(sqlCommand);
+            commandPrepared = true;
 
-        // We make sure the command type is appropriate for stored procedures
-        if (sqlCommand.CommandType != CommandType.StoredProcedure)
-            sqlCommand.CommandType = CommandType.StoredProcedure;
+            // We make sure the command type is appropriate for stored procedures
+            if (sqlCommand.CommandType != CommandType.StoredProcedure)
+                sqlCommand.CommandType = CommandType.StoredProcedure;
 
-        // Since there is no intrinsic way of filling a DataSet async, we spin off a new task and do it manually
-        return await Task.Run(() =>
-                              {
-                                  using (var sqlDataAdapter = new SqlDataAdapter(sqlCommand))
-                                  {
-                                      // We use the connection on the data service and fill the DataSet
-                                      if (AutoRetrieveDatabaseSchema) sqlDataAdapter.MissingSchemaAction = MissingSchemaAction.AddWithKey;
-                                      if (!string.IsNullOrEmpty(entityName))
-                                          sqlDataAdapter.Fill(existingDataSet, entityName);
-                                      else
-                                          sqlDataAdapter.Fill(existingDataSet);
-                                  }
+            // Since there is no intrinsic way of filling a DataSet async, we use an async reader and fill manually
+            using (var reader = await sqlCommand.ExecuteReaderAsync())
+            {
+                var resultCounter = 0;
+                do
+                {
+                    var tableName = !string.IsNullOrEmpty(entityName)
+                        ? resultCounter == 0 ? entityName : entityName + resultCounter
+                        : resultCounter == 0 ? "Table" : "Table" + resultCounter;
 
-                                  // We fire an event
-                                  RaiseOnQueryCompleteEvent(existingDataSet, sqlCommand, entityName);
+                    var table = existingDataSet.Tables.Contains(tableName)
+                        ? existingDataSet.Tables[tableName]
+                        : existingDataSet.Tables.Add(tableName);
 
-                                  // We do not want to keep the connection attached to the command, since we do not know how long the command will stay around...
-                                  CleanCommandObject(sqlCommand);
-                                  CloseConnection();
-                                  return existingDataSet;
-                              });
+                    if (table.Columns.Count == 0)
+                    {
+                        var schemaTable = reader.GetSchemaTable();
+                        var keyColumns = new List<DataColumn>();
+
+                        for (var columnIndex = 0; columnIndex < reader.FieldCount; columnIndex++)
+                        {
+                            var columnName = reader.GetName(columnIndex);
+                            if (string.IsNullOrEmpty(columnName)) columnName = "Column" + (columnIndex + 1);
+                            if (table.Columns.Contains(columnName)) columnName = columnName + "_" + columnIndex;
+
+                            var column = new DataColumn(columnName, reader.GetFieldType(columnIndex));
+
+                            if (schemaTable?.Rows.Count > columnIndex)
+                            {
+                                var schemaRow = schemaTable.Rows[columnIndex];
+
+                                if (schemaTable.Columns.Contains("AllowDBNull") && schemaRow["AllowDBNull"] != DBNull.Value)
+                                    column.AllowDBNull = (bool)schemaRow["AllowDBNull"];
+
+                                if (AutoRetrieveDatabaseSchema && schemaTable.Columns.Contains("IsKey") && schemaRow["IsKey"] != DBNull.Value && (bool)schemaRow["IsKey"])
+                                    keyColumns.Add(column);
+                            }
+
+                            table.Columns.Add(column);
+                        }
+
+                        if (AutoRetrieveDatabaseSchema && keyColumns.Count > 0) table.PrimaryKey = keyColumns.ToArray();
+                    }
+
+                    while (await reader.ReadAsync())
+                    {
+                        var row = table.NewRow();
+                        for (var columnIndex = 0; columnIndex < reader.FieldCount; columnIndex++)
+                            row[columnIndex] = await reader.IsDBNullAsync(columnIndex) ? DBNull.Value : reader.GetValue(columnIndex);
+                        table.Rows.Add(row);
+                    }
+
+                    resultCounter++;
+                } while (await reader.NextResultAsync());
+            }
+
+            // We fire an event
+            RaiseOnQueryCompleteEvent(existingDataSet, sqlCommand, entityName);
+            return existingDataSet;
+        }
+        finally
+        {
+            // We do not want to keep the connection attached to the command, since we do not know how long the command will stay around...
+            if (commandPrepared)
+            {
+                CleanCommandObject(sqlCommand);
+                CloseConnection();
+            }
+        }
     }
 
     /// <summary>
@@ -1444,30 +1544,40 @@ public class SqlDataService : DataService
                 throw new UnsupportedProcessMethodException("Individual text commands are not a valid data access method based on the current system configuration!");
         }
 
-        // This is an SqlCommand object. We are ready to go.
-        PrepareCommandObject(sqlCommand);
-
-        // We make sure the command type is appropriate for stored procedures
-        if (sqlCommand.CommandType != CommandType.StoredProcedure)
-            sqlCommand.CommandType = CommandType.StoredProcedure;
-
-        using (var sqlDataAdapter = new SqlDataAdapter(sqlCommand))
+        var commandPrepared = false;
+        try
         {
-            // We use the connection on the data service and fill the DataSet
-            if (AutoRetrieveDatabaseSchema) sqlDataAdapter.MissingSchemaAction = MissingSchemaAction.AddWithKey;
-            if (!string.IsNullOrEmpty(entityName))
-                sqlDataAdapter.Fill(existingDataSet, entityName);
-            else
-                sqlDataAdapter.Fill(existingDataSet);
+            // This is an SqlCommand object. We are ready to go.
+            PrepareCommandObject(sqlCommand);
+            commandPrepared = true;
+
+            // We make sure the command type is appropriate for stored procedures
+            if (sqlCommand.CommandType != CommandType.StoredProcedure)
+                sqlCommand.CommandType = CommandType.StoredProcedure;
+
+            using (var sqlDataAdapter = new SqlDataAdapter(sqlCommand))
+            {
+                // We use the connection on the data service and fill the DataSet
+                if (AutoRetrieveDatabaseSchema) sqlDataAdapter.MissingSchemaAction = MissingSchemaAction.AddWithKey;
+                if (!string.IsNullOrEmpty(entityName))
+                    sqlDataAdapter.Fill(existingDataSet, entityName);
+                else
+                    sqlDataAdapter.Fill(existingDataSet);
+            }
+
+            // We fire an event
+            RaiseOnQueryCompleteEvent(existingDataSet, sqlCommand, entityName);
+            return existingDataSet;
         }
-
-        // We fire an event
-        RaiseOnQueryCompleteEvent(existingDataSet, sqlCommand, entityName);
-
-        // We do not want to keep the connection attached to the command, since we do not know how long the command will stay around...
-        CleanCommandObject(sqlCommand);
-        CloseConnection();
-        return existingDataSet;
+        finally
+        {
+            // We do not want to keep the connection attached to the command, since we do not know how long the command will stay around...
+            if (commandPrepared)
+            {
+                CleanCommandObject(sqlCommand);
+                CloseConnection();
+            }
+        }
     }
 
     /// <summary>
@@ -1492,23 +1602,33 @@ public class SqlDataService : DataService
                 throw new UnsupportedProcessMethodException("Individual text commands are not a valid data access method based on the current system configuration!");
         }
 
-        // This is an SqlCommand object. We are ready to go.
-        PrepareCommandObject(sqlCommand);
+        var commandPrepared = false;
+        try
+        {
+            // This is an SqlCommand object. We are ready to go.
+            PrepareCommandObject(sqlCommand);
+            commandPrepared = true;
 
-        // We make sure the command type is appropriate for stored procedures
-        if (sqlCommand.CommandType != CommandType.StoredProcedure)
-            sqlCommand.CommandType = CommandType.StoredProcedure;
+            // We make sure the command type is appropriate for stored procedures
+            if (sqlCommand.CommandType != CommandType.StoredProcedure)
+                sqlCommand.CommandType = CommandType.StoredProcedure;
 
-        var affectedRows = await sqlCommand.ExecuteNonQueryAsync();
+            var affectedRows = await sqlCommand.ExecuteNonQueryAsync();
 
-        // We make sure we leave no dangling references
-        CleanCommandObject(sqlCommand);
-        CloseConnection();
+            // We raise an event
+            RaiseOnNonQueryCompleteEvent(command, affectedRows);
 
-        // We raise an event
-        RaiseOnNonQueryCompleteEvent(command, affectedRows);
-
-        return affectedRows > 0;
+            return affectedRows > 0;
+        }
+        finally
+        {
+            // We make sure we leave no dangling references
+            if (commandPrepared)
+            {
+                CleanCommandObject(sqlCommand);
+                CloseConnection();
+            }
+        }
     }
 
     /// <summary>
@@ -1520,7 +1640,7 @@ public class SqlDataService : DataService
     public override bool ExecuteStoredProcedure(IDbCommand command)
     {
         // We grab the command object and verify that it is an SQLCommand
-        if (!(command is SqlCommand sqlCommand)) throw new UnsupportedCommandObjectException("SqlCommand expected.");
+        if (command is not SqlCommand sqlCommand) throw new UnsupportedCommandObjectException("SqlCommand expected.");
 
         // We check whether the execution method of this command object conforms to allowable settings
         if (AllowedDataMethod != AllowedDataAccessMethod.All)
@@ -1534,23 +1654,33 @@ public class SqlDataService : DataService
                 throw new UnsupportedProcessMethodException("Individual text commands are not a valid data access method based on the current system configuration!");
         }
 
-        // This is an SqlCommand object. We are ready to go.
-        PrepareCommandObject(sqlCommand);
+        var commandPrepared = false;
+        try
+        {
+            // This is an SqlCommand object. We are ready to go.
+            PrepareCommandObject(sqlCommand);
+            commandPrepared = true;
 
-        // We make sure the command type is appropriate for stored procedures
-        if (sqlCommand.CommandType != CommandType.StoredProcedure)
-            sqlCommand.CommandType = CommandType.StoredProcedure;
+            // We make sure the command type is appropriate for stored procedures
+            if (sqlCommand.CommandType != CommandType.StoredProcedure)
+                sqlCommand.CommandType = CommandType.StoredProcedure;
 
-        var affectedRows = sqlCommand.ExecuteNonQuery();
+            var affectedRows = sqlCommand.ExecuteNonQuery();
 
-        // We make sure we leave no dangling references
-        CleanCommandObject(sqlCommand);
-        CloseConnection();
+            // We raise an event
+            RaiseOnNonQueryCompleteEvent(command, affectedRows);
 
-        // We raise an event
-        RaiseOnNonQueryCompleteEvent(command, affectedRows);
-
-        return affectedRows > 0;
+            return affectedRows > 0;
+        }
+        finally
+        {
+            // We make sure we leave no dangling references
+            if (commandPrepared)
+            {
+                CleanCommandObject(sqlCommand);
+                CloseConnection();
+            }
+        }
     }
 
     /// <summary>Returns a new SqlCommand object.</summary>
@@ -1796,7 +1926,7 @@ public class SqlDataService : DataService
             case DataRowProcessMethod.Default:
             case DataRowProcessMethod.IndividualCommands:
                 var selectCommand = NewCommandObject();
-                selectCommand.CommandText = "SELECT " + fieldList + " FROM " + tableName;
+                selectCommand.CommandText = $"SELECT {fieldList} FROM {tableName}";
                 if (!string.IsNullOrEmpty(orderBy))
                     selectCommand.CommandText += " ORDER BY " + orderBy;
                 return selectCommand;
@@ -1840,7 +1970,7 @@ public class SqlDataService : DataService
             case DataRowProcessMethod.Default:
             case DataRowProcessMethod.IndividualCommands:
                 var loadCommand = NewCommandObject();
-                loadCommand.CommandText = "SELECT " + fieldList + " FROM " + tableName + " WHERE " + primaryKeyFieldName + " = @PK";
+                loadCommand.CommandText = $"SELECT {fieldList} FROM {tableName} WHERE {primaryKeyFieldName} = @PK";
                 loadCommand.Parameters.Add(NewCommandObjectParameter("@PK", primaryKeyValue));
                 return loadCommand;
             case DataRowProcessMethod.StoredProcedures:
