@@ -1878,6 +1878,36 @@ public abstract class BusinessObject : IBusinessObject
         }
     }
 
+    /// <summary>
+    /// Executes a command without waiting for a result. This is useful for commands that do not return any data, such as INSERT, UPDATE, or DELETE statements.
+    /// </summary>
+    /// <param name="command">IDbCommand Object</param>
+    /// <remarks>
+    /// This is a fire-and-forget operation that is fast but the caller has no way of knowing if it worked.
+    /// If this method is called multiple times in rapid succession, the sequence of operations is not guaranteed to be the same as the order of the calls.
+    /// This method always operates asynchronously and does not wait for the result of the query.
+    /// </remarks>
+    protected virtual void ExecuteFireAndForget(IDbCommand command)
+    {
+        try
+        {
+            var service = DataService;
+
+            // We check for app roles
+            if (!string.IsNullOrEmpty(AppRole)) service.ApplyAppRole(AppRole, AppRolePassword);
+
+            service.ExecuteFireAndForget(command);
+
+            // We reset the app role if we set a role
+            if (!string.IsNullOrEmpty(AppRole)) service.RevertAppRole();
+        }
+        catch (Exception ex)
+        {
+            LastErrorMessage = ex.Message;
+            throw;
+        }
+    }
+
     /// <summary>This method executes an SQL Command and returns the number of affected records.</summary>
     /// <param name="command">IDbCommand Object</param>
     /// <returns>Number of affected records.</returns>
