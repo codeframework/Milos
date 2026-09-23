@@ -124,6 +124,7 @@ public interface IDataService : IDisposable
     /// <param name="command">Command string (such as an SQL Insert command)</param>
     /// <remarks>
     /// This is a fire-and-forget operation that is fast but the caller has no way of knowing if it worked.
+    /// If this method is called multiple times in rapid succession, the sequence of operations is not guaranteed to be the same as the order of the calls.
     /// This method always operates asynchronously and does not wait for the result of the query.
     /// </remarks>
     void ExecuteFireAndForget(IDbCommand command);
