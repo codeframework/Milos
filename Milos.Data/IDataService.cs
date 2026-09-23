@@ -115,7 +115,18 @@ public interface IDataService : IDisposable
     /// This method executes a query asynchronously.
     /// </summary>
     /// <param name="command">Command string (such as an SQL Insert command)</param>
+    /// <returns>The number of affected records</returns>
     Task<int> ExecuteNonQueryAsync(IDbCommand command);
+
+    /// <summary>
+    /// This method executes a query and does not wait for the result.
+    /// </summary>
+    /// <param name="command">Command string (such as an SQL Insert command)</param>
+    /// <remarks>
+    /// This is a fire-and-forget operation that is fast but the caller has no way of knowing if it worked.
+    /// This method always operates asynchronously and does not wait for the result of the query.
+    /// </remarks>
+    void ExecuteFireAndForget(IDbCommand command);
 
     /// <summary>This method executes a query and returns a single value.</summary>
     /// <param name="command">Command object (such as an SQL Select command)</param>

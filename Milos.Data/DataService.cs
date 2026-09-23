@@ -128,7 +128,29 @@ public abstract class DataService : IDataService
     /// <returns>True, if number of affected records is the same as the expected record count.</returns>
     public virtual bool ExecuteNonQuery(IDbCommand command, int expectedRecordCount) => ExecuteNonQuery(command) == expectedRecordCount;
 
+    /// <summary>
+    /// This method executes a query asynchronously.
+    /// </summary>
+    /// <param name="command">Command string (such as an SQL Insert command)</param>
+    /// <returns>The number of affected records</returns>
     public abstract Task<int> ExecuteNonQueryAsync(IDbCommand command);
+
+    /// <summary>
+    /// This method executes a query and does not wait for the result.
+    /// </summary>
+    /// <param name="command">Command string (such as an SQL Insert command)</param>
+    /// <remarks>
+    /// This is a fire-and-forget operation that is fast but the caller has no way of knowing if it worked.
+    /// This method always operates asynchronously and does not wait for the result of the query.
+    /// </remarks>
+    public void ExecuteFireAndForget(IDbCommand command)
+    {
+        // Triggers an ExecuteNonQueryAsync but does not wait for the result.
+        // This is a fire-and-forget operation that is fast but the caller has no way of knowing if it worked.
+#pragma warning disable CS4014
+        Task.Run(() => { ExecuteNonQueryAsync(command); });
+#pragma warning restore CS4014
+    }
 
     /// <summary>
     /// Abstract implementation
