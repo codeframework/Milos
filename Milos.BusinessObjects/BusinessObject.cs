@@ -1891,15 +1891,7 @@ public abstract class BusinessObject : IBusinessObject
     {
         try
         {
-            var service = DataService;
-
-            // We check for app roles
-            if (!string.IsNullOrEmpty(AppRole)) service.ApplyAppRole(AppRole, AppRolePassword);
-
-            service.ExecuteFireAndForget(command);
-
-            // We reset the app role if we set a role
-            if (!string.IsNullOrEmpty(AppRole)) service.RevertAppRole();
+            DataService.ExecuteFireAndForget(command, AppRole, AppRolePassword);
         }
         catch (Exception ex)
         {

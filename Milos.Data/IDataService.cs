@@ -122,12 +122,15 @@ public interface IDataService : IDisposable
     /// This method executes a query and does not wait for the result.
     /// </summary>
     /// <param name="command">Command string (such as an SQL Insert command)</param>
+    /// <param name="appRole">Application role name (optional)</param>
+    /// <param name="appRolePassword">Application role password (optional)</param>
+    /// <param name="disposeCommandWhenDone">If true, the .Dispose() will be called on the command when done</param>
     /// <remarks>
     /// This is a fire-and-forget operation that is fast but the caller has no way of knowing if it worked.
     /// If this method is called multiple times in rapid succession, the sequence of operations is not guaranteed to be the same as the order of the calls.
     /// This method always operates asynchronously and does not wait for the result of the query.
     /// </remarks>
-    void ExecuteFireAndForget(IDbCommand command);
+    void ExecuteFireAndForget(IDbCommand command, string appRole = "", string appRolePassword = "", bool disposeCommandWhenDone = false);
 
     /// <summary>This method executes a query and returns a single value.</summary>
     /// <param name="command">Command object (such as an SQL Select command)</param>
