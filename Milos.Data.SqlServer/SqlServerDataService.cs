@@ -116,7 +116,11 @@ public class SqlDataService : DataService
         get
         {
             // We make sure we have a connection
-            _directConnection ??= CreateConnection();
+            if (_directConnection == null)
+            {
+                _directConnection = CreateConnection();
+                RegisterCurrentAppRoleOnServer(_directConnection); // May be needed if an app role is set
+            }
 
             // We make sure the connection is open
             if (_directConnection.State == ConnectionState.Closed)
@@ -140,7 +144,6 @@ public class SqlDataService : DataService
 
         var newConnection = new SqlConnection(ConnectionString);
         newConnection.Open();
-        RegisterCurrentAppRoleOnServer(newConnection); // May be needed if an app role is set
 
         return newConnection;
     }
@@ -796,9 +799,14 @@ public class SqlDataService : DataService
         }
         finally
         {
+            // If we created a private connection, we manually close it here
+            if (forcePrivateConnection && sqlCommand.Connection != null && sqlCommand.Connection.State == ConnectionState.Open) 
+                sqlCommand.Connection.Close(); 
+
             // Some cleanup work to make sure we do not have any dangling references
-            if (forcePrivateConnection) sqlCommand.Connection.Close();
             CleanCommandObject(sqlCommand);
+
+            // If it wasn't a private connection, we perform a standard close
             if (!forcePrivateConnection) CloseConnection();
         }
     }
@@ -2077,12 +2085,17 @@ public class SqlDataService : DataService
     /// <param name="forcePrivateConnection">If true, a new connection will always be created to execute this command.</param>
     protected virtual void PrepareCommandObject(SqlCommand command, bool forcePrivateConnection = false)
     {
-        // First, we get a connection (this will open the connection if needed)
-        command.Connection = !forcePrivateConnection ? Connection : CreateConnection();
+        if (!forcePrivateConnection)
+        {
+            // First, we get a connection (this will open the connection if needed)
+            command.Connection = Connection;
 
-        // Then we check whether we are currently in a transaction, and if so, use that transaction on the current connection.
-        if (InTransaction && !forcePrivateConnection)
-            command.Transaction = CurrentTransaction;
+            // Then we check whether we are currently in a transaction, and if so, use that transaction on the current connection.
+            if (InTransaction) 
+                command.Transaction = CurrentTransaction;
+        }
+        else
+            command.Connection = CreateConnection();
 
         // We also check the timeout
         if (MinimumCommandTimeout > 0 && command.CommandTimeout < MinimumCommandTimeout)
