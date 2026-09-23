@@ -1882,17 +1882,17 @@ public abstract class BusinessObject : IBusinessObject
     /// Executes a command without waiting for a result. This is useful for commands that do not return any data, such as INSERT, UPDATE, or DELETE statements.
     /// </summary>
     /// <param name="command">IDbCommand Object</param>
-    /// <param name="disposeCommandWhenDone">If true, the .Dispose() will be called on the command when done</param>
     /// <remarks>
     /// This is a fire-and-forget operation that is fast but the caller has no way of knowing if it worked.
     /// If this method is called multiple times in rapid succession, the sequence of operations is not guaranteed to be the same as the order of the calls.
     /// This method always operates asynchronously and does not wait for the result of the query.
     /// </remarks>
-    protected virtual void ExecuteFireAndForget(IDbCommand command, bool disposeCommandWhenDone = false)
+    protected virtual void ExecuteFireAndForget(IDbCommand command)
     {
         try
         {
-            DataService.ExecuteFireAndForget(command, AppRole, AppRolePassword, disposeCommandWhenDone);
+            using var clonedCommand = DataService.CloneCommand(command);
+            DataService.ExecuteFireAndForget(clonedCommand);
         }
         catch (Exception ex)
         {

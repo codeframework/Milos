@@ -142,35 +142,39 @@ public abstract class DataService : IDataService
     /// This method executes a query and does not wait for the result.
     /// </summary>
     /// <param name="command">Command string (such as an SQL Insert command)</param>
-    /// <param name="appRole">Application role name (optional)</param>
-    /// <param name="appRolePassword">Application role password (optional)</param>
-    /// <param name="disposeCommandWhenDone">If true, the .Dispose() will be called on the command when done</param>
     /// <remarks>
     /// This is a fire-and-forget operation that is fast but the caller has no way of knowing if it worked.
     /// If this method is called multiple times in rapid succession, the sequence of operations is not guaranteed to be the same as the order of the calls.
     /// This method always operates asynchronously and does not wait for the result of the query.
     /// </remarks>
-    public void ExecuteFireAndForget(IDbCommand command, string appRole = "", string appRolePassword = "", bool disposeCommandWhenDone = false)
+    public void ExecuteFireAndForget(IDbCommand command)
     {
         // Triggers an ExecuteNonQueryAsync but does not wait for the result.
         // This is a fire-and-forget operation that is fast but the caller has no way of knowing if it worked.
+
 #pragma warning disable CS4014
-        Task.Run(() => 
+        Task.Run(async () => 
         {
-            // We check for app roles
-            if (!string.IsNullOrEmpty(appRole)) ApplyAppRole(appRole, appRolePassword);
-
             // Firing the command
-            ExecuteNonQueryAsync(command, forcePrivateConnection: true);
-
-            // We reset the app role if we set a role
-            if (!string.IsNullOrEmpty(appRole)) RevertAppRole();
-
-            // We dispose the command if requested
-            if (disposeCommandWhenDone) command.Dispose();
+            try
+            {
+                await ExecuteNonQueryAsync(command, forcePrivateConnection: true);
+            }
+            finally
+            {
+                // We dispose the command if requested
+                command.Dispose();
+            }
         });
 #pragma warning restore CS4014
     }
+
+    /// <summary>
+    /// Creates a deep clone of the specified command object. This is useful if you want to execute the same command multiple times with different parameters.
+    /// </summary>
+    /// <param name="command">The command object to clone.</param>
+    /// <returns>A deep clone of the specified command object.</returns>
+    public abstract IDbCommand CloneCommand(IDbCommand command);
 
     /// <summary>
     /// Abstract implementation

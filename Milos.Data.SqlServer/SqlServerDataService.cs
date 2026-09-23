@@ -23,7 +23,7 @@ public class SqlDataService : DataService
     /// <summary>
     /// For internal use only (app role filo stack)
     /// </summary>
-    private readonly List<AppRoleStackItem> appRoleStack = [];
+    private readonly List<AppRoleStackItem> _appRoleStack = [];
 
     private static readonly ConcurrentDictionary<Type, Dictionary<string, PropertySetter>> PropertySetterCache = new();
 
@@ -450,7 +450,7 @@ public class SqlDataService : DataService
     public override bool ApplyAppRole(string role, string password)
     {
         // If the app role is empty, we go to the default role
-        if (role.Length == 0)
+        if (string.IsNullOrEmpty(role))
         {
             role = DefaultAppRole;
             password = DefaultAppRolePassword;
@@ -477,8 +477,8 @@ public class SqlDataService : DataService
         // if this is a valid setting and other settings already exist,
         // otherwise, app roles are not really executed. In those cases,
         // we are in a role-less environment (which is a likely scenario)
-        if (appRoleStack.Count > 0 || role.Length > 0)
-            appRoleStack.Add(new AppRoleStackItem {Role = role, Password = password});
+        if (_appRoleStack.Count > 0 || !string.IsNullOrEmpty(role))
+            _appRoleStack.Add(new AppRoleStackItem {Role = role, Password = password});
 
         return true;
     }
@@ -496,14 +496,14 @@ public class SqlDataService : DataService
         string password;
 
         // We check whether we can revert anything
-        if (appRoleStack.Count > 1)
+        if (_appRoleStack.Count > 1)
         {
             // We have more than one item, so we can revert to the previous one
             // Before we do so, we remove the most recent (current) one, since
             // we do not need it anymore, and want the previous one to be the most current one.
-            appRoleStack.RemoveAt(appRoleStack.Count - 1);
+            _appRoleStack.RemoveAt(_appRoleStack.Count - 1);
             // We now get the latest role name and pw
-            var stackItem = appRoleStack[appRoleStack.Count - 1];
+            var stackItem = _appRoleStack[_appRoleStack.Count - 1];
             role = stackItem.Role;
             password = stackItem.Password;
         }
@@ -516,8 +516,8 @@ public class SqlDataService : DataService
             //       string.Empty unless a configuration file specified a different setting).
 
             // If there is a single item in the stack, we just get rid of it
-            if (appRoleStack.Count == 1)
-                appRoleStack.RemoveAt(0);
+            if (_appRoleStack.Count == 1)
+                _appRoleStack.RemoveAt(0);
 
             // The role and password need to be defaulted at this point
             role = DefaultAppRole;
@@ -744,6 +744,27 @@ public class SqlDataService : DataService
     }
 
     /// <summary>
+    /// Creates a deep clone of the specified command object. This is useful if you want to execute the same command multiple times with different parameters.
+    /// </summary>
+    /// <param name="command">The command object to clone.</param>
+    /// <returns>A deep clone of the specified command object.</returns>
+    public override IDbCommand CloneCommand(IDbCommand command)
+    {
+        if (command is not SqlCommand sqlCommand) throw new UnsupportedCommandObjectException("SqlCommand expected.");
+        var clonedCommand = new SqlCommand(sqlCommand.CommandText)
+        {
+            CommandType = sqlCommand.CommandType,
+            CommandTimeout = sqlCommand.CommandTimeout,
+            UpdatedRowSource = sqlCommand.UpdatedRowSource
+        };
+
+        foreach (SqlParameter parameter in sqlCommand.Parameters)
+            clonedCommand.Parameters.Add(((ICloneable)parameter).Clone());
+
+        return clonedCommand;
+    }
+
+    /// <summary>
     /// Executes an Sql Command and returns the number of affected rows.
     /// </summary>
     /// <param name="command">Sql Command object</param>
@@ -767,17 +788,19 @@ public class SqlDataService : DataService
         // This is an SqlCommand object. We are ready to go.
         PrepareCommandObject(sqlCommand, forcePrivateConnection);
 
-        var affectedRows = await sqlCommand.ExecuteNonQueryAsync();
-
-        // Some cleanup work to make sure we do not have any dangling references
-        if (forcePrivateConnection) sqlCommand.Connection.Close();
-        CleanCommandObject(sqlCommand);
-        if (!forcePrivateConnection) CloseConnection();
-
-        // We raise an event
-        RaiseOnNonQueryCompleteEvent(sqlCommand, affectedRows);
-
-        return affectedRows;
+        try
+        {
+            var affectedRows = await sqlCommand.ExecuteNonQueryAsync();
+            RaiseOnNonQueryCompleteEvent(sqlCommand, affectedRows);
+            return affectedRows;
+        }
+        finally
+        {
+            // Some cleanup work to make sure we do not have any dangling references
+            if (forcePrivateConnection) sqlCommand.Connection.Close();
+            CleanCommandObject(sqlCommand);
+            if (!forcePrivateConnection) CloseConnection();
+        }
     }
 
     /// <summary>
@@ -805,17 +828,19 @@ public class SqlDataService : DataService
         // This is an SqlCommand object. We are ready to go.
         PrepareCommandObject(sqlCommand, forcePrivateConnection);
 
-        var affectedRows = sqlCommand.ExecuteNonQuery();
-
-        // Some cleanup work to make sure we do not have any dangling references
-        if (forcePrivateConnection) sqlCommand.Connection.Close();
-        CleanCommandObject(sqlCommand);
-        if (!forcePrivateConnection) CloseConnection();
-
-        // We raise an event
-        RaiseOnNonQueryCompleteEvent(sqlCommand, affectedRows);
-
-        return affectedRows;
+        try
+        {
+            var affectedRows = sqlCommand.ExecuteNonQuery();
+            RaiseOnNonQueryCompleteEvent(sqlCommand, affectedRows);
+            return affectedRows;
+        }
+        finally
+        {
+            // Some cleanup work to make sure we do not have any dangling references
+            if (forcePrivateConnection) sqlCommand.Connection.Close();
+            CleanCommandObject(sqlCommand);
+            if (!forcePrivateConnection) CloseConnection();
+        }
     }
 
     /// <summary>
