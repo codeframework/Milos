@@ -65,7 +65,7 @@ public class SqlDataService : DataService
     /// <summary>
     /// Internal object reference to the current connection.
     /// </summary>
-    private SqlConnection directConnection;
+    private SqlConnection _directConnection;
 
     /// <summary>
     /// For internal use only
@@ -116,51 +116,56 @@ public class SqlDataService : DataService
         get
         {
             // We make sure we have a connection
-            if (directConnection == null)
-            {
-                if (string.IsNullOrEmpty(ConnectionString))
-                {
-                    if (TrustedConnection)
-                        ConnectionString = $"initial catalog={Catalog};server={Server};Integrated Security=SSPI";
-                    else
-                        ConnectionString = $"user id={UserName};password={Password};initial catalog={Catalog};server={Server}";
-
-                    if (!string.IsNullOrEmpty(CurrentAppRole))
-                        // If we have an app role in place, we can not use connection pooling
-                        ConnectionString += ";pooling=false";
-                }
-
-                directConnection = new SqlConnection(ConnectionString);
-                directConnection.Open();
-                RegisterCurrentAppRoleOnServer(directConnection); // May be needed if an app role is set
-            }
+            _directConnection ??= CreateConnection();
 
             // We make sure the connection is open
-            if (directConnection.State == ConnectionState.Closed)
+            if (_directConnection.State == ConnectionState.Closed)
             {
-                // If an app role is applied, we need to make sure pooling is off.
-                if (!string.IsNullOrEmpty(CurrentAppRole))
-                {
-                    // An app role is assigned
-                    if (ConnectionString != null && ConnectionString.ToLowerInvariant().IndexOf("pooling=false", StringComparison.Ordinal) <= 0)
-                        ConnectionString += ";pooling=false";
-                }
-                else
-                {
-                    // No app role exists. We can use pooling.
-                    if (ConnectionString != null && ConnectionString.IndexOf(";pooling=false", StringComparison.Ordinal) > 0)
-                        ConnectionString = ConnectionString.Replace(";pooling=false", string.Empty);
-                }
+                EnsureConnectionStringIsPopulated();
 
                 // OK, ready to go.
-                directConnection.ConnectionString = ConnectionString; // We re-assign this in case something in this service changed the string (such as an assigned app role)
-                directConnection.Open();
-                RegisterCurrentAppRoleOnServer(directConnection); // May be needed if an app role is set
+                _directConnection.ConnectionString = ConnectionString; // We re-assign this in case something in this service changed the string (such as an assigned app role)
+                _directConnection.Open();
+                RegisterCurrentAppRoleOnServer(_directConnection); // May be needed if an app role is set
             }
 
-            return directConnection;
+            return _directConnection;
         }
-        set => directConnection = value;
+        set => _directConnection = value;
+    }
+
+    private SqlConnection CreateConnection()
+    {
+        EnsureConnectionStringIsPopulated();
+
+        var newConnection = new SqlConnection(ConnectionString);
+        newConnection.Open();
+        RegisterCurrentAppRoleOnServer(newConnection); // May be needed if an app role is set
+
+        return newConnection;
+    }
+
+    private void EnsureConnectionStringIsPopulated()
+    {
+        if (!string.IsNullOrEmpty(ConnectionString)) return;
+
+        if (TrustedConnection)
+            ConnectionString = $"initial catalog={Catalog};server={Server};Integrated Security=SSPI";
+        else
+            ConnectionString = $"user id={UserName};password={Password};initial catalog={Catalog};server={Server}";
+
+        if (!string.IsNullOrEmpty(CurrentAppRole))
+        {
+            // If we have an app role in place, we can not use connection pooling
+            if (ConnectionString != null && ConnectionString.ToLowerInvariant().IndexOf("pooling=false", StringComparison.Ordinal) <= 0)
+                ConnectionString += ";pooling=false";
+        }
+        else
+        {
+            // No app role exists. We can use pooling.
+            if (ConnectionString != null && ConnectionString.IndexOf(";pooling=false", StringComparison.Ordinal) > 0)
+                ConnectionString = ConnectionString.Replace(";pooling=false", string.Empty);
+        }
     }
 
     /// <summary>
@@ -459,11 +464,11 @@ public class SqlDataService : DataService
             //       The actual change will happen when the transaction is complete.
             //       This happens automatically, since the connection will be closed,
             //       whenever a transaction is completed.
-            if (directConnection != null && directConnection.State == ConnectionState.Open && !InTransaction)
+            if (_directConnection != null && _directConnection.State == ConnectionState.Open && !InTransaction)
                 // We close the connection. The next time the connection is used,
                 // it will be re-opened automatically, and the new app role
                 // will be applied.
-                directConnection.Close();
+                _directConnection.Close();
         // We memorize the role for future use
         CurrentAppRole = role;
         CurrentAppRolePassword = password;
@@ -531,9 +536,9 @@ public class SqlDataService : DataService
             //       The actual change will happen when the transaction is complete.
             //       This happens automatically, since the connection will be closed,
             //       whenever a transaction is completed.
-            if (directConnection != null && directConnection.State == ConnectionState.Open && !InTransaction)
+            if (_directConnection != null && _directConnection.State == ConnectionState.Open && !InTransaction)
                 // We close the connection. The next time the connection is used, it will be re-opened automatically, and the new app role will be applied.
-                directConnection.Close();
+                _directConnection.Close();
         // We memorize the role for future use
         CurrentAppRole = role;
         CurrentAppRolePassword = password;
@@ -548,33 +553,31 @@ public class SqlDataService : DataService
     /// <returns>True or False</returns>
     protected virtual bool RegisterCurrentAppRoleOnServer(SqlConnection currentConnection)
     {
-        if (!string.IsNullOrEmpty(CurrentAppRole))
+        if (string.IsNullOrEmpty(CurrentAppRole)) return true;
+
+
+        // We have a role setting, so we apply it
+        var applyRoleCommand = new SqlCommand("sp_setapprole") { CommandType = CommandType.StoredProcedure };
+        applyRoleCommand.Parameters.AddWithValue("@rolename", CurrentAppRole);
+        applyRoleCommand.Parameters.AddWithValue("@password", CurrentAppRolePassword);
+
+        // We are now ready to execute the SP
+        // Note: We can NOT use this.ExecuteScalar() for this, since this could
+        //       cause a cyclic call to the Connection property and ultimately
+        //       to this very method. Also, we want to be able to execute this SP
+        //       even if ExecuteScalar() was configured to not allow SPs.
+        applyRoleCommand.Connection = currentConnection;
+        try
         {
-            // We have a role setting, so we apply it
-            var applyRoleCommand = new SqlCommand("sp_setapprole") {CommandType = CommandType.StoredProcedure};
-            applyRoleCommand.Parameters.AddWithValue("@rolename", CurrentAppRole);
-            applyRoleCommand.Parameters.AddWithValue("@password", CurrentAppRolePassword);
-
-            // We are now ready to execute the SP
-            // Note: We can NOT use this.ExecuteScalar() for this, since this could
-            //       cause a cyclic call to the Connection property and ultimately
-            //       to this very method. Also, we want to be able to execute this SP
-            //       even if ExecuteScalar() was configured to not allow SPs.
-            applyRoleCommand.Connection = currentConnection;
-            try
-            {
-                applyRoleCommand.ExecuteScalar();
-                applyRoleCommand.Connection = null;
-                applyRoleCommand.Dispose();
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            applyRoleCommand.ExecuteScalar();
+            applyRoleCommand.Connection = null;
+            applyRoleCommand.Dispose();
+            return true;
         }
-
-        return true;
+        catch
+        {
+            return false;
+        }
     }
 
     /// <summary>
@@ -744,7 +747,8 @@ public class SqlDataService : DataService
     /// Executes an Sql Command and returns the number of affected rows.
     /// </summary>
     /// <param name="command">Sql Command object</param>
-    public override async Task<int> ExecuteNonQueryAsync(IDbCommand command)
+    /// <param name="forcePrivateConnection">If true, a new connection will always be created to execute this command.</param>
+    public override async Task<int> ExecuteNonQueryAsync(IDbCommand command, bool forcePrivateConnection = false)
     {
         if (command is not SqlCommand sqlCommand) throw new UnsupportedCommandObjectException("SqlCommand expected.");
 
@@ -761,13 +765,14 @@ public class SqlDataService : DataService
         }
 
         // This is an SqlCommand object. We are ready to go.
-        PrepareCommandObject(sqlCommand);
+        PrepareCommandObject(sqlCommand, forcePrivateConnection);
 
         var affectedRows = await sqlCommand.ExecuteNonQueryAsync();
 
         // Some cleanup work to make sure we do not have any dangling references
+        if (forcePrivateConnection) sqlCommand.Connection.Close();
         CleanCommandObject(sqlCommand);
-        CloseConnection();
+        if (!forcePrivateConnection) CloseConnection();
 
         // We raise an event
         RaiseOnNonQueryCompleteEvent(sqlCommand, affectedRows);
@@ -779,8 +784,9 @@ public class SqlDataService : DataService
     /// Executes an Sql Command and returns the number of affected rows.
     /// </summary>
     /// <param name="command">Sql Command object</param>
+    /// <param name="forcePrivateConnection">If true, a new connection will always be created to execute this command.</param>
     /// <remarks>Prefer ExecuteNonQueryAsync(IDbCommand) for new code.</remarks>
-    public override int ExecuteNonQuery(IDbCommand command)
+    public override int ExecuteNonQuery(IDbCommand command, bool forcePrivateConnection = false)
     {
         if (command is not SqlCommand sqlCommand) throw new UnsupportedCommandObjectException("SqlCommand expected.");
 
@@ -797,13 +803,14 @@ public class SqlDataService : DataService
         }
 
         // This is an SqlCommand object. We are ready to go.
-        PrepareCommandObject(sqlCommand);
+        PrepareCommandObject(sqlCommand, forcePrivateConnection);
 
         var affectedRows = sqlCommand.ExecuteNonQuery();
 
         // Some cleanup work to make sure we do not have any dangling references
+        if (forcePrivateConnection) sqlCommand.Connection.Close();
         CleanCommandObject(sqlCommand);
-        CloseConnection();
+        if (!forcePrivateConnection) CloseConnection();
 
         // We raise an event
         RaiseOnNonQueryCompleteEvent(sqlCommand, affectedRows);
@@ -1912,13 +1919,14 @@ public class SqlDataService : DataService
     /// a transaction.
     /// </summary>
     /// <param name="command">Sql Command object</param>
-    protected virtual void PrepareCommandObject(SqlCommand command)
+    /// <param name="forcePrivateConnection">If true, a new connection will always be created to execute this command.</param>
+    protected virtual void PrepareCommandObject(SqlCommand command, bool forcePrivateConnection = false)
     {
         // First, we get a connection (this will open the connection if needed)
-        command.Connection = Connection;
+        command.Connection = !forcePrivateConnection ? Connection : CreateConnection();
 
         // Then we check whether we are currently in a transaction, and if so, use that transaction on the current connection.
-        if (InTransaction)
+        if (InTransaction && !forcePrivateConnection)
             command.Transaction = CurrentTransaction;
 
         // We also check the timeout
@@ -1971,11 +1979,11 @@ public class SqlDataService : DataService
             AbortTransaction();
 
         // We make sure we close the connections on shutdown
-        if (directConnection != null && directConnection.State != ConnectionState.Closed)
+        if (_directConnection != null && _directConnection.State != ConnectionState.Closed)
             try
             {
-                directConnection.Close();
-                directConnection.Dispose();
+                _directConnection.Close();
+                _directConnection.Dispose();
             }
             catch
             {

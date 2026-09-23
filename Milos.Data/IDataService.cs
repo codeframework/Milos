@@ -99,24 +99,27 @@ public interface IDataService : IDisposable
     /// This method executes a query and returns the number of affected rows.
     /// </summary>
     /// <param name="command">Command string (such as an SQL Insert command)</param>
+    /// <param name="forcePrivateConnection">If true, a new connection will always be created to execute this command.</param>
     /// <returns>Number of affected rows.</returns>
     /// <remarks>Prefer ExecuteNonQueryAsync(IDbCommand) for new code.</remarks>
-    int ExecuteNonQuery(IDbCommand command);
+    int ExecuteNonQuery(IDbCommand command, bool forcePrivateConnection = false);
 
     /// <summary>
     /// This method executes a query and returns the number of affected rows.
     /// </summary>
     /// <param name="command">Command string (such as an SQL Insert command)</param>
     /// <param name="expectedRecordCount">Number of records we expect to be effected by this command.</param>
+    /// <param name="forcePrivateConnection">If true, a new connection will always be created to execute this command.</param>
     /// <returns>True, if number of affected records is the same as the expected record count.</returns>
-    bool ExecuteNonQuery(IDbCommand command, int expectedRecordCount);
+    bool ExecuteNonQuery(IDbCommand command, int expectedRecordCount, bool forcePrivateConnection = false);
 
     /// <summary>
     /// This method executes a query asynchronously.
     /// </summary>
     /// <param name="command">Command string (such as an SQL Insert command)</param>
+    /// <param name="forcePrivateConnection">If true, a new connection will always be created to execute this command.</param>
     /// <returns>The number of affected records</returns>
-    Task<int> ExecuteNonQueryAsync(IDbCommand command);
+    Task<int> ExecuteNonQueryAsync(IDbCommand command, bool forcePrivateConnection = false);
 
     /// <summary>
     /// This method executes a query and does not wait for the result.

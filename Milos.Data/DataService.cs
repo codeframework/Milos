@@ -117,23 +117,26 @@ public abstract class DataService : IDataService
     /// Abstract implementation
     /// </summary>
     /// <param name="command">Command object</param>
+    /// <param name="forcePrivateConnection">If true, a new connection will always be created to execute this command.</param>
     /// <returns>Number of affected records</returns>
-    public abstract int ExecuteNonQuery(IDbCommand command);
+    public abstract int ExecuteNonQuery(IDbCommand command, bool forcePrivateConnection = false);
 
     /// <summary>
     /// This method executes a query and returns the number of affected rows.
     /// </summary>
     /// <param name="command">Command string (such as an SQL Insert command)</param>
     /// <param name="expectedRecordCount">Number of records we expect to be effected by this command.</param>
+    /// <param name="forcePrivateConnection">If true, a new connection will always be created to execute this command.</param>
     /// <returns>True, if number of affected records is the same as the expected record count.</returns>
-    public virtual bool ExecuteNonQuery(IDbCommand command, int expectedRecordCount) => ExecuteNonQuery(command) == expectedRecordCount;
+    public virtual bool ExecuteNonQuery(IDbCommand command, int expectedRecordCount, bool forcePrivateConnection = false) => ExecuteNonQuery(command, forcePrivateConnection) == expectedRecordCount;
 
     /// <summary>
     /// This method executes a query asynchronously.
     /// </summary>
     /// <param name="command">Command string (such as an SQL Insert command)</param>
+    /// <param name="forcePrivateConnection">If true, a new connection will always be created to execute this command.</param>
     /// <returns>The number of affected records</returns>
-    public abstract Task<int> ExecuteNonQueryAsync(IDbCommand command);
+    public abstract Task<int> ExecuteNonQueryAsync(IDbCommand command, bool forcePrivateConnection = false);
 
     /// <summary>
     /// This method executes a query and does not wait for the result.
@@ -158,7 +161,7 @@ public abstract class DataService : IDataService
             if (!string.IsNullOrEmpty(appRole)) ApplyAppRole(appRole, appRolePassword);
 
             // Firing the command
-            ExecuteNonQueryAsync(command);
+            ExecuteNonQueryAsync(command, forcePrivateConnection: true);
 
             // We reset the app role if we set a role
             if (!string.IsNullOrEmpty(appRole)) RevertAppRole();
@@ -633,7 +636,7 @@ public abstract class DataService : IDataService
         GC.SuppressFinalize(this);
     }
 
-    public virtual async Task<bool> ExecuteNonQueryAsync(IDbCommand command, int expectedRecordCount) => await ExecuteNonQueryAsync(command) == expectedRecordCount;
+    public virtual async Task<bool> ExecuteNonQueryAsync(IDbCommand command, int expectedRecordCount, bool forcePrivateConnection = false) => await ExecuteNonQueryAsync(command, forcePrivateConnection) == expectedRecordCount;
 
     /// <summary>
     /// This method raises the QueryComplete event
