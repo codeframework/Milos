@@ -920,8 +920,8 @@ public class SqlDataService : DataService
         using var reader = ExecuteReader(command);
         if (reader == null) return result;
 
-        var (mappedColumns, trimStrings) = GetMappedColumnsSetters<TItem>(reader);
-        MapReaderRecordsToResultRecord(result, reader, mappedColumns, trimStrings);
+        var (mappedColumns, trimStrings, nullStringsToEmpty) = GetMappedColumnsSetters<TItem>(reader);
+        MapReaderRecordsToResultRecord(result, reader, mappedColumns, trimStrings, nullStringsToEmpty);
 
         return result;
     }
@@ -937,18 +937,19 @@ public class SqlDataService : DataService
         using var reader = await ExecuteReaderAsync(command);
         if (reader == null) return result;
 
-        var (mappedColumns, trimStrings) = GetMappedColumnsSetters<TItem>(reader);
-        MapReaderRecordsToResultRecord(result, reader, mappedColumns, trimStrings);
+        var (mappedColumns, trimStrings, nullStringsToEmpty) = GetMappedColumnsSetters<TItem>(reader);
+        MapReaderRecordsToResultRecord(result, reader, mappedColumns, trimStrings, nullStringsToEmpty);
 
         return result;
     }
 
-    private static (List<(int Ordinal, PropertySetter Setter)> Columns, bool TrimStrings) GetMappedColumnsSetters<TItem>(IDataReader reader) where TItem : new()
+    private static (List<(int Ordinal, PropertySetter Setter)> Columns, bool TrimStrings, bool NullStringsToEmpty) GetMappedColumnsSetters<TItem>(IDataReader reader) where TItem : new()
     {
         var type = typeof(TItem);
         var setters = GetPropertySetters(type);
         var stripPrefix = type.GetCustomAttribute<StripColumnPrefixAttribute>();
         var trimStrings = type.GetCustomAttribute<TrimStringsAttribute>() != null;
+        var nullStringsToEmpty = type.GetCustomAttribute<NullStringsToEmptyAttribute>() != null;
         var mappedColumns = new List<(int Ordinal, PropertySetter Setter)>();
 
         for (var columnIndex = 0; columnIndex < reader.FieldCount; columnIndex++)
@@ -969,7 +970,7 @@ public class SqlDataService : DataService
             }
         }
 
-        return (mappedColumns, trimStrings);
+        return (mappedColumns, trimStrings, nullStringsToEmpty);
     }
 
     /// <summary>
@@ -991,7 +992,7 @@ public class SqlDataService : DataService
         return i > 0 && i < columnName.Length ? columnName.Substring(i) : columnName;
     }
 
-    private static void MapReaderRecordsToResultRecord<TItem>(List<TItem> result, IDataReader reader, List<(int Ordinal, PropertySetter Setter)> mappedColumns, bool trimStrings = false) where TItem : new()
+    private static void MapReaderRecordsToResultRecord<TItem>(List<TItem> result, IDataReader reader, List<(int Ordinal, PropertySetter Setter)> mappedColumns, bool trimStrings = false, bool nullStringsToEmpty = false) where TItem : new()
     {
         while (reader.Read())
         {
@@ -1025,8 +1026,8 @@ public class SqlDataService : DataService
                         value = Convert.ChangeType(value, targetType, CultureInfo.InvariantCulture);
                 }
 
-                if (trimStrings && value is string str)
-                    value = str.Trim();
+                if (nullStringsToEmpty && value is string str && value == null) value = string.Empty;
+                if (trimStrings && value is string str2) value = str2.Trim();
 
                 mappedColumn.Setter.Setter(record, value);
             }

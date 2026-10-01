@@ -17,3 +17,20 @@ namespace Milos.Data;
 /// </example>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, Inherited = true, AllowMultiple = false)]
 public sealed class TrimStringsAttribute : Attribute { }
+
+/// <summary>
+/// When applied to a result-mapping class, instructs the data service to automatically
+/// convert null strings to empty strings when reading from the data source. 
+/// This is useful when mapping database columns that may contain null values.
+/// </summary>
+/// <example>
+/// <code>
+/// [TrimStrings]
+/// public class CustomerResult
+/// {
+///     public string FirstName { get; set; }  // null → ""
+/// }
+/// </code>
+/// </example>
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, Inherited = true, AllowMultiple = false)]
+public sealed class NullStringsToEmptyAttribute : Attribute { } 
